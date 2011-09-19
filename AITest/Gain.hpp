@@ -113,7 +113,7 @@ private:
 
 		while (begin != end) {
 			float p = begin->second / size;
-			result += -1.f * p * (std::log(p) / std::log(2.f));
+			result -= p * (std::log(p) / log_2_);
 			++begin;
 		}
 		return result;
