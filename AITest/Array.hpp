@@ -61,10 +61,10 @@ public:
 	class const_iterator {
 	private:
 		unsigned int index_;
-		T* data_;
+		const T* data_;
 
 	public:
-		const_iterator(unsigned int index, T* data) : index_(index), data_(data)
+		const_iterator(unsigned int index, const T* data) : index_(index), data_(data)
 		{}
 
 		void operator++() {
@@ -75,7 +75,7 @@ public:
 			index_--;
 		}
 
-		bool operator!=(const iterator& value) {
+		bool operator!=(const const_iterator& value) {
 			return index_ != value.index_;
 		}
 

@@ -16,16 +16,16 @@ class Gain {
 public:
 	typedef std::map< Attribue, float > AttribueMap;
 	typedef std::map< Result, float > ResultMap;
-	typedef std::map< Attribue, std::map< Result, float > > AttribuePerResultMap;
+	typedef std::map< Attribue, ResultMap > AttribuePerResultMap;
 
 	template < typename AttribueContainer, typename ResultContainer>
 	float operator()(const AttribueContainer& value, const ResultContainer& result) {
 		float size_total = 0;
-		typedef AttribueContainer::const_iterator ita = value.begin();
-		typedef AttribueContainer::const_iterator itae = value.end();
+		typename AttribueContainer::const_iterator ita = value.begin();
+		typename AttribueContainer::const_iterator itae = value.end();
 
-		typedef ResultContainer::const_iterator itr = result.begin();
-		typedef ResultContainer::const_iterator itre = result.end();
+		typename ResultContainer::const_iterator itr = result.begin();
+		typename ResultContainer::const_iterator itre = result.end();
 
 		while (itr != itre) {
 			attribue_per_result_[*ita][*itr]++;
@@ -43,7 +43,7 @@ public:
 		typename AttribueMap::iterator it_tot = attribue_value_total_.begin();
 
 		while (it_yes != it_yes_e) {
-			entropy -= (*it_tot / size_total) * getEntropy(*it_yes.begin(), *it_yes.end(), *it_tot);
+			entropy -= (it_tot->second / size_total) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
 			++it_yes;
 			++it_tot;
 		}
@@ -53,11 +53,11 @@ public:
 	template < typename AttribueContainer, typename ResultContainer>
 	float getGain(const AttribueContainer& value, const ResultContainer& result) {
 		float size_total = 0;
-		typedef AttribueContainer::const_iterator ita = value.begin();
-		typedef AttribueContainer::const_iterator itae = value.end();
+		typename AttribueContainer::const_iterator ita = value.begin();
+		typename AttribueContainer::const_iterator itae = value.end();
 
-		typedef ResultContainer::const_iterator itr = result.begin();
-		typedef ResultContainer::const_iterator itre = result.end();
+		typename ResultContainer::const_iterator itr = result.begin();
+		typename ResultContainer::const_iterator itre = result.end();
 
 		while (itr != itre) {
 			attribue_per_result_[*ita][*itr]++;
@@ -75,7 +75,7 @@ public:
 		typename AttribueMap::iterator it_tot = attribue_value_total_.begin();
 
 		while (it_yes != it_yes_e) {
-			entropy -= (*it_tot / size_total) * getEntropy(*it_yes.begin(), *it_yes.end(), *it_tot);
+			entropy -= (it_tot->second() / size_total) * getEntropy((it_yes->second()).begin(), (it_yes->second()).end(), it_tot->second());
 			++it_yes;
 			++it_tot;
 		}
@@ -98,8 +98,8 @@ private:
 		float result = 0;
 
 		while (begin != end) {
-			float p = *begin / size;
-			result += -1.f * p * std::log(p);
+			float p = begin->second / size;
+			result += -1.f * p * (std::log(p) / std::log(2.f));
 			++begin;
 		}
 		return result;
