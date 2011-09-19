@@ -64,7 +64,7 @@ public:
 		T* data_;
 
 	public:
-		iterator(unsigned int index, T* data) : index_(index), data_(data)
+		const_iterator(unsigned int index, T* data) : index_(index), data_(data)
 		{}
 
 		void operator++() {
