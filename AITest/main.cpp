@@ -58,9 +58,9 @@ int main(void) {
 	initWind(wind);
 	initResponse(response);
 
-	Gain<Wind, PlayBall> calc;
+	Gain<Wind, PlayBall> calc(wind, response);
 
-	float entropy_wind = calc(wind, response);
+	float entropy_wind = calc.getResult();
 	float entropy_global = calc.getGlobalEntropy();
 
 	std::cout << "wind entropy " << entropy_wind << " entropy global " << entropy_global << std::endl;

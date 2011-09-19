@@ -18,6 +18,15 @@ public:
 	typedef std::map< Result, float > ResultMap;
 	typedef std::map< Attribue, ResultMap > AttribuePerResultMap;
 
+	Gain() : attribue_per_result_(), attribue_value_total_(), result_value_yes_(), entropy_(0), log_2_(std::log(2.f)) 
+	{}
+
+	template < typename AttribueContainer, typename ResultContainer>
+	Gain(const AttribueContainer& value, const ResultContainer& result)
+		: attribue_per_result_(), attribue_value_total_(), result_value_yes_(), entropy_(0), log_2_(std::log(2.f)) {
+			getGain(value, result);
+	}
+
 	template < typename AttribueContainer, typename ResultContainer>
 	float operator()(const AttribueContainer& value, const ResultContainer& result) {
 		float size_total = 0;
@@ -37,17 +46,17 @@ public:
 			++size_total;
 		}
 
-		float entropy = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total);
+		result_= entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total);
 		typename AttribuePerResultMap::iterator it_yes = attribue_per_result_.begin();
 		typename AttribuePerResultMap::iterator it_yes_e = attribue_per_result_.end();
 		typename AttribueMap::iterator it_tot = attribue_value_total_.begin();
 
 		while (it_yes != it_yes_e) {
-			entropy -= (it_tot->second / size_total) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
+			result_ -= (it_tot->second / size_total) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
 			++it_yes;
 			++it_tot;
 		}
-		return entropy;
+		return result_;
 	}
 
 	template < typename AttribueContainer, typename ResultContainer>
@@ -69,29 +78,34 @@ public:
 			++size_total;
 		}
 
-		float entropy = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total);
+		result_ = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total);
 		typename AttribuePerResultMap::iterator it_yes = attribue_per_result_.begin();
 		typename AttribuePerResultMap::iterator it_yes_e = attribue_per_result_.end();
 		typename AttribueMap::iterator it_tot = attribue_value_total_.begin();
 
 		while (it_yes != it_yes_e) {
-			entropy -= (it_tot->second() / size_total) * getEntropy((it_yes->second()).begin(), (it_yes->second()).end(), it_tot->second());
+			result_ -= (it_tot->second / size_total) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
 			++it_yes;
 			++it_tot;
 		}
-		return entropy;
+		return result_;
 	}
 
-	float getGlobalEntropy() const {
+	const float& getGlobalEntropy() const {
 		return entropy_;
 	}
 
+	const float& getResult() const {
+		return result_;
+	}
 
 private:
 	AttribuePerResultMap attribue_per_result_;
 	AttribueMap attribue_value_total_;
 	ResultMap result_value_yes_;
 	float entropy_;
+	float result_;
+	float log_2_;
 
 	template <typename Iterator>
 	inline float getEntropy(Iterator begin, Iterator end, float size) {
