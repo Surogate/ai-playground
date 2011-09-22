@@ -91,6 +91,41 @@ public:
 		return result_;
 	}
 
+	template < typename AttribueContainer, typename ResultContainer, typename ConditionnalFunctor>
+	float getGain(const AttribueContainer& value, const ResultContainer& result, const ConditionnalFunctor& func) {
+		float size_total = 0;
+		typename AttribueContainer::const_iterator ita = value.begin();
+		typename AttribueContainer::const_iterator itae = value.end();
+
+		typename ResultContainer::const_iterator itr = result.begin();
+		typename ResultContainer::const_iterator itre = result.end();
+
+		while (itr != itre) {
+			if (func()) {
+				attribue_per_result_[*ita][*itr]++;
+				attribue_value_total_[*ita]++;
+				result_value_yes_[*itr]++;
+			}
+
+			++func;
+			++itr;
+			++ita;
+			++size_total;
+		}
+
+		result_ = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total);
+		typename AttribuePerResultMap::iterator it_yes = attribue_per_result_.begin();
+		typename AttribuePerResultMap::iterator it_yes_e = attribue_per_result_.end();
+		typename AttribueMap::iterator it_tot = attribue_value_total_.begin();
+
+		while (it_yes != it_yes_e) {
+			result_ -= (it_tot->second / size_total) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
+			++it_yes;
+			++it_tot;
+		}
+		return result_;
+	}
+
 	const float& getGlobalEntropy() const {
 		return entropy_;
 	}
