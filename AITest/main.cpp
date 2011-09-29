@@ -1,13 +1,33 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
+#include <functional>
 
 #include "Array.hpp"
 #include "Gain.hpp"
+#include "ID3Class.hpp"
 
 enum Wind {
 	Weak,
 	Strong
+};
+
+enum Humidity {
+	High,
+	Normal,
+};
+
+enum Temperature {
+	Hot,
+	Mild,
+	Cool
+};
+
+enum Outlook {
+	Sunny,
+	Overcast,
+	Rain
 };
 
 enum PlayBall {
@@ -15,56 +35,35 @@ enum PlayBall {
 	Yes
 };
 
-void initWind(Array<Wind, 14>& array) {
-	array[0] = Weak;
-	array[1] = Strong;
-	array[2] = Weak;
-	array[3] = Weak;
-	array[4] = Weak;
-	array[5] = Strong;
-	array[6] = Strong;
-	array[7] = Weak;
-	array[8] = Weak;
-	array[9] = Weak;
-	array[10] = Strong;
-	array[11] = Strong;
-	array[12] = Weak;
-	array[13] = Strong;
-}
-
-void initResponse(Array<PlayBall, 14>& array) {
-	array[0] = No;
-	array[1] = No;
-	array[2] = Yes;
-	array[3] = Yes;
-	array[4] = Yes;
-	array[5] = No;
-	array[6] = Yes;
-	array[7] = No;
-	array[8] = Yes;
-	array[9] = Yes;
-	array[10] = Yes;
-	array[11] = Yes;
-	array[12] = Yes;
-	array[13] = No;
+void initID3(ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall>& id3) {
+	id3.addData(Sunny	, Hot	, High	, Weak	, No	);
+	id3.addData(Sunny	, Hot	, High	, Strong, No	);
+	id3.addData(Overcast, Hot	, High	, Weak	, Yes	);
+	id3.addData(Rain	, Mild	, High	, Weak	, Yes	);
+	id3.addData(Rain	, Cool	, Normal, Weak	, Yes	);
+	id3.addData(Rain	, Cool	, Normal, Strong, No	);
+	id3.addData(Overcast, Cool	, Normal, Strong, Yes	);
+	id3.addData(Sunny	, Mild	, High	, Weak	, No	);
+	id3.addData(Sunny	, Cool	, Normal, Weak	, Yes	);
+	id3.addData(Rain	, Mild	, Normal, Weak	, Yes	);
+	id3.addData(Sunny	, Mild	, Normal, Strong, Yes	);
+	id3.addData(Overcast, Mild	, High	, Strong, Yes	);
+	id3.addData(Overcast, Hot	, Normal, Weak	, Yes	);
+	id3.addData(Rain	, Mild	, High	, Strong, No	);
 }
 
 int main(void) {
-	std::cout << "hello world" << std::endl;
+	ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall> id3;
 
-	Array<Wind, 14> wind;
-	Array<PlayBall, 14> response;
+	initID3(id3);
 
-	initWind(wind);
-	initResponse(response);
+	id3.generateTree();
 
-	Gain<Wind, PlayBall> calc(wind, response);
+	PlayBall value = id3.decide(Sunny, Hot, Normal, Weak);
+	if (value == Yes)
+		std::cout << "yes" << std::endl;
+	else
+		std::cout << "no" << std::endl;
 
-	float entropy_wind = calc.getResult();
-	float entropy_global = calc.getGlobalEntropy();
-
-	std::cout << "wind entropy " << entropy_wind << " entropy global " << entropy_global << std::endl;
-
-	std::cin.get();
 	return 0;
 }

@@ -10,6 +10,9 @@
 
 #include <map>
 #include <cmath>
+#include <random>
+
+#include "ConditionnalFunctor.hpp"
 
 template < typename Attribue, typename Result >
 class Gain {
@@ -18,50 +21,28 @@ public:
 	typedef std::map< Result, float > ResultMap;
 	typedef std::map< Attribue, ResultMap > AttribuePerResultMap;
 
-	Gain() : attribue_per_result_(), attribue_value_total_(), result_value_yes_(), entropy_(0), log_2_(std::log(2.f)) 
+	Gain() : attribue_per_result_(), attribue_value_total_(), result_value_yes_(), entropy_(0), log_2_(std::log(2.f)), size_total_(0) 
 	{}
 
 	template < typename AttribueContainer, typename ResultContainer>
 	Gain(const AttribueContainer& value, const ResultContainer& result)
-		: attribue_per_result_(), attribue_value_total_(), result_value_yes_(), entropy_(0), log_2_(std::log(2.f)) {
+		: attribue_per_result_(), attribue_value_total_(), result_value_yes_(), entropy_(0), log_2_(std::log(2.f)), size_total_(0) {
 			getGain(value, result);
 	}
 
 	template < typename AttribueContainer, typename ResultContainer>
+	Gain(const AttribueContainer& value, const ResultContainer& result, ConditionnalFunctor& func)
+		: attribue_per_result_(), attribue_value_total_(), result_value_yes_(), entropy_(0), log_2_(std::log(2.f)), size_total_(0) {
+			getGain(value, result, func);
+	}
+
+	template < typename AttribueContainer, typename ResultContainer>
 	float operator()(const AttribueContainer& value, const ResultContainer& result) {
-		float size_total = 0;
-		typename AttribueContainer::const_iterator ita = value.begin();
-		typename AttribueContainer::const_iterator itae = value.end();
-
-		typename ResultContainer::const_iterator itr = result.begin();
-		typename ResultContainer::const_iterator itre = result.end();
-
-		while (itr != itre) {
-			attribue_per_result_[*ita][*itr]++;
-			attribue_value_total_[*ita]++;
-			result_value_yes_[*itr]++;
-
-			++itr;
-			++ita;
-			++size_total;
-		}
-
-		result_= entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total);
-		typename AttribuePerResultMap::iterator it_yes = attribue_per_result_.begin();
-		typename AttribuePerResultMap::iterator it_yes_e = attribue_per_result_.end();
-		typename AttribueMap::iterator it_tot = attribue_value_total_.begin();
-
-		while (it_yes != it_yes_e) {
-			result_ -= (it_tot->second / size_total) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
-			++it_yes;
-			++it_tot;
-		}
-		return result_;
+		return getGain(value, result);
 	}
 
 	template < typename AttribueContainer, typename ResultContainer>
 	float getGain(const AttribueContainer& value, const ResultContainer& result) {
-		float size_total = 0;
 		typename AttribueContainer::const_iterator ita = value.begin();
 		typename AttribueContainer::const_iterator itae = value.end();
 
@@ -75,16 +56,16 @@ public:
 
 			++itr;
 			++ita;
-			++size_total;
+			++size_total_;
 		}
 
-		result_ = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total);
+		result_ = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total_);
 		typename AttribuePerResultMap::iterator it_yes = attribue_per_result_.begin();
 		typename AttribuePerResultMap::iterator it_yes_e = attribue_per_result_.end();
 		typename AttribueMap::iterator it_tot = attribue_value_total_.begin();
 
 		while (it_yes != it_yes_e) {
-			result_ -= (it_tot->second / size_total) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
+			result_ -= (it_tot->second / size_total_) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
 			++it_yes;
 			++it_tot;
 		}
@@ -92,8 +73,7 @@ public:
 	}
 
 	template < typename AttribueContainer, typename ResultContainer, typename ConditionnalFunctor>
-	float getGain(const AttribueContainer& value, const ResultContainer& result, const ConditionnalFunctor& func) {
-		float size_total = 0;
+	float getGain(const AttribueContainer& value, const ResultContainer& result, ConditionnalFunctor& func) {
 		typename AttribueContainer::const_iterator ita = value.begin();
 		typename AttribueContainer::const_iterator itae = value.end();
 
@@ -110,16 +90,16 @@ public:
 			++func;
 			++itr;
 			++ita;
-			++size_total;
+			++size_total_;
 		}
 
-		result_ = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total);
+		result_ = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total_);
 		typename AttribuePerResultMap::iterator it_yes = attribue_per_result_.begin();
 		typename AttribuePerResultMap::iterator it_yes_e = attribue_per_result_.end();
 		typename AttribueMap::iterator it_tot = attribue_value_total_.begin();
 
 		while (it_yes != it_yes_e) {
-			result_ -= (it_tot->second / size_total) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
+			result_ -= (it_tot->second / size_total_) * getEntropy(it_yes->second.begin(), it_yes->second.end(), it_tot->second);
 			++it_yes;
 			++it_tot;
 		}
@@ -134,6 +114,47 @@ public:
 		return result_;
 	}
 
+	const AttribueMap& getAttribueMap() const {
+		return attribue_value_total_;
+	}
+
+	Result getMainResult() const {
+		Result answer = Result();
+		float higher = 0;
+
+		ResultMap::const_iterator it = result_value_yes_.begin();
+		ResultMap::const_iterator ite = result_value_yes_.begin();
+
+		while (it != ite) {
+			if (it->second > higher)
+				answer = it->first;
+			++it;
+		}
+		return answer;
+	}
+
+	float getSize() const {
+		return size_total_;
+	}
+
+	template <typename ResultContainer>
+	Result getRandomResult(const ResultContainer& container) const {
+		std::uniform_int_distribution<int> distribution(0, container.size());
+		int value = distribution(std::mt19937());
+
+		typename ResultContainer::const_iterator it = container.begin();
+		typename ResultContainer::const_iterator ite = container.end();
+
+		int i = 0;
+		while (it != ite && i < value)
+		{
+			++it;
+			++i;
+		}
+
+		return *it;
+	}
+
 private:
 	AttribuePerResultMap attribue_per_result_;
 	AttribueMap attribue_value_total_;
@@ -141,6 +162,7 @@ private:
 	float entropy_;
 	float result_;
 	float log_2_;
+	float size_total_;
 
 	template <typename Iterator>
 	inline float getEntropy(Iterator begin, Iterator end, float size) {
