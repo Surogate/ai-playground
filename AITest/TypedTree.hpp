@@ -53,27 +53,57 @@ namespace TypedTree {
 
 			template <typename N, typename B, typename V, typename C, typename X>
 			inline Result test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4, const X& val5) const {
-				return test(value, val1, val2, val3, val4, val5);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, value, val2, val3, val4, val5);
+				}
+				else 
+					return Result();
 			}
 	 
 			template <typename N, typename B, typename V, typename C, typename X>
 			inline Result test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4, const X& val5) const {
-				return test(value, val1, val2, val3, val4, val5);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, val2, value, val3, val4, val5);
+				}
+				else 
+					return Result();
 			}
 	
 			template <typename N, typename B, typename V, typename C, typename X>
 			inline Result test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4, const X& val5) const {
-				return test(value, val1, val2, val3, val4, val5);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, val2, val3, value, val4, val5);
+				}
+				else 
+					return Result();
 			}
 
 			template <typename N, typename B, typename V, typename C, typename X>
 			inline Result test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value, const X& val5) const {
-				return test(value, val1, val2, val3, val4, val5);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, val2, val3, val4, value, val5);
+				}
+				else 
+					return Result();
 			}
 
 			template <typename N, typename B, typename V, typename C, typename X>
 			inline Result test(const N& val1, const V& val2, const B& val3, const C& val4, const X& val5, const Specialized& value) const {
-				return test(value, val1, val2, val3, val4, val5);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, val2, val3, val4, val5, value);
+				}
+				else 
+					return Result();
 			}
 
 			void AddSubNode(const Specialized& value, const ATree* sub) 
@@ -133,22 +163,46 @@ namespace TypedTree {
 
 			template <typename N, typename B, typename V, typename C>
 			inline Result test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4) const {
-				return test(value, val1, val2, val3, val4);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, value, val2, val3, val4);
+				}
+				else 
+					return Result();
 			}
 	 
 			template <typename N, typename B, typename V, typename C>
 			inline Result test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4) const {
-				return test(value, val1, val2, val3, val4);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, val2, value, val3, val4);
+				}
+				else 
+					return Result();
 			}
 	
 			template <typename N, typename B, typename V, typename C>
 			inline Result test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4) const {
-				return test(value, val1, val2, val3, val4);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, val2, val3, value, val4);
+				}
+				else 
+					return Result();
 			}
 
 			template <typename N, typename B, typename V, typename C>
 			inline Result test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value) const {
-				return test(value, val1, val2, val3, val4);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, val2, val3, val4, value);
+				}
+				else 
+					return Result();
 			}
 
 			void AddSubNode(const Specialized& value, const ATree* sub) 
@@ -294,12 +348,24 @@ namespace TypedTree {
 
 			template <typename N, typename B>
 			inline Result test(const N& val1, const Specialized& value, const B& val2) const {
-				return test(value, val1, val2);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, value, val2);
+				}
+				else 
+					return Result();
 			}
 	 
 			template <typename N, typename B>
 			inline Result test(const N& val1, const B& val2, const Specialized& value) const {
-				return test(value, val1, val2);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, val2, value);
+				}
+				else 
+					return Result();
 			}
 	
 			void AddSubNode(const Specialized& value, const ATree* sub) {
@@ -357,7 +423,13 @@ namespace TypedTree {
 
 			template <typename N>
 			inline Result test(const N& val1, const Specialized& value) const {
-				return test(value, val1);
+				ChildMap::const_iterator it = child_.find(value);
+			
+				if (it != child_.end()) {
+					return it->second->evaluate(val1, value);
+				}
+				else 
+					return Result();
 			}
 	 
 			void AddSubNode(const Specialized& value, const ATree* sub) {
