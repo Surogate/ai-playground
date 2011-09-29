@@ -28,7 +28,7 @@ public:
 private:
 	typename T::const_iterator it_;
 	typename T::const_iterator ite_;
-	const Y& value_;
+	Y value_;
 };
 
 template <typename T, typename Y>
@@ -51,7 +51,7 @@ class ConditionnalFunctorVal : public ConditionnalFunctor {
 private:
 	typename T::const_iterator it_;
 	typename T::const_iterator ite_;
-	const Y& value_;
+	Y value_;
 	ConditionnalFunctor& buddy_;
 };
 
@@ -78,8 +78,8 @@ private:
 	typename T::const_iterator ite_;
 	typename U::const_iterator it2_;
 	typename U::const_iterator ite2_;
-	const Y& value_;
-	const I& value2_;
+	Y value_;
+	I value2_;
 };
 
 template <typename T, typename Y, typename U, typename I, typename O, typename P>
@@ -111,9 +111,9 @@ private:
 	typename O::const_iterator it3_;
 	typename O::const_iterator ite3_;
 
-	const Y& value_;
-	const I& value2_;
-	const P& value3_;
+	Y value_;
+	I value2_;
+	P value3_;
 };
 
 

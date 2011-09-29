@@ -9,7 +9,7 @@
 namespace TreeBuilder {
 
 	template <typename Tree> 
-	class Builder {
+	class Builder { //structure qui compare les differente valeur des prochain noeud possible et qui contient un functor du noeud le plus haut
 	public:
 		typedef typename Tree::ATree ATree;
 
@@ -25,6 +25,7 @@ namespace TreeBuilder {
 			return construct_();
 		}
 
+		//fonction static pour lancer la construction de l'arbre
 		template <typename ResultContainer, typename ContW, typename ContX, typename ContC, typename ContV>
 		static ATree* construct(const ResultContainer& result, const ContW& val1, const ContX& val2, const ContC& val3, const ContV& val4 ) {
 			Builder<Tree> build;
@@ -42,15 +43,19 @@ namespace TreeBuilder {
 			build(build_v.getResult(), std::bind(&BuilderNode<Tree, ContV::value_type>::construct<ContW, ContX, ContC, ContV>, &build_v, std::ref(val1), std::ref(val2), std::ref(val3), std::ref(val4)));
 
 			return build();
-		}
+		} 
 
 	private:
 		float higher_;
 		std::function< ATree*() > construct_;
 	};
 
-	template< typename Tree, typename Specialized >
-	class BuilderNode {
+
+	// BuilderNode : Structure qui construit l'arbre decisionnel
+	// Tree : namespace template de l'arbre voulue
+	// Specialized : Type du noeud actuellement evaluer
+	template< typename Tree, typename Specialized > 
+	class BuilderNode { 
 	private:
 		typedef typename Tree::Result Result;
 		typedef typename Tree::ATree ATree;
@@ -130,6 +135,8 @@ namespace TreeBuilder {
 
 					BuilderNode<Tree, ContZ::value_type> build_t(val3, res_, func);
 					build(build_t.getResult(), std::bind(&BuilderNode<Tree, ContZ::value_type>::construct<ContX, ContY, ContZ>, &build_t, std::ref(val1), std::ref(val2), std::ref(val3)));
+
+					root->AddSubNode(it->first, build());
 				} else {
 					ConditionnalFunctorVal func(spe, it->first, *func_);
 
@@ -141,9 +148,11 @@ namespace TreeBuilder {
 
 					BuilderNode<Tree, ContZ::value_type> build_t(val3, res_, func);
 					build(build_t.getResult(), std::bind(&BuilderNode<Tree, ContZ::value_type>::construct<ContX, ContY, ContZ>, &build_t, std::ref(val1), std::ref(val2), std::ref(val3)));
+
+					root->AddSubNode(it->first, build());
 				}
 
-				root->AddSubNode(it->first, build());
+
 				++it;
 			}
 				
@@ -178,6 +187,7 @@ namespace TreeBuilder {
 			typename AttribueMap::const_iterator it = map.begin();
 			typename AttribueMap::const_iterator ite = map.end();
 
+			//Evaluate every value of the current Node Attribute.
 			while (it != ite) {
 				Builder build;
 					
@@ -189,6 +199,8 @@ namespace TreeBuilder {
 
 					BuilderNode<Tree, ContY::value_type> build_s(val2, res_, func);
 					build(build_s.getResult(), std::bind(&BuilderNode<Tree, ContY::value_type>::construct<ContX, ContY>, &build_s, std::ref(val1), std::ref(val2)));
+
+					root->AddSubNode(it->first, build());
 				} else {
 					ConditionnalFunctorVal func(spe, it->first, *func_);
 
@@ -197,9 +209,9 @@ namespace TreeBuilder {
 
 					BuilderNode<Tree, ContY::value_type> build_s(val2, res_, func);
 					build(build_s.getResult(), std::bind(&BuilderNode<Tree, ContY::value_type>::construct<ContX, ContY>, &build_s, std::ref(val1), std::ref(val2)));
-				}
 
-				root->AddSubNode(it->first, build());
+					root->AddSubNode(it->first, build());
+				}
 				++it;
 			}
 				
@@ -237,14 +249,17 @@ namespace TreeBuilder {
 
 					BuilderNode<Tree, ContX::value_type> build_f(val1, res_, func);
 					build(build_f.getResult(), std::bind(&BuilderNode<Tree, ContX::value_type>::construct<ContX>, &build_f, std::ref(val1)));
+
+					root->AddSubNode(it->first, build());
 				} else {
 					ConditionnalFunctorVal func(spe, it->first, *func_);
 
 					BuilderNode<Tree, ContX::value_type> build_f(val1, res_, func);
 					build(build_f.getResult(), std::bind(&BuilderNode<Tree, ContX::value_type>::construct<ContX>, &build_f, std::ref(val1)));
+
+					root->AddSubNode(it->first, build());
 				}
 
-				root->AddSubNode(it->first, build());
 				++it;
 			}
 

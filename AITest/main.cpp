@@ -65,5 +65,6 @@ int main(void) {
 	else
 		std::cout << "no" << std::endl;
 
+	std::cin.get();
 	return 0;
 }
