@@ -250,8 +250,6 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 			}
 
 			Resu evaluateDebug(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
-				std::cout << "wait what ?" << std::endl;
-				Debugger<Resu> debug(value_);
 				return value_;
 			}
 		};
@@ -264,12 +262,10 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 			typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 			Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
-				Debugger<Specialized> debug;
 				return test(val1, val2, val3, val4);
 			}
 
 			Resu evaluateDebug(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
-				Debugger<Specialized> debug;
 				return test(val1, val2, val3, val4);
 			}
 

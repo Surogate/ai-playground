@@ -85,12 +85,13 @@ public:
 				attribue_per_result_[*ita][*itr]++;
 				attribue_value_total_[*ita]++;
 				result_value_yes_[*itr]++;
+
+				++size_total_;
 			}
 
 			++func;
 			++itr;
 			++ita;
-			++size_total_;
 		}
 
 		result_ = entropy_ =  getEntropy(result_value_yes_.begin(), result_value_yes_.end(),  size_total_);
@@ -123,7 +124,7 @@ public:
 		float higher = 0;
 
 		ResultMap::const_iterator it = result_value_yes_.begin();
-		ResultMap::const_iterator ite = result_value_yes_.begin();
+		ResultMap::const_iterator ite = result_value_yes_.end();
 
 		while (it != ite) {
 			if (it->second > higher)
@@ -137,8 +138,12 @@ public:
 		return size_total_;
 	}
 
+	unsigned int size_value() {
+		return result_value_yes_.size();
+	}
+
 	template <typename ResultContainer>
-	Result getRandomResult(const ResultContainer& container) const {
+	static Result getRandomResult(const ResultContainer& container) {
 		std::uniform_int_distribution<int> distribution(0, container.size());
 		int value = distribution(std::mt19937());
 

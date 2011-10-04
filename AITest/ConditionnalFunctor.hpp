@@ -8,12 +8,15 @@ public:
 	virtual bool operator()() const = 0;
 	virtual void operator++() = 0;
 	virtual void reset() = 0;
+	virtual void debug() = 0;
 };
 
-template <typename T, typename Y>
+template <typename T>
 class ConditionnalFunctor1 : public ConditionnalFunctor {
 public:
-	ConditionnalFunctor1(const T& container, const Y& value) 
+	typedef typename T::value_type value_type;
+
+	ConditionnalFunctor1(const T& container, const value_type& value) 
 		: it_(container.begin()), tmp_(it_), ite_(container.end()), value_(value) 
 	{}
 
@@ -30,17 +33,24 @@ public:
 		tmp_ = it_;
 	}
 
+	void debug() {
+		std::cout << "Functor value" << std::endl;
+		TypedTree::Debugger<value_type> debug(value_);
+	}
+
 private:
 	typename T::const_iterator it_;
 	typename T::const_iterator tmp_;
 	typename T::const_iterator ite_;
-	Y value_;
+	value_type value_;
 };
 
-template <typename T, typename Y>
+template <typename T>
 class ConditionnalFunctorVal : public ConditionnalFunctor {
-	public:
-	ConditionnalFunctorVal(const T& container, const Y& value, ConditionnalFunctor& buddy) 
+public:
+	typedef typename T::value_type value_type;
+
+	ConditionnalFunctorVal(const T& container, const value_type& value, ConditionnalFunctor& buddy) 
 		: it_(container.begin()), tmp_(it_), ite_(container.end()), value_(value), buddy_(buddy)
 	{}
 
@@ -59,11 +69,17 @@ class ConditionnalFunctorVal : public ConditionnalFunctor {
 		buddy_.reset();
 	}
 
+	void debug() {
+		std::cout << "Functor value" << std::endl;
+		TypedTree::Debugger<value_type> debug(value_);
+		buddy_.debug();
+	}
+
 private:
 	typename T::const_iterator it_;
 	typename T::const_iterator tmp_;
 	typename T::const_iterator ite_;
-	Y value_;
+	value_type value_;
 	ConditionnalFunctor& buddy_;
 };
 
