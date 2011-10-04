@@ -83,7 +83,6 @@ struct TypedTree::Debugger<Outlook> {
 	}
 };
 
-
 template <>
 struct TypedTree::Debugger<PlayBall> {
 	Debugger() { std::cout << "PlayBall" << std::endl; }
@@ -94,8 +93,6 @@ struct TypedTree::Debugger<PlayBall> {
 		return "No";
 	}
 };
-
-
 
 void initID3(ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall>& id3) {
 	id3.addData(Sunny	, Hot	, High	, Weak	, No	);
@@ -120,6 +117,9 @@ void initID3(ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall>& id3) {
 	id3.addData(Rain	, Mild	, High	, Strong, No	);
 }
 
+typedef ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall> ID3Test;
+typedef ID3Test::Answer Answer;
+
 int main(void) {
 	ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall> id3;
 
@@ -129,16 +129,16 @@ int main(void) {
 
 	id3.generateTree();
 
-	PlayBall value = id3.decide(Sunny, Hot, Normal, Weak);
-	TypedTree::Debugger<PlayBall> answerDebug(value);
+	Answer value = id3.decide(Sunny, Hot, Normal, Weak);
+	TypedTree::Debugger<PlayBall> answerDebug(*value);
 	value = id3.decide(Overcast, Hot, High, Weak);
-	TypedTree::Debugger<PlayBall> answerDebug1(value);
+	TypedTree::Debugger<PlayBall> answerDebug1(*value);
 	value = id3.decide(Rain, Hot, High, Weak);
-	TypedTree::Debugger<PlayBall> answerDebug2(value);
+	TypedTree::Debugger<PlayBall> answerDebug2(*value);
 	value = id3.decide(Sunny, Hot, High, Weak);
-	TypedTree::Debugger<PlayBall> answerDebug3(value);
+	TypedTree::Debugger<PlayBall> answerDebug3(*value);
 	value = id3.decide(Rain, Hot, High, Strong);
-	TypedTree::Debugger<PlayBall> answerDebug4(value);
+	TypedTree::Debugger<PlayBall> answerDebug4(*value);
 
 	std::cin.get();
 	return 0;

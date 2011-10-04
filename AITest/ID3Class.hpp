@@ -1,3 +1,9 @@
+/* 
+ * File:   ID3Class.hpp
+ * Author: Francois Ancel (francoisancel [at] gmail.com)
+ * Copyright : BSD license
+ * Created on September 16, 2011
+ */
 
 #ifndef ID3CLASS
 #define ID3CLASS
@@ -13,6 +19,7 @@ template <typename First, typename Second, typename Third, typename Fourth, type
 class ID3Class5 {
 public:
 	typedef typename TypedTree::Tree5<Result, First, Second, Third, Fourth> Tree;
+	typedef typename Tree::Answer Answer;
 	typedef typename TreeBuilder::Builder< Tree > Builder;
 
 	ID3Class5() : first_(), second_(), third_(), fourth_(), result_(), actualize_(false), tree_(0)
@@ -108,13 +115,8 @@ public:
 		actualize_ = true;
 	}
 
-	Result decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4) {
+	Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4) {
 		return tree_->evaluate(val1, val2, val3, val4);
-	}
-
-	Result decideDebug(const First& val1, const Second& val2, const Third& val3, const Fourth& val4) {
-		std::cout << "decide Debug" << std::endl;
-		return tree_->evaluateDebug(val1, val2, val3, val4);
 	}
 
 private:

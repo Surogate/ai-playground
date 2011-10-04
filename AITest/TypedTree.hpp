@@ -1,3 +1,9 @@
+/* 
+ * File:   TypedTree.hpp
+ * Author: Francois Ancel (francoisancel [at] gmail.com)
+ * Copyright : BSD license
+ * Created on September 16, 2011
+ */
 
 #ifndef TYPEDTREE_HPP
 #define TYPEDTREE_HPP
@@ -5,7 +11,10 @@
 #include <memory>
 #include <iostream>
 
-namespace TypedTree { // namespace des structure qui compose les arbre de decision
+/*
+	Hold decisional tree structure.
+*/
+namespace TypedTree {
 
 	template <typename T>
 	struct Debugger {
@@ -18,14 +27,27 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 		}
 	};
 
+	/*
+		Templated Namespace that contains each class used.
+	*/
 	template < typename Resu, typename Fi, typename Se, typename Th, typename Fo, typename Fifth, typename Sixth >
-	struct Tree7 { //namespace template des structure pour l'arbre a 6 attribue
-		typedef Resu Result; // typedef pour retrouver la sortie, utile a la construction.
+	struct Tree7 {
+		typedef Resu Result; 
+
+		struct Answer {
+			Answer() : valid(false), answer() {}
+			Answer(const Result& value) : valid(true), answer(value) {}
+
+			operator bool() { return valid; }
+			const Result& operator*() const { return answer; }
+			bool valid;
+			Result answer;
+		};
 
 		class ATree {
 		public:
 			virtual ~ATree() {}
-			virtual Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6) const = 0;
+			virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6) const = 0;
 		};
 
 		class Leaf : public ATree {
@@ -35,7 +57,7 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 		public:
 			Leaf(Resu value) : value_(value) {}
 
-			Resu evaluate(const Fi&, const Se&, const Th&, const Fo&, const Fifth&, const Sixth&) const {
+			Answer evaluate(const Fi&, const Se&, const Th&, const Fo&, const Fifth&, const Sixth&) const {
 				return value_;
 			}
 		};
@@ -47,75 +69,75 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 			typedef std::auto_ptr< const ATree > AutoTreePtr;
 			typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
-			Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6) const 
+			Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6) const 
 			{
 				return test(val1, val2, val3, val4, val5, val6);
 			}
 
 			template <typename N, typename B, typename V, typename C, typename X>
-			inline Resu test(const Specialized& value, const N& val1, const B& val2, const V& val3, const Fifth& val4, const Sixth& val5) const {
+			inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3, const Fifth& val4, const Sixth& val5) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(value, val1, val2, val3, val4, val5);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			template <typename N, typename B, typename V, typename C, typename X>
-			inline Resu test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4, const X& val5) const {
+			inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4, const X& val5) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, value, val2, val3, val4, val5);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 	 
 			template <typename N, typename B, typename V, typename C, typename X>
-			inline Resu test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4, const X& val5) const {
+			inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4, const X& val5) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, value, val3, val4, val5);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 	
 			template <typename N, typename B, typename V, typename C, typename X>
-			inline Resu test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4, const X& val5) const {
+			inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4, const X& val5) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, val3, value, val4, val5);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			template <typename N, typename B, typename V, typename C, typename X>
-			inline Resu test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value, const X& val5) const {
+			inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value, const X& val5) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, val3, val4, value, val5);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			template <typename N, typename B, typename V, typename C, typename X>
-			inline Resu test(const N& val1, const V& val2, const B& val3, const C& val4, const X& val5, const Specialized& value) const {
+			inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const X& val5, const Specialized& value) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, val3, val4, val5, value);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			void AddSubNode(const Specialized& value, const ATree* sub) 
@@ -129,13 +151,23 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 	};
 
 	template < typename Resu, typename Fi, typename Se, typename Th, typename Fo, typename Fifth >
-	struct Tree6 { //namespace template pour les structure de l'arbre a 5 attribue
+	struct Tree6 {
 		typedef Resu Result;
+
+		struct Answer {
+			Answer() : valid(false), answer() {}
+			Answer(const Result& value) : valid(true), answer(value) {}
+
+			operator bool() { return valid; }
+			const Result& operator*() const { return answer; }
+			bool valid;
+			Result answer;
+		};
 
 		class ATree {
 		public:
 			virtual ~ATree() {}
-			virtual Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const = 0;
+			virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const = 0;
 		};
 
 		class Leaf : public ATree {
@@ -145,7 +177,7 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 		public:
 			Leaf(Resu value) : value_(value) {}
 
-			Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const {
+			Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const {
 				return value_;
 			}
 		};
@@ -157,64 +189,64 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 			typedef std::auto_ptr< const ATree > AutoTreePtr;
 			typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
-			Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const 
+			Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const 
 			{
 				return test(val1, val2, val3, val4, val5);
 			}
 
 			template <typename N, typename B, typename V, typename C>
-			inline Resu test(const Specialized& value, const N& val1, const B& val2, const V& val3, const C& val4) const {
+			inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3, const C& val4) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(value, val1, val2, val3, val4);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			template <typename N, typename B, typename V, typename C>
-			inline Resu test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4) const {
+			inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, value, val2, val3, val4);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 	 
 			template <typename N, typename B, typename V, typename C>
-			inline Resu test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4) const {
+			inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, value, val3, val4);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 	
 			template <typename N, typename B, typename V, typename C>
-			inline Resu test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4) const {
+			inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, val3, value, val4);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			template <typename N, typename B, typename V, typename C>
-			inline Resu test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value) const {
+			inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, val3, val4, value);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			void AddSubNode(const Specialized& value, const ATree* sub) 
@@ -231,11 +263,20 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 	struct Tree5 { 
 		typedef Resu Result;
 
+		struct Answer {
+			Answer() : valid(false), answer() {}
+			Answer(const Result& value) : valid(true), answer(value) {}
+
+			operator bool() { return valid; }
+			const Result& operator*() const { return answer; }
+			bool valid;
+			Result answer;
+		};
+
 		class ATree {
 		public:
 			virtual ~ATree() {}
-			virtual Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const = 0;
-			virtual Resu evaluateDebug(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const = 0;
+			virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const = 0;
 		};
 
 		class Leaf : public ATree {
@@ -245,11 +286,7 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 		public:
 			Leaf(Resu value) : value_(value) {}
 
-			Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
-				return value_;
-			}
-
-			Resu evaluateDebug(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
+			Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
 				return value_;
 			}
 		};
@@ -261,56 +298,52 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 			typedef std::auto_ptr< const ATree > AutoTreePtr;
 			typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
-			Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
-				return test(val1, val2, val3, val4);
-			}
-
-			Resu evaluateDebug(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
+			Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
 				return test(val1, val2, val3, val4);
 			}
 
 			template <typename N, typename B, typename V>
-			inline Resu test(const Specialized& value, const N& val1, const B& val2, const V& val3) const {
+			inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(value, val1, val2, val3);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			template <typename N, typename B, typename V>
-			inline Resu test(const N& val1, const Specialized& value, const B& val2, const V& val3) const {
+			inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, value, val2, val3);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 	 
 			template <typename N, typename B, typename V>
-			inline Resu test(const N& val1, const B& val2, const Specialized& value, const V& val3) const {
+			inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, value, val3);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 	
 			template <typename N, typename B, typename V>
-			inline Resu test(const N& val1, const V& val2, const B& val3, const Specialized& value) const {
+			inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value) const {
 				ChildMap::const_iterator it = child_.find(value);
 			
 				if (it != child_.end()) {
 					return it->second->evaluate(val1, val2, val3, value);
 				}
 				else 
-					return Resu();
+					return Answer();
 			}
 
 			void AddSubNode(const Specialized& value, const ATree* sub) 
@@ -326,6 +359,12 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 	template < typename Resu, typename Fi, typename Se, typename Th>
 	struct Tree4 {
 		typedef Resu Result;
+
+		struct Answer {
+			Answer() : valid(false), answer() {}
+			bool valid;
+			Result answer;
+		};
 
 		class ATree {
 		public:
@@ -402,6 +441,12 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 	struct Tree3 {
 		typedef Resu Result;
 
+		struct Answer {
+			Answer() : valid(false), answer() {}
+			bool valid;
+			Result answer;
+		};
+
 		class ATree {
 		public:
 			virtual ~ATree() {}
@@ -465,6 +510,12 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 	template < typename Resu, typename Fi>
 	struct Tree2 {
 		typedef Resu Result;
+
+		struct Answer {
+			Answer() : valid(false), answer() {}
+			bool valid;
+			Result answer;
+		};
 
 		class ATree {
 		public:

@@ -1,7 +1,7 @@
 /* 
  * File:   Gain.hpp
- * Author: fancel
- *
+ * Author: Francois Ancel (francoisancel [at] gmail.com)
+ * Copyright : BSD license
  * Created on September 16, 2011, 1:37 PM
  */
 
