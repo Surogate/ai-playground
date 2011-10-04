@@ -3,8 +3,20 @@
 #define TYPEDTREE_HPP
 
 #include <memory>
+#include <iostream>
 
-namespace TypedTree { // namespace des structure qui compose les arbre de decision 
+namespace TypedTree { // namespace des structure qui compose les arbre de decision
+
+	template <typename T>
+	struct Debugger {
+	public:
+		Debugger() {
+			std::cout << "debug standard" << std::endl;
+		}
+		Debugger(const T value) {
+			std::cout << " value " << static_cast<int>(value) << std::endl;
+		}
+	};
 
 	template < typename Resu, typename Fi, typename Se, typename Th, typename Fo, typename Fifth, typename Sixth >
 	struct Tree7 { //namespace template des structure pour l'arbre a 6 attribue
@@ -223,6 +235,7 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 		public:
 			virtual ~ATree() {}
 			virtual Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const = 0;
+			virtual Resu evaluateDebug(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const = 0;
 		};
 
 		class Leaf : public ATree {
@@ -235,6 +248,12 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 			Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
 				return value_;
 			}
+
+			Resu evaluateDebug(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
+				std::cout << "wait what ?" << std::endl;
+				Debugger<Resu> debug(value_);
+				return value_;
+			}
 		};
 
 		template< typename Specialized >
@@ -245,6 +264,12 @@ namespace TypedTree { // namespace des structure qui compose les arbre de decisi
 			typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 			Resu evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
+				Debugger<Specialized> debug;
+				return test(val1, val2, val3, val4);
+			}
+
+			Resu evaluateDebug(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
+				Debugger<Specialized> debug;
 				return test(val1, val2, val3, val4);
 			}
 

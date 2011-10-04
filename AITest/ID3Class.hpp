@@ -42,6 +42,11 @@ public:
 		return tree_->evaluate(val1, val2, val3, val4);
 	}
 
+	Result decideDebug(const First& val1, const Second& val2, const Third& val3, const Fourth& val4) {
+		std::cout << "decide Debug" << std::endl;
+		return tree_->evaluateDebug(val1, val2, val3, val4);
+	}
+
 private:
 	std::deque<First> first_;
 	std::deque<Second> second_;

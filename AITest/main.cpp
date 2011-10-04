@@ -35,6 +35,39 @@ enum PlayBall {
 	Yes
 };
 
+template <>
+struct TypedTree::Debugger<Wind> {
+	Debugger() { std::cout << "Wind" << std::endl; }
+	Debugger(const Wind& value) { std::cout << "Wind value " << static_cast<int>(value) << std::endl;}
+};
+
+template <>
+struct TypedTree::Debugger<Humidity> {
+	Debugger() { std::cout << "Humidity" << std::endl; }
+	Debugger(const Humidity& value) { std::cout << "Humidity value " << static_cast<int>(value) << std::endl;}
+};
+
+template <>
+struct TypedTree::Debugger<Temperature> {
+	Debugger() { std::cout << "Temperature" << std::endl; }
+	Debugger(const Temperature& value) { std::cout << "Temperature value " << static_cast<int>(value) << std::endl;}
+};
+
+template <>
+struct TypedTree::Debugger<Outlook> {
+	Debugger() { std::cout << "Outlook" << std::endl; }
+	Debugger(const Outlook& value) { std::cout << "Outlook value " << static_cast<int>(value) << std::endl;}
+};
+
+
+template <>
+struct TypedTree::Debugger<PlayBall> {
+	Debugger() { std::cout << "PlayBall" << std::endl; }
+	Debugger(const PlayBall& value) { std::cout << "PlayBall value " << static_cast<int>(value) << std::endl;}
+};
+
+
+
 void initID3(ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall>& id3) {
 	id3.addData(Sunny	, Hot	, High	, Weak	, No	);
 	id3.addData(Sunny	, Hot	, High	, Strong, No	);
@@ -59,7 +92,7 @@ int main(void) {
 
 	id3.generateTree();
 
-	PlayBall value = id3.decide(Sunny, Hot, Normal, Weak);
+	PlayBall value = id3.decideDebug(Sunny, Hot, Normal, Weak);
 	if (value == Yes)
 		std::cout << "yes" << std::endl;
 	else
