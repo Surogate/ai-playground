@@ -18,3 +18,4 @@ protected:
 #define SINGLETON_CLASS(name) friend class Singleton< name >
 
 #endif /* SINGLETON_HPP */
+
