@@ -3,6 +3,7 @@
 #define ENTITY_HPP
 
 class Entity {
+	unsigned int foodCount_;
 
 };
 
