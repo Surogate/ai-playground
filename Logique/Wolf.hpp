@@ -4,9 +4,13 @@
 
 #include "Entity.hpp"
 
-class Wolf : public Entity {
+namespace Logique {
 
-};
+	class Wolf : public Entity {
+
+	};
+
+}
 
 #endif /* !WOLF_HPP */
 

@@ -4,9 +4,13 @@
 
 #include "Entity.hpp"
 
-class Sheep : public Entity {
+namespace Logique {
 
-};
+	class Sheep : public Entity {
+
+	};
+
+}
 
 #endif /* !SHEEP_HPP */
 

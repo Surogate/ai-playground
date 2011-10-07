@@ -209,6 +209,7 @@ Hold Class that construct Tree
 		template< typename Tree, typename SpecializedContainer, typename ResultContainer > 
 		class BuilderNode : public ABuilderNode< Tree > { 
 		private:
+
 			typedef typename SpecializedContainer::value_type					Specialized;
 			typedef typename ResultContainer::value_type						Result;
 			typedef typename Tree::ATree										ATree;

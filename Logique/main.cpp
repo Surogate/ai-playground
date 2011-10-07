@@ -6,7 +6,7 @@
 int main(void) {
 	std::cout << "hello world" << std::endl;
 
-	Environnement env;
+	Logique::Environnement env;
 
 	env.run();
 

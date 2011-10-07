@@ -4,10 +4,14 @@
 
 #include <functional>
 
-struct Action {
-	unsigned int tickBeforeAction_;
-	std::function< void () > action_;
-};
+namespace Logique {
+
+	struct Action {
+		unsigned int tickBeforeAction_;
+		std::function< void () > action_;
+	};
+
+}
 
 #endif /* !ACTION_HPP */
 
