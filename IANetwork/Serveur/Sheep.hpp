@@ -11,7 +11,7 @@ public:
 	~Sheep(void);
 
 	void move(World & world);
-	Server::BufferedPackage serialize(); 
+	Networking::Server::BufferedPackage serialize(); 
 };
 
 #endif

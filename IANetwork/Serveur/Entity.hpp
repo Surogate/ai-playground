@@ -23,7 +23,7 @@ public:
 	virtual ~Entity(void);
 
 	virtual void move(World & world) = 0;
-	virtual Server::BufferedPackage serialize() = 0; 
+	virtual Networking::Server::BufferedPackage serialize() = 0; 
 };
 
 #endif

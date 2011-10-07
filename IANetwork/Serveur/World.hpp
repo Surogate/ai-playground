@@ -26,7 +26,7 @@ public:
 	int32_t get_width();
 	int32_t get_height();
 	Entities & get_entities();
-	Server::BufferedPackage serialize();
+	Networking::Server::BufferedPackage serialize();
 };
 
 #endif

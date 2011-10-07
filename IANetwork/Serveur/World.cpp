@@ -47,14 +47,14 @@ World::Entities & World::get_entities()
 	return (entities_);
 }
 
-Server::BufferedPackage World::serialize()
+Networking::Server::BufferedPackage World::serialize()
 {
 	std::stringstream ss;
 	std::string	s;
 
 	ss << "world:"<< width_ << ":" << height_;
 	ss >> s;
-	Server::BufferedPackage pack = Server::BufferedPackage(new Package());
+	Networking::Server::BufferedPackage pack = Networking::Server::BufferedPackage(new Package());
 	pack->init_from_string(s);
 	return (pack);
 }
