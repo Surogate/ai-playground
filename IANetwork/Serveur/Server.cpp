@@ -47,8 +47,9 @@ namespace Networking
 	void Server::disconnected(socket_ptr & socket)
 	{
 		boost::lock_guard<boost::mutex> lock(sockets_mutex_);
-
-		//if (socket.get() != NULL)
+		
+		mark_container::iterator it = std::find(marks_.begin(), marks_.end(), socket->native_handle());
+		if (it == marks_.end())
 			marks_.push_back(socket->native_handle());
 	}
 
@@ -137,8 +138,13 @@ namespace Networking
 
 		for (;it != ite; ++it)
 		{
-			std::clog << "[LOG] disconnection from : " << sockets_[(*it)]->remote_endpoint().address().to_string() << std::endl;
-			sockets_.erase((*it));
+			// Check if the key exist in the sockets
+			socket_container::iterator its = sockets_.find(*it);
+			if (its != sockets_.end())
+			{	
+				std::clog << "[LOG] disconnection from : " << its->second->remote_endpoint().address().to_string() << std::endl;
+				sockets_.erase((*it));
+			}
 		}
 		marks_.clear();
 	}
