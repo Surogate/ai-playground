@@ -20,14 +20,14 @@ void Wolf::move(World & world)
 	y_ = std::rand() % world.get_height();
 }
 
-Server::BufferedPackage Wolf::serialize()
+Networking::Server::BufferedPackage Wolf::serialize()
 {
 	std::stringstream ss;
 	std::string	s;
 
 	ss << "w:" << id_ << ":" << x_ << ":" << y_ << "eof";
 	ss >> s;
-	Server::BufferedPackage pack = Server::BufferedPackage(new Package());
+	Networking::Server::BufferedPackage pack = Networking::Server::BufferedPackage(new Package());
 	pack->init_from_string(s);
 	return (pack);
 }
