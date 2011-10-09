@@ -13,48 +13,75 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Logique">
+      <UniqueIdentifier>{024f4943-fb44-4730-850b-a134a4e4f468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Networking">
+      <UniqueIdentifier>{6d4111b6-e379-4d74-b2a1-aa191d2752b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Logique">
+      <UniqueIdentifier>{7a346b83-7e29-4a62-932c-4a9542c00fe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Networking">
+      <UniqueIdentifier>{0ebc9aaf-d96d-4db5-a35b-eb6bf748a349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Wrapper">
+      <UniqueIdentifier>{fe4e53e6-5da1-4ffd-a827-db697f6c1ab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Wrapper">
+      <UniqueIdentifier>{ace084d7-5d61-4aa9-bb0f-589b6cd9bef7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Package.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sheep.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Wolf.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Networking</Filter>
     </ClCompile>
     <ClCompile Include="Server.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Logique\Environnement.cpp">
+      <Filter>Source Files\Logique</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkEnvironnement.cpp">
+      <Filter>Source Files\Wrapper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Logique\Action.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Board.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Entity.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Environnement.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Sheep.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Singleton.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Square.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Wolf.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
     <ClInclude Include="Package.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sheep.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Wolf.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Networking</Filter>
     </ClInclude>
     <ClInclude Include="Server.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkEnvironnement.hpp">
+      <Filter>Header Files\Wrapper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

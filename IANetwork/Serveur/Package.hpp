@@ -4,23 +4,26 @@
 #include <boost/array.hpp>
 #include <stdint.h>
 
-class Package
+namespace Networking
 {
-public:
-	typedef boost::array<char, 64> Buffer;
-private:
-	Buffer	buffer_;
+	class Package
+	{
+	public:
+		typedef boost::array<char, 64> Buffer;
+	private:
+		Buffer	buffer_;
 
-public:
-	Package(void);
-	Package(Package const & orig);
-	~Package(void);
+	public:
+		Package(void);
+		Package(Package const & orig);
+		~Package(void);
 
-	Package & operator=(Package const & orig);
+		Package & operator=(Package const & orig);
 
-	Buffer & get_buffer();
-	uint32_t size();
-	void init_from_string(std::string & data);
-};
+		Buffer & get_buffer();
+		uint32_t size();
+		void init_from_string(std::string & data);
+	};
+}
 
 #endif
