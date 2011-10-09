@@ -52,12 +52,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Logique;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\calimeraw\Documents\dev\boost_1_47_0\boost_1_47_0\bin.v2\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\boost\boost_1_47\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -83,21 +83,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Logique\Environnement.cpp" />
+    <ClCompile Include="NetworkEnvironnement.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Package.cpp" />
-    <ClCompile Include="Sheep.cpp" />
-    <ClCompile Include="Wolf.cpp" />
-    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Logique\Action.hpp" />
+    <ClInclude Include="..\..\Logique\Board.hpp" />
+    <ClInclude Include="..\..\Logique\Entity.hpp" />
+    <ClInclude Include="..\..\Logique\Environnement.hpp" />
+    <ClInclude Include="..\..\Logique\Sheep.hpp" />
+    <ClInclude Include="..\..\Logique\Singleton.hpp" />
+    <ClInclude Include="..\..\Logique\Square.hpp" />
+    <ClInclude Include="..\..\Logique\Wolf.hpp" />
+    <ClInclude Include="NetworkEnvironnement.hpp" />
     <ClInclude Include="Server.hpp" />
-    <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Package.hpp" />
-    <ClInclude Include="Sheep.hpp" />
-    <ClInclude Include="Wolf.hpp" />
-    <ClInclude Include="World.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
