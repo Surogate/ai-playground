@@ -10,7 +10,11 @@ namespace Logique {
 			BLOCK,
 			GRASS,
 			SHEEP,
-			WOLF
+			WOLF,
+			GRASS_SHEEP,
+			GRASS_WOLF,
+			GRASS_SHEEP_WOLF,
+			SHEEP_WOLF
 		};
 
 		Title title_;
