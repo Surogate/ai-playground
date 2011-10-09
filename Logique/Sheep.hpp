@@ -7,7 +7,8 @@
 namespace Logique {
 
 	class Sheep : public Entity {
-
+	public:
+		Action getNewAction() {}
 	};
 
 }

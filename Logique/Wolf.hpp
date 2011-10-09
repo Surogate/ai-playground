@@ -7,7 +7,8 @@
 namespace Logique {
 
 	class Wolf : public Entity {
-
+	public:
+		Action getNewAction() {}
 	};
 
 }

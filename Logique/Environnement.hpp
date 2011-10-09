@@ -5,8 +5,10 @@
 #include <list>
 #include <memory>
 #include <array>
+#include <stack>
 
 #include <boost/function.hpp>
+#include <boost/thread.hpp>
 #include <boost/date_time.hpp>
 
 #include "Square.hpp"
@@ -23,6 +25,9 @@ namespace Logique {
 		typedef std::array<Square, SIZE> ArrayBoard;
 		typedef std::array<ArrayBoard, SIZE> ArrayArrayBoard;
 		typedef Board< ArrayArrayBoard > Board;
+		typedef std::list< Action > ActionList;
+		typedef std::list< Entity::Ptr > EntityPtrList;
+		typedef std::stack< Action > ActionTmpStack;
 
 		Environnement();
 
@@ -40,15 +45,16 @@ namespace Logique {
 		void setOnBoardChange(const boost::function< void (const Board&) >& onBoardChange);
 
 	private:
-		void waitUntil();
-		void waitFunction();
+		void unsafeInsertAction(const Action& value);
+		void insertActionStack();
+		void preRun();
 
 		Board board_;
-		boost::thread* threadWaiter_;
-
 		boost::posix_time::time_duration baseTime_;
-		std::list< std::shared_ptr<Entity> > entityList_;
-		std::list< Action > actionList_;
+		EntityPtrList entityList_;
+		boost::mutex listMtx_;
+		ActionList actionList_;
+		ActionTmpStack actionTmpStack_;
 	};
 
 }
