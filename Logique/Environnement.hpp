@@ -20,11 +20,6 @@ namespace Logique {
 
 	class Environnement {
 	public:
-		enum { SIZE = 20 };
-
-		typedef std::array<Square, SIZE> ArrayBoard;
-		typedef std::array<ArrayBoard, SIZE> ArrayArrayBoard;
-		typedef Board< ArrayArrayBoard > Board;
 		typedef std::list< Action > ActionList;
 		typedef std::list< Entity::Ptr > EntityPtrList;
 		typedef std::stack< Action > ActionTmpStack;
