@@ -9,15 +9,14 @@
 namespace Logique {
 
 	Environnement::Environnement() 
-		: board_(), entityList_(), actionList_()
+		: board_(), baseTime_(), entityList_(), listMtx_(), actionList_(), actionTmpStack_(), randomD_(), gen_(randomD_), distri_(0, SIZE - 1)
 	{
 		baseTime_ = boost::posix_time::seconds(1);
+		addAction(createSpawnGrass());
 	}
 
 	void Environnement::preRun() {
-		listMtx_.lock(); // ##list lock
 		insertActionStack();
-		listMtx_.unlock(); // ## list unlock
 
 		if (actionList_.empty()) {
 			std::cout << "no action" << std::endl;
@@ -29,6 +28,7 @@ namespace Logique {
 
 		unsigned int tickwait;
 		boost::posix_time::time_duration sleep_time;
+		boost::posix_time::time_duration zero;
 		ActionList::iterator executor;
 		ActionList::iterator toDeleteEnd;
 		ActionList::iterator end;
@@ -39,9 +39,11 @@ namespace Logique {
 			timer_start = boost::chrono::system_clock::now();			
 			tickwait = actionList_.begin()->tickBeforeAction_ - static_cast<unsigned int>(sec.count());
 			sleep_time =  baseTime_ * tickwait;
-			boost::this_thread::sleep(sleep_time);
+			if (sleep_time != zero) {
+				std::cout << "sleep_time " << sleep_time << std::endl;
+				boost::this_thread::sleep(sleep_time);
+			}
 
-			listMtx_.lock(); // ##list lock
 			executor = actionList_.begin();
 			end = actionList_.end();
 
@@ -59,9 +61,10 @@ namespace Logique {
 				++executor;
 			}
 
+			actionList_.erase(actionList_.begin(), toDeleteEnd);
+
 			//on insere les nouvelle actions
-			insertActionStack();	
-			listMtx_.unlock(); // ##list unlock
+			insertActionStack();
 
 			//on calcule le temps qu'on a mis pour accomplir les operation, pour le soustraire plus tard
 			timer_end = boost::chrono::system_clock::now();
@@ -76,7 +79,9 @@ namespace Logique {
 	}
 
 	void Environnement::addAction(const Action& value) {
+		listMtx_.lock(); // ##list lock
 		actionTmpStack_.push(value);
+		listMtx_.unlock(); // ## list unlock
 	}
 
 	void Environnement::unsafeInsertAction(const Action& value) {
@@ -90,10 +95,36 @@ namespace Logique {
 	}
 
 	void Environnement::insertActionStack() {
+		listMtx_.lock(); // ##list lock
 		while (actionTmpStack_.size()) {
 			unsafeInsertAction(actionTmpStack_.top());
 			actionTmpStack_.pop();
 		}
+		listMtx_.unlock(); // ## list unlock
+	}
+
+	Action Environnement::createSpawnGrass() {
+		Action act;
+
+		act.action_ = std::bind(&Environnement::createGrass, this);
+		act.tickBeforeAction_ = 1;
+		return act;
+	}
+
+	void Environnement::createGrass() {
+		unsigned int x = distri_(gen_);
+		unsigned int y = distri_(gen_);
+
+		std::cout << "try spawn grass on " << x << " " << y << std::endl;
+		if (!board_[x][y].hasGrass()) {
+			std::cout << "spawn grass on " << x << " " << y << std::endl;
+			board_.lock();
+			board_[x][y].setGrass();
+			board_.unlock();
+			if (onBoardChange_) onBoardChange_(board_);
+		}
+
+		addAction(createSpawnGrass());
 	}
 
 	void Environnement::setSpawnSheep(const boost::function< void (const Entity&) >& onSpawnSheep) {
@@ -115,6 +146,7 @@ namespace Logique {
 	}
 
 	void Environnement::setOnBoardChange(const boost::function< void (const Board&) >& onBoardChange) {
+		onBoardChange_ = onBoardChange;
 	}
 
 }

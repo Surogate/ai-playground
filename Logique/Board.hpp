@@ -6,6 +6,7 @@
 #include <array>
 
 #include "Square.hpp"
+#include "Coord.hpp"
 
 namespace Logique {
 	enum BoardSize { SIZE = 20 };
@@ -14,6 +15,9 @@ namespace Logique {
 	public:
 		void lock() { mtx_.lock(); }
 		void unlock() { mtx_.unlock(); }
+
+		const Square& get(const Coord& pos) const { return at(pos.x)[pos.y]; }
+		Square& get(const Coord& pos) { return at(pos.x)[pos.y]; }
 
 	private:
 		boost::mutex mtx_;

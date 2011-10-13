@@ -6,6 +6,8 @@
 #include <memory>
 #include <array>
 #include <stack>
+#include <random>
+
 
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
@@ -43,6 +45,8 @@ namespace Logique {
 		void unsafeInsertAction(const Action& value);
 		void insertActionStack();
 		void preRun();
+		Action createSpawnGrass();
+		void createGrass();
 
 		Board board_;
 		boost::posix_time::time_duration baseTime_;
@@ -50,6 +54,13 @@ namespace Logique {
 		boost::mutex listMtx_;
 		ActionList actionList_;
 		ActionTmpStack actionTmpStack_;
+
+		std::random_device randomD_;
+		std::mt19937 gen_;
+		std::uniform_int_distribution<unsigned int> distri_;
+
+		//functor
+		boost::function< void (const Board&) > onBoardChange_;
 	};
 
 }
