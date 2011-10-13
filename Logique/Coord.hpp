@@ -2,12 +2,17 @@
 #ifndef COORD_HPP
 #define COORD_HPP
 
+#include <iostream>
+
 struct Coord {
 	unsigned int x;
 	unsigned int y;
 
-	Coord() : x(), y() {}
-	Coord(unsigned int _x_, unsigned int _y_) : x(_x_), y(_y_) {} 
+	Coord();
+	Coord(unsigned int _x_, unsigned int _y_);
 };
 
-#endif
+std::ostream& operator<<(std::ostream& cout, const Coord& value);
+
+#endif /* !COORD_HPP */
+
