@@ -45,8 +45,8 @@ namespace Logique {
 		void unsafeInsertAction(const Action& value);
 		void insertActionStack();
 		void preRun();
-		Action createSpawnGrass();
-		void createGrass();
+		Action createBoardPlay();
+		void boardPlay();
 
 		Board board_;
 		boost::posix_time::time_duration baseTime_;

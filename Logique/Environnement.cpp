@@ -12,7 +12,7 @@ namespace Logique {
 		: board_(), baseTime_(), entityList_(), listMtx_(), actionList_(), actionTmpStack_(), randomD_(), gen_(randomD_), distri_(0, SIZE - 1)
 	{
 		baseTime_ = boost::posix_time::seconds(1);
-		addAction(createSpawnGrass());
+		addAction(createBoardPlay());
 	}
 
 	void Environnement::preRun() {
@@ -103,28 +103,44 @@ namespace Logique {
 		listMtx_.unlock(); // ## list unlock
 	}
 
-	Action Environnement::createSpawnGrass() {
+	Action Environnement::createBoardPlay() {
 		Action act;
 
-		act.action_ = std::bind(&Environnement::createGrass, this);
+		act.action_ = std::bind(&Environnement::boardPlay, this);
 		act.tickBeforeAction_ = 1;
 		return act;
 	}
 
-	void Environnement::createGrass() {
-		unsigned int x = distri_(gen_);
-		unsigned int y = distri_(gen_);
+	void Environnement::boardPlay() {
+		Coord grassSpawn;
+		unsigned int odour_higher = 0;
 
-		std::cout << "try spawn grass on " << x << " " << y << std::endl;
-		if (!board_[x][y].hasGrass()) {
-			std::cout << "spawn grass on " << x << " " << y << std::endl;
+		for (unsigned int x = 0; x < SIZE; ++x) {
+			for (unsigned int y = 0; y < SIZE; ++y) {
+				if (board_[x][y].odour_ > odour_higher) {
+					odour_higher = board_[x][y].odour_;
+					grassSpawn.x = x;
+					grassSpawn.y = y;
+				}
+				if (board_[x][y].odour_)
+					board_[x][y].odour_--;
+			}
+		}
+
+		if (!odour_higher) {
+			grassSpawn = Coord(distri_(gen_), distri_(gen_));
+		}
+
+		std::cout << "try spawn grass on " << grassSpawn << std::endl;
+		if (!board_(grassSpawn).hasGrass()) {
+			std::cout << "spawn grass on " << grassSpawn << std::endl;
 			board_.lock();
-			board_[x][y].setGrass();
+			board_(grassSpawn).setGrass();
 			board_.unlock();
 			if (onBoardChange_) onBoardChange_(board_);
 		}
 
-		addAction(createSpawnGrass());
+		addAction(createBoardPlay());
 	}
 
 	void Environnement::setSpawnSheep(const boost::function< void (const Entity&) >& onSpawnSheep) {

@@ -19,6 +19,9 @@ namespace Logique {
 		const Square& get(const Coord& pos) const { return at(pos.x)[pos.y]; }
 		Square& get(const Coord& pos) { return at(pos.x)[pos.y]; }
 
+		const Square& operator()(const Coord& pos) const { return at(pos.x)[pos.y]; }
+		Square& operator()(const Coord& pos) { return at(pos.x)[pos.y]; }
+
 	private:
 		boost::mutex mtx_;
 	};
