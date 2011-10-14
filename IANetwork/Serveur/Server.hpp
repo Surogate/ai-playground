@@ -41,6 +41,7 @@ namespace Networking
 
 		void run();
 		void add_sending_package(Package_ptr & package);
+		void add_sending_packages(Package_queue & packages);
 
 	private:
 		void start();

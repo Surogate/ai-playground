@@ -9,12 +9,24 @@ namespace Wrapper
 	class NetworkEnvironnement
 	{
 	public:
+		enum COMMAND {
+			SPAWN,
+			MOVE,
+			EAT,
+			DIE,
+			STARVING,
+			CLONE,
+			BOARD_BEG,
+			BOARD,
+			BOARD_END
+		};
+
 		NetworkEnvironnement(Networking::Server * server);
 		~NetworkEnvironnement(void);
+
 	private:
 		Logique::Environnement	env_;
 		Networking::Server *	server_;
-
 
 		void onSpawnSheep(Logique::Entity const &);
 		void onSpawnWolf(Logique::Entity const &);
