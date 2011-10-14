@@ -9,7 +9,7 @@ namespace Networking
 	class Package
 	{
 	public:
-		typedef boost::array<char, 64> Buffer;
+		typedef boost::array<char, 512> Buffer;
 	private:
 		Buffer	buffer_;
 
@@ -22,7 +22,7 @@ namespace Networking
 
 		Buffer & get_buffer();
 		uint32_t size();
-		void init_from_string(std::string & data);
+		void init(std::string&);
 	};
 }
 

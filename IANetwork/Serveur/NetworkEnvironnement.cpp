@@ -1,4 +1,9 @@
 #include "NetworkEnvironnement.hpp"
+#include <iostream>
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+#include <stdint.h>
+#include <sstream>
 
 namespace Wrapper
 {
@@ -11,6 +16,7 @@ namespace Wrapper
 		env_.setOnEntityEat(boost::bind(&NetworkEnvironnement::onEntityEat, this, _1));
 		env_.setOnEntityDead(boost::bind(&NetworkEnvironnement::onEntityDead, this, _1));
 		env_.setOnBoardChange(boost::bind(&NetworkEnvironnement::onBoardChange, this, _1));
+		boost::thread env_thr(boost::bind(&Logique::Environnement::run, &env_));
 	}
 
 	NetworkEnvironnement::~NetworkEnvironnement(void)
@@ -43,6 +49,31 @@ namespace Wrapper
 	
 	void NetworkEnvironnement::onBoardChange(Logique::Board const & board)
 	{
+		const_cast<Logique::Board&>(board).lock();
+		Networking::Server::Package_queue packages;
 
+		Networking::Package * begin = new Networking::Package();
+		std::stringstream sstreamb;
+		sstreamb << BOARD_BEG << ";" << board.size();
+		begin->init(sstreamb.str());
+		packages.push_back(Networking::Server::Package_ptr(begin));
+		for (uint32_t x = 0; x < board.size(); x++)
+		{
+			for (uint32_t y = 0; y < board.size(); y++)
+			{
+				std::stringstream sstreamp;
+				Networking::Package * pack = new Networking::Package();
+				sstreamp << BOARD << ";" << x << ";" << y << ";" << board.get(Coord(x, y)).title_ << ";" << board.get(Coord(x, y)).odour_;
+				pack->init(sstreamp.str());
+				packages.push_back(Networking::Server::Package_ptr(pack));
+			}
+		}
+		Networking::Package * end = new Networking::Package();
+		std::stringstream sstreame;
+		sstreame << BOARD_END;;
+		end->init(sstreame.str());
+		packages.push_back(Networking::Server::Package_ptr(end));
+		server_->add_sending_packages(packages);
+		const_cast<Logique::Board&>(board).unlock();
 	}
 }

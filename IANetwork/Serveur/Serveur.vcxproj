@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Logique\Coord.cpp" />
     <ClCompile Include="..\..\Logique\Environnement.cpp" />
     <ClCompile Include="NetworkEnvironnement.cpp" />
     <ClCompile Include="Server.cpp" />
@@ -92,6 +93,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Logique\Action.hpp" />
     <ClInclude Include="..\..\Logique\Board.hpp" />
+    <ClInclude Include="..\..\Logique\Coord.hpp" />
     <ClInclude Include="..\..\Logique\Entity.hpp" />
     <ClInclude Include="..\..\Logique\Environnement.hpp" />
     <ClInclude Include="..\..\Logique\Sheep.hpp" />
