@@ -27,10 +27,20 @@ namespace ClientXNA
         }
 
 
+        #region Utils
+        private delegate void Command(GameClient gcl, string message);
+        #endregion
+
         #region Attributes
         private TcpClient client_;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        private Texture2D   grass_;
+        private List<string> incoming_packages_;
+        private Command[] commands_ = {new Command(spawn), new Command(move), new Command(eat)
+                                    , new Command(die) , new Command(starving) , new Command(clone)
+                                    , new Command(board_beg) , new Command(board) , new Command(board_end)};
+        private Board board_ = null;
         #endregion
 
         public GameClient()
@@ -38,6 +48,7 @@ namespace ClientXNA
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             client_ = new TcpClient("127.0.0.1", 16000);
+            incoming_packages_ = new List<string>();
         }
 
         #region OverrideMethods
@@ -50,6 +61,7 @@ namespace ClientXNA
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            StartRecv();
             base.Initialize();
         }
 
@@ -61,7 +73,7 @@ namespace ClientXNA
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+            grass_ = this.Content.Load<Texture2D>("grass");
             // TODO: use this.Content to load your game content here
         }
 
@@ -87,7 +99,28 @@ namespace ClientXNA
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
             // TODO: Add your update logic here
-
+            lock (incoming_packages_)
+            {
+                while (incoming_packages_.Count > 0)
+                {
+                    string package = incoming_packages_.First();
+                    string[] tokens = package.Split(new char[]{';'});
+                    try
+                    {
+                        int cmd = int.Parse(tokens[0]);
+                        StringBuilder sb = new StringBuilder();
+                        if (tokens.Count() > 1)
+                            commands_[cmd](this, package.Substring(tokens[0].Length + 1));
+                        else
+                            commands_[cmd](this, package);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.Message);
+                    }
+                    incoming_packages_.RemoveAt(0);
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -100,7 +133,12 @@ namespace ClientXNA
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            if (board_ != null)
+            for(int x = 0; x < board_.Data.Count(); x++)
+                for (int y = 0; y < board_.Data.Count(); y++)
+                    spriteBatch.Draw(grass_, new Rectangle(x*32, y*32, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
         #endregion
@@ -130,9 +168,13 @@ namespace ClientXNA
                 int receiveSize = client_.Client.EndReceive(iar);
                 if (receiveSize > 0)
                 {
-                    nd.sb.Append(Encoding.ASCII.GetString(nd.buffer, 0, receiveSize));
-                    Debug.WriteLine(nd.sb.ToString());
-                    nd.sb.Clear();
+                    lock (incoming_packages_)
+                    {
+                        nd.sb.Append(Encoding.ASCII.GetString(nd.buffer, 0, receiveSize));
+                        incoming_packages_.Add(nd.sb.ToString());
+                        nd.sb.Clear();
+                    }
+                    client_.Client.BeginReceive(nd.buffer, 0, NetworkData.BUFFER_SIZE, 0, new AsyncCallback(ReceiveCallBack), nd);
                 }
                 else
                 {
@@ -144,6 +186,69 @@ namespace ClientXNA
                 Debug.WriteLine(e.Message);
             }
         }
+
+        private static void spawn(GameClient gcl, string msg)
+        {
+
+        }
+
+        private static void move(GameClient gcl, string msg)
+        {
+
+        }
+
+        private static void eat(GameClient gcl, string msg)
+        {
+
+        }
+
+        private static void die(GameClient gcl, string msg)
+        {
+
+        }
+
+        private static void starving(GameClient gcl, string msg)
+        {
+
+        }
+
+        private static void clone(GameClient gcl, string msg)
+        {
+
+        }
+
+        private static void board_beg(GameClient gcl, string msg)
+        {
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
+            if (gcl.board_ == null)
+            {
+                try
+                {
+                    int size = int.Parse(tokens[0]);
+                    gcl.board_ = new Board(size);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
+        }
+
+        private static void board(GameClient gcl, string msg)
+        {
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
+
+        }
+
+        private static void board_end(GameClient gcl, string msg)
+        {
+            return;
+        }
+
         #endregion
     }
 }
