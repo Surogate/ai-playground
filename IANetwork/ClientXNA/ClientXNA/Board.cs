@@ -16,8 +16,12 @@ namespace ClientXNA
         {
             size_ = size;
             data_ = new Square[size][];
-            for (int i = 0; i < size; i++)
-                data_[i] = new Square[size];
+            for (int x = 0; x < size; x++)
+            {
+                data_[x] = new Square[size];
+                for (int y = 0; y < size; y++)
+                    data_[x][y] = new Square();
+            }
         }
 
         public int Size
