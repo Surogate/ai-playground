@@ -135,9 +135,15 @@ namespace ClientXNA
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             if (board_ != null)
-            for(int x = 0; x < board_.Data.Count(); x++)
-                for (int y = 0; y < board_.Data.Count(); y++)
-                    spriteBatch.Draw(grass_, new Rectangle(x*32, y*32, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            {
+                for (int x = 0; x < board_.Data.Count(); x++)
+                    for (int y = 0; y < board_.Data.Count(); y++)
+                    {
+                        spriteBatch.Draw(grass_, new Rectangle(x * 32, y * 32, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+                        if (board_.Data[x][y].hasGrass())
+                            spriteBatch.Draw(grass_, new Rectangle(x * 32, y * 32, 32, 32), new Rectangle(32, 0, 32, 32), Color.White);
+                    }
+            }
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -241,7 +247,17 @@ namespace ClientXNA
             string[] tokens = msg.Split(new char[] { ';' });
             if (tokens.Count() < 0)
                 return;
-
+            try
+            {
+                int x = int.Parse(tokens[0]);
+                int y = int.Parse(tokens[1]);
+                int title = int.Parse(tokens[2]);
+                gcl.board_.Data[x][y].OnSquare = (Square.Title)title;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         private static void board_end(GameClient gcl, string msg)

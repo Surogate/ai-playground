@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace ClientXNA
 {
@@ -41,6 +42,14 @@ namespace ClientXNA
         {
             get { return odour_;  }
             set { odour_ = value; }
+        }
+
+        public bool hasGrass()
+        {
+            return (((int)OnSquare == (int)Title.GRASS ||
+                     (int)OnSquare == (int)Title.GRASS_SHEEP ||
+                     (int)OnSquare == (int)Title.GRASS_WOLF ||
+                     (int)OnSquare == (int)Title.GRASS_SHEEP_WOLF));
         }
     }
 }
