@@ -2,6 +2,7 @@
 #include <ctime>
 #include <iostream>
 #include <boost/bind.hpp>
+#include "NetworkEnvironnement.hpp"
 
 namespace Networking
 {
@@ -55,6 +56,7 @@ namespace Networking
 	void Server::run()
 	{
 		this->start();
+		Wrapper::NetworkEnvironnement ne(this);
 		while (run_)
 		{
 			boost::lock_guard<boost::mutex> lk_in_package(in_packages_mut_);
@@ -67,19 +69,17 @@ namespace Networking
 			boost::lock_guard<boost::mutex> lk_out_package(out_packages_mut_);
 			while (!sending_packages_.empty())
 			{
-				//socket_container::iterator it = sockets_.begin();
-				//socket_container::iterator ite = sockets_.end();
-				//for (; it != ite; ++it)
-				//{
-				//	if ((it->second)->is_open())
-				//	{
-				//		for (uint32_t y = 0; y < world.get_entities().size(); y++)
-				//		{
-				//			if (!send_message((it->second), /*msg*/))
-				//				break;
-				//		}
-				//	}
-				//}
+				socket_container::iterator it = sockets_.begin();
+				socket_container::iterator ite = sockets_.end();
+				for (; it != ite; ++it)
+				{
+					if ((it->second)->is_open())
+					{
+						if (!send_message((it->second), sending_packages_.back()))
+							break;
+					}
+				}
+				sending_packages_.pop_back();
 			}
 			this->cleaning_sockets();
 		}
@@ -90,6 +90,16 @@ namespace Networking
 	{
 		boost::lock_guard<boost::mutex> lk(out_packages_mut_);
 		sending_packages_.push_back(package);
+	}
+
+	void Server::add_sending_packages(Package_queue & packages)
+	{
+		boost::lock_guard<boost::mutex> lk(out_packages_mut_);
+		while (!packages.empty())
+		{
+			sending_packages_.push_back(packages.back());
+			packages.pop_back();
+		}
 	}
 
 	void Server::set_handle_read(socket_ptr & socket, boost::system::error_code const & error)

@@ -15,7 +15,7 @@ namespace Client2D.ViewModel
     {
         private class StateObject
         {
-            public const int BufferSize = 64;
+            public const int BufferSize = 512;
             public byte[] buffer = new byte[BufferSize];
             public StringBuilder sb = new StringBuilder();
         }

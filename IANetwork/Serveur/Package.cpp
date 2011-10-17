@@ -39,11 +39,17 @@ namespace Networking
 		return (buffer_.size());
 	}
 
-	void Package::init_from_string(std::string & data)
+	void Package::init(std::string & data)
 	{
-		for (uint32_t i = 0; i < data.size(); i++)
+		uint32_t i = 0;
+		for (; i < size() && i < data.size(); i++)
 		{
 			buffer_[i] = data.at(i);
+		}
+		if (i < size())
+		{
+			for (; i < size(); i++)
+				buffer_[i] = 0;
 		}
 	}
 }

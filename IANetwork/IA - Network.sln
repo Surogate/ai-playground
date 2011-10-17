@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serveur", "Serveur\Serveur.vcxproj", "{DFDDFFB5-68EA-4F3D-BA9D-93301E28681C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientXNA", "ClientXNA\ClientXNA\ClientXNA.csproj", "{A8B88B80-6433-4704-A5B8-9EAA19C44D00}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "ClientXNAContent", "ClientXNA\ClientXNAContent\ClientXNAContent.contentproj", "{7899C2DC-FC3E-48D6-B440-50059FB67ED6}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client2D", "Client2D\Client2D.csproj", "{CB728297-0A76-47B3-8E40-34240B6EFCCE}"
 EndProject
 Global
@@ -25,6 +29,22 @@ Global
 		{DFDDFFB5-68EA-4F3D-BA9D-93301E28681C}.Release|Win32.ActiveCfg = Release|Win32
 		{DFDDFFB5-68EA-4F3D-BA9D-93301E28681C}.Release|Win32.Build.0 = Release|Win32
 		{DFDDFFB5-68EA-4F3D-BA9D-93301E28681C}.Release|x86.ActiveCfg = Release|Win32
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Debug|Win32.ActiveCfg = Debug|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Debug|x86.ActiveCfg = Debug|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Debug|x86.Build.0 = Debug|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Release|Win32.ActiveCfg = Release|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Release|x86.ActiveCfg = Release|x86
+		{A8B88B80-6433-4704-A5B8-9EAA19C44D00}.Release|x86.Build.0 = Release|x86
+		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Debug|Win32.ActiveCfg = Debug|x86
+		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Debug|x86.ActiveCfg = Debug|x86
+		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Release|Win32.ActiveCfg = Release|x86
+		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Release|x86.ActiveCfg = Release|x86
 		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Debug|Win32.ActiveCfg = Debug|x86
