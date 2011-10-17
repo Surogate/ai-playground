@@ -7,6 +7,8 @@
 #include <array>
 #include <stack>
 #include <random>
+#include <set>
+#include <map>
 
 
 #include <boost/function.hpp>
@@ -22,9 +24,16 @@ namespace Logique {
 
 	class Environnement {
 	public:
+		enum {
+			ODOURONDEATH = 3
+		};
+
 		typedef std::list< Action > ActionList;
-		typedef std::list< Entity::Ptr > EntityPtrList;
+		typedef std::map< const Entity*, Entity::Ptr > EntityPtrSet;
 		typedef std::stack< Action > ActionTmpStack;
+
+		typedef boost::function< void (const Entity&) > EntityFunctor;
+		typedef boost::function< void (const Board&) > BoardFunctor;
 
 		Environnement();
 
@@ -33,13 +42,13 @@ namespace Logique {
 		void addAction(const Action& value);
 
 		void setBaseTime(const boost::posix_time::time_duration& time);
-		void setSpawnSheep(const boost::function< void (const Entity&) >& onSpawnSheep);
-		void setSpawnWolf(const boost::function< void (const Entity&) >& onSpawnWolf);
-		void setOnEntityMove(const boost::function< void (const Entity&) >& onEntityMove);
-		void setOnReproduce(const boost::function< void (const Entity&) >& onEntityMove);
-		void setOnEntityEat(const boost::function< void (const Entity&) >& onEntityEat);
-		void setOnEntityDead(const boost::function< void (const Entity&) >& onEntityDead);
-		void setOnBoardChange(const boost::function< void (const Board&) >& onBoardChange);
+		void setSpawnSheep(const EntityFunctor& onSpawnSheep);
+		void setSpawnWolf(const EntityFunctor& onSpawnWolf);
+		void setOnEntityMove(const EntityFunctor& onEntityMove);
+		void setOnReproduce(const EntityFunctor& onEntityMove);
+		void setOnEntityEat(const EntityFunctor& onEntityEat);
+		void setOnEntityDead(const EntityFunctor& onEntityDead);
+		void setOnBoardChange(const BoardFunctor& onBoardChange);
 
 	private:
 		void unsafeInsertAction(const Action& value);
@@ -48,10 +57,13 @@ namespace Logique {
 		Action createBoardPlay();
 		void boardPlay();
 		void spawnSheep();
+		void onEntityDeath(const Entity& value);
+		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
+		void setOdour(int x, int y, unsigned int value);
 
 		Board board_;
 		boost::posix_time::time_duration baseTime_;
-		EntityPtrList entityList_;
+		EntityPtrSet entityList_;
 		boost::mutex listMtx_;
 		ActionList actionList_;
 		ActionTmpStack actionTmpStack_;
@@ -61,7 +73,8 @@ namespace Logique {
 		std::uniform_int_distribution<unsigned int> distri_;
 
 		//functor
-		boost::function< void (const Board&) > onBoardChange_;
+		BoardFunctor onBoardChange_;
+		EntityFunctor onEntityDeath_;
 	};
 
 }
