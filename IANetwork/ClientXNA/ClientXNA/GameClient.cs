@@ -46,6 +46,8 @@ namespace ClientXNA
         public GameClient()
         {
             graphics = new GraphicsDeviceManager(this);
+            this.graphics.PreferredBackBufferHeight = 480;
+            this.graphics.PreferredBackBufferWidth = 600;
             Content.RootDirectory = "Content";
             client_ = new TcpClient("127.0.0.1", 16000);
             incoming_packages_ = new List<string>();
