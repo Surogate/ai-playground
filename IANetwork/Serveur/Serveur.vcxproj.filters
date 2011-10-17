@@ -48,6 +48,9 @@
     <ClCompile Include="NetworkEnvironnement.cpp">
       <Filter>Source Files\Wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Logique\Coord.cpp">
+      <Filter>Source Files\Logique</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Logique\Action.hpp">
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="NetworkEnvironnement.hpp">
       <Filter>Header Files\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Coord.hpp">
+      <Filter>Header Files\Logique</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
