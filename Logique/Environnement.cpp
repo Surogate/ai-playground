@@ -117,7 +117,7 @@ namespace Logique {
 
 		for (unsigned int x = 0; x < SIZE; ++x) {
 			for (unsigned int y = 0; y < SIZE; ++y) {
-				if (board_[x][y].odour_ > odour_higher) {
+				if (board_[x][y].odour_ > odour_higher && !board_[x][y].hasGrass()) {
 					odour_higher = board_[x][y].odour_;
 					grassSpawn.x = x;
 					grassSpawn.y = y;
@@ -135,12 +135,27 @@ namespace Logique {
 		if (!board_(grassSpawn).hasGrass()) {
 			std::cout << "spawn grass on " << grassSpawn << std::endl;
 			board_.lock();
-			board_(grassSpawn).setGrass();
+			board_(grassSpawn).hasGrass(true);
+			int value = board_(grassSpawn).getInt();
+			std::cout << "case value " << value << std::endl;
 			board_.unlock();
 			if (onBoardChange_) onBoardChange_(board_);
 		}
 
 		addAction(createBoardPlay());
+	}
+
+	void Environnement::spawnSheep() {
+		Coord loc;
+		unsigned int limit = 0;
+
+		do {
+			loc = Coord(distri_(gen_), distri_(gen_));
+		} while (board_(loc).hasSheep() && limit < 10);
+
+		if (limit < 10) {
+			
+		}
 	}
 
 	void Environnement::setSpawnSheep(const boost::function< void (const Entity&) >& onSpawnSheep) {

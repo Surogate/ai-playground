@@ -47,6 +47,7 @@ namespace Logique {
 		void preRun();
 		Action createBoardPlay();
 		void boardPlay();
+		void spawnSheep();
 
 		Board board_;
 		boost::posix_time::time_duration baseTime_;
