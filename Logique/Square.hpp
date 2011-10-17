@@ -5,6 +5,7 @@
 namespace Logique {
 
 	struct Square {
+		enum { ODOUR_MAX = 10 };
 
 		Square() : odour_(0), useable_(true), hasGrass_(false), hasSheep_(false), hasWolf_(false)
 		{}
@@ -60,6 +61,13 @@ namespace Logique {
 				value |= WOLF;
 
 			return value;
+		}
+
+		inline void addOdour(unsigned int odour) {
+			odour_ += odour;
+			if (odour_ > ODOUR_MAX) {
+				odour_ = ODOUR_MAX;
+			}
 		}
 
 		unsigned int odour_;
