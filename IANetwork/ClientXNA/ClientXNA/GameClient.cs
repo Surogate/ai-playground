@@ -36,6 +36,7 @@ namespace ClientXNA
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private Texture2D   grass_;
+        private Vector2 camera_;
         private List<string> incoming_packages_;
         private Command[] commands_ = {new Command(spawn), new Command(move), new Command(eat)
                                     , new Command(die) , new Command(starving) , new Command(clone)
@@ -46,11 +47,13 @@ namespace ClientXNA
         public GameClient()
         {
             graphics = new GraphicsDeviceManager(this);
-            this.graphics.PreferredBackBufferHeight = 480;
             this.graphics.PreferredBackBufferWidth = 600;
+            this.graphics.PreferredBackBufferHeight = 480;
+            this.IsMouseVisible = true;
             Content.RootDirectory = "Content";
             client_ = new TcpClient("127.0.0.1", 16000);
             incoming_packages_ = new List<string>();
+            camera_ = new Vector2();
         }
 
         #region OverrideMethods
@@ -100,6 +103,17 @@ namespace ClientXNA
                 this.Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= 120)
+                    camera_.X++;
+                else if (Mouse.GetState().X >= (this.graphics.PreferredBackBufferWidth - 120) && Mouse.GetState().X <= this.graphics.PreferredBackBufferWidth)
+                    camera_.X--;
+                if (Mouse.GetState().Y >= 0 && Mouse.GetState().Y <= 80)
+                    camera_.Y++;
+                else if (Mouse.GetState().Y >= (this.graphics.PreferredBackBufferHeight - 80) && Mouse.GetState().Y <= this.graphics.PreferredBackBufferHeight)
+                    camera_.Y--;
+            }
             // TODO: Add your update logic here
             lock (incoming_packages_)
             {
@@ -141,9 +155,9 @@ namespace ClientXNA
                 for (int x = 0; x < board_.Data.Count(); x++)
                     for (int y = 0; y < board_.Data.Count(); y++)
                     {
-                        spriteBatch.Draw(grass_, new Rectangle(x * 32, y * 32, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+                        spriteBatch.Draw(grass_, new Rectangle((int)camera_.X + (x * 32), (int)camera_.Y + (y * 32), 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
                         if (board_.Data[x][y].hasGrass())
-                            spriteBatch.Draw(grass_, new Rectangle(x * 32, y * 32, 32, 32), new Rectangle(32, 0, 32, 32), Color.White);
+                            spriteBatch.Draw(grass_, new Rectangle((int)camera_.X + (x * 32), (int)camera_.Y + (y * 32), 32, 32), new Rectangle(32, 0, 32, 32), Color.White);
                     }
             }
             spriteBatch.End();
@@ -254,7 +268,7 @@ namespace ClientXNA
                 int x = int.Parse(tokens[0]);
                 int y = int.Parse(tokens[1]);
                 int title = int.Parse(tokens[2]);
-                gcl.board_.Data[x][y].OnSquare = (Square.Title)title;
+                gcl.board_.Data[x][y].setHasGrass((title == 1));
             }
             catch (Exception e)
             {
