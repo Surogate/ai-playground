@@ -70,6 +70,10 @@ namespace Logique {
 			}
 		}
 
+		inline void dump() const {
+			std::cout << odour_;
+		}
+
 		unsigned int odour_;
 
 	private:

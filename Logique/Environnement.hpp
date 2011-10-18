@@ -38,6 +38,7 @@ namespace Logique {
 		Environnement();
 
 		void run();
+		void test();
 
 		void addAction(const Action& value);
 
@@ -59,7 +60,8 @@ namespace Logique {
 		void spawnSheep();
 		void onEntityDeath(const Entity& value);
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
-		void setOdour(int x, int y, unsigned int value);
+		void addOdour(int x, int y, unsigned int value);
+		void OdourLeft(int x, int y, unsigned int value);
 
 		Board board_;
 		boost::posix_time::time_duration baseTime_;

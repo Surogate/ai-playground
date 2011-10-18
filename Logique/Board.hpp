@@ -22,6 +22,16 @@ namespace Logique {
 		const Square& operator()(const Coord& pos) const { return at(pos.x)[pos.y]; }
 		Square& operator()(const Coord& pos) { return at(pos.x)[pos.y]; }
 
+		void dump() const {
+			for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
+				for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
+					at(x)[y].dump();
+					std::cout << " ";
+				}
+				std::cout << std::endl;
+			}
+		}
+
 	private:
 		boost::mutex mtx_;
 	};

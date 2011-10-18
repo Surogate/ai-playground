@@ -75,6 +75,11 @@ namespace Logique {
 		std::cout << "Simulation end" << std::endl;
 	}
 
+	void Environnement::test() {
+		popOdour(Coord(10, 10), 5);
+		board_.dump();
+	}
+
 	void Environnement::setBaseTime(const boost::posix_time::time_duration& time) {
 		baseTime_ = time;
 	}
@@ -184,17 +189,33 @@ namespace Logique {
 	}
 
 	void Environnement::popOdour(const Coord& loc, unsigned int power) {
-		int x_coord = loc.x;
-		int y_coord = loc.y;
 		
-		for (int x = 0; x < power * 2; ++x) {
-			for (int y = 0; y < power * 2; ++y) {
-				setOdour(x_coord - power + x, y_coord - power + y, power - x % power - y % power);
+		for (unsigned int size = power; size > 0; size--) {
+			int x_start = loc.x - size;
+			int y_start = loc.y - size;
+
+			int x_end = loc.x + size - 1;
+			int y_end = loc.y + size - 1;
+
+			std::cout << "x_start " << x_start << " x_end " << x_end << std::endl;
+			std::cout << "y_start " << y_start << " y_end " << y_end << std::endl;
+
+			while (x_start < x_end) {
+				y_start = loc.y - size;
+
+				while (y_start < y_end) {
+					std::cout << "add at x " << x_start << " y " << y_start << std::endl;
+					addOdour(x_start, y_start, 1);
+					y_start++;
+				}
+
+				x_start++;
 			}
 		}
+		
 	}
 
-	void Environnement::setOdour(int x, int y, unsigned int value) {
+	void Environnement::addOdour(int x, int y, unsigned int value) {
 		if (x > 0 && x < BOARD_SIZE  && y > 0 && y < BOARD_SIZE ) {
 			board_[x][y].addOdour(value);
 		}
