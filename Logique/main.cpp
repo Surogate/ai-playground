@@ -6,9 +6,7 @@
 int main(void) {
 	Logique::Environnement env;
 
-	//env.run();
-
-	env.test();
+	env.run();
 
 	std::cin.get();
 	return 0;
