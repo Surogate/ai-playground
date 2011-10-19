@@ -10,6 +10,8 @@ namespace Logique {
 
 	Callback_Environnement::~Callback_Environnement() {}
 
+	Callback_Environnement::Callback_Environnement(const Callback_Environnement& orig) {}
+
 	void Callback_Environnement::setSpawnSheep(const EntityFunctor& onSpawnSheep) {
 		_onSheepSpawn = onSpawnSheep;
 	}

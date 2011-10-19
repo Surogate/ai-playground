@@ -7,8 +7,20 @@
 namespace Logique {
 
 	struct Action {
-		unsigned int tickBeforeAction_;
-		std::function< void () > action_;
+		typedef std::function< void () > Functor;
+
+		Action() : _tickBeforeAction(), _action() 
+		{}
+
+		Action(unsigned int time, const Functor& func) : _tickBeforeAction(time), _action(func) 
+		{}
+
+		void operator()() {
+			 _action();
+		}
+
+		unsigned int _tickBeforeAction;
+		Functor _action;
 	};
 
 }
