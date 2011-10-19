@@ -9,7 +9,7 @@
 
 namespace Logique {
 
-	Environnement::Environnement() 
+	Environnement::Environnement()
 		: board_(), baseTime_(), entityList_(), listMtx_(), actionList_(), actionTmpStack_()
 		, randomD_(), gen_(randomD_), distri_(0, BOARD_SIZE - 1)
 	{
@@ -17,10 +17,10 @@ namespace Logique {
 		addAction(createBoardPlay());
 	}
 
-	void Environnement::preRun() {
-		
-		spawnSheep();
+	Environnement::~Environnement() {}
 
+	void Environnement::preRun() {
+		spawnSheep();
 		insertActionStack();
 
 		if (actionList_.empty()) {
@@ -41,7 +41,7 @@ namespace Logique {
 		boost::chrono::system_clock::time_point timer_end = boost::chrono::system_clock::now();
 		boost::chrono::duration<double> sec;
 		while (!actionList_.empty()) {
-			timer_start = boost::chrono::system_clock::now();			
+			timer_start = boost::chrono::system_clock::now();
 			tickwait = actionList_.begin()->tickBeforeAction_ - static_cast<unsigned int>(sec.count());
 			sleep_time =  baseTime_ * tickwait;
 			if (sleep_time != zero) {
@@ -177,11 +177,13 @@ namespace Logique {
 			board_.lock();
 			board_(loc).hasSheep(true);
 			board_.unlock();
+			sheepNum_++;
+			cb_onSheepSpawn(*sheepPtr);
+			cb_onBoardChange(board_);
 		}
 	}
 
 	void Environnement::onEntityDeath(const Entity& value) {
-		std::cout << "entity death" << std::endl;
 		cb_onEntityDeath(value);
 
 		board_.lock();
