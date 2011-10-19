@@ -23,7 +23,7 @@
 
 namespace Logique {
 
-	class Environnement : public Callback_Environnement {
+	class Environnement {
 	public:
 		enum {
 			ODOURONDEATH = 3
@@ -36,6 +36,34 @@ namespace Logique {
 		Environnement();
 		~Environnement();
 
+		void setSpawnSheep(const Callback_Environnement::EntityFunctor& func) {
+			Callback_Environnement::getInstance().setSpawnSheep(func);
+		}
+
+		void setSpawnWolf(const Callback_Environnement::EntityFunctor& func) {
+			Callback_Environnement::getInstance().setSpawnWolf(func);
+		}
+
+		void setOnEntityMove(const Callback_Environnement::EntityFunctor& func) {
+			Callback_Environnement::getInstance().setOnEntityMove(func);
+		}
+
+		void setOnReproduce(const Callback_Environnement::EntityFunctor& func) {
+			Callback_Environnement::getInstance().setOnReproduce(func);
+		}
+
+		void setOnEntityEat(const Callback_Environnement::EntityFunctor& func) {
+			Callback_Environnement::getInstance().setOnEntityEat(func);
+		}
+
+		void setOnEntityDead(const Callback_Environnement::EntityFunctor& func) {
+			Callback_Environnement::getInstance().setOnEntityDead(func);
+		}
+
+		void setOnBoardChange(const Callback_Environnement::BoardFunctor& func) {
+			Callback_Environnement::getInstance().setOnBoardChange(func);
+		}
+
 		void run();
 		void Environnement::test(int x, int y) {
 			popOdour(Coord(x, y), 3);
@@ -47,6 +75,9 @@ namespace Logique {
 		void addSheep(unsigned int num);
 		unsigned int getSheepNum() const;
 		unsigned int getWolfNum() const;
+		const EntityPtrSet& getEntityList() const;
+		void lock();
+		void unlock();
 
 	private:
 		void unsafeInsertAction(const Action& value);
@@ -56,7 +87,7 @@ namespace Logique {
 		void boardPlay();
 		void initEntity(std::shared_ptr<Entity> value);
 		void spawnSheep();
-		void onEntityDeath(const Entity& value);
+		void onEntityDeath(Entity& value);
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
 
@@ -64,15 +95,16 @@ namespace Logique {
 		unsigned int _wolfNum;
 
 		Board _board;
-		boost::posix_time::time_duration baseTime_;
-		EntityPtrSet entityList_;
-		boost::mutex listMtx_;
-		ActionList actionList_;
-		ActionTmpStack actionTmpStack_;
+		boost::posix_time::time_duration _baseTime;
+		EntityPtrSet _entityList;
+		boost::mutex _listMtx;
+		boost::mutex _attriMtx;
+		ActionList _actionList;
+		ActionTmpStack _actionTmpStack;
 
-		std::random_device randomD_;
-		std::mt19937 gen_;
-		std::uniform_int_distribution<unsigned int> distri_;
+		std::random_device _randomD;
+		std::mt19937 _gen;
+		std::uniform_int_distribution<unsigned int> _distri;
 	};
 
 }

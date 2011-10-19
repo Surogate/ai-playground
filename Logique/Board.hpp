@@ -7,33 +7,25 @@
 
 #include "Square.hpp"
 #include "Coord.hpp"
+#include "Entity.hpp"
 
 namespace Logique {
 	enum { BOARD_SIZE = 20 };
 
 	class Board : public std::array< std::array<Square, BOARD_SIZE >, BOARD_SIZE > {
 	public:
-		void lock() { mtx_.lock(); }
-		void unlock() { mtx_.unlock(); }
+		void lock();
+		void unlock();
 
-		const Square& get(const Coord& pos) const { return at(pos.x)[pos.y]; }
-		Square& get(const Coord& pos) { return at(pos.x)[pos.y]; }
+		const Square& get(const Coord& pos) const;
+		Square& get(const Coord& pos);
 
-		const Square& operator()(const Coord& pos) const { return at(pos.x)[pos.y]; }
-		Square& operator()(const Coord& pos) { return at(pos.x)[pos.y]; }
+		const Square& operator()(const Coord& pos) const;
+		Square& operator()(const Coord& pos);
 
-		void dump() const {
-			for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
-				for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
-					at(x)[y].dump();
-					std::cout << " ";
-				}
-				std::cout << std::endl;
-			}
-		}
-
+		void dump() const;
 	private:
-		boost::mutex mtx_;
+		boost::mutex _mtx;
 	};
 
 }
