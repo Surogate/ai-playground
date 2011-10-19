@@ -10,7 +10,7 @@
 namespace Logique {
 
 	Environnement::Environnement()
-		: board_(), baseTime_(), entityList_(), listMtx_(), actionList_(), actionTmpStack_()
+		: _board(), baseTime_(), entityList_(), listMtx_(), actionList_(), actionTmpStack_()
 		, randomD_(), gen_(randomD_), distri_(0, BOARD_SIZE - 1)
 	{
 		baseTime_ = boost::posix_time::seconds(1);
@@ -82,6 +82,18 @@ namespace Logique {
 		baseTime_ = time;
 	}
 
+	void Environnement::addSheep(const Coord& loc) {}
+
+	void Environnement::addSheep(unsigned int num) {}
+
+	unsigned int Environnement::getSheepNum() const {
+		return _sheepNum;
+	}
+
+	unsigned int Environnement::getWolfNum() const {
+		return _wolfNum;
+	}
+
 	void Environnement::addAction(const Action& value) {
 		listMtx_.lock(); // ##list lock
 		actionTmpStack_.push(value);
@@ -121,31 +133,31 @@ namespace Logique {
 
 		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
 			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
-				if (board_[x][y].odour_ > odour_higher && !board_[x][y].hasGrass()) {
-					odour_higher = board_[x][y].odour_;
+				if (_board[x][y].odour_ > odour_higher && !_board[x][y].hasGrass()) {
+					odour_higher = _board[x][y].odour_;
 					grassSpawn.x = x;
 					grassSpawn.y = y;
 				}
-				if (board_[x][y].odour_)
-					board_[x][y].odour_--;
+				if (_board[x][y].odour_)
+					_board[x][y].odour_--;
 			}
 		}
 
 		if (!odour_higher) {
 			grassSpawn = Coord(distri_(gen_), distri_(gen_));
 		} else {
-			board_.dump();
+			_board.dump();
 		}
 
 		//std::cout << "try spawn grass on " << grassSpawn << std::endl;
-		if (!board_(grassSpawn).hasGrass()) {
+		if (!_board(grassSpawn).hasGrass()) {
 			//std::cout << "spawn grass on " << grassSpawn << std::endl;
-			board_.lock();
-			board_(grassSpawn).hasGrass(true);
-			int value = board_(grassSpawn).getInt();
+			_board.lock();
+			_board(grassSpawn).hasGrass(true);
+			int value = _board(grassSpawn).getInt();
 			//std::cout << "case value " << value << std::endl;
-			board_.unlock();
-			cb_onBoardChange(board_);
+			_board.unlock();
+			cb_onBoardChange(_board);
 		}
 
 		addAction(createBoardPlay());
@@ -164,7 +176,7 @@ namespace Logique {
 
 		do {
 			loc = Coord(distri_(gen_), distri_(gen_));
-		} while (board_(loc).hasSheep() && limit < 10);
+		} while (_board(loc).hasSheep() && limit < 10);
 
 		if (limit < 10) {
 			std::cout << "spawn sheep at " << loc << std::endl;
@@ -174,28 +186,28 @@ namespace Logique {
 			sheepPtr->setLocation(loc);
 			initEntity(sheepPtr);
 
-			board_.lock();
-			board_(loc).hasSheep(true);
-			board_.unlock();
-			sheepNum_++;
+			_board.lock();
+			_board(loc).hasSheep(true);
+			_board.unlock();
+			_sheepNum++;
 			cb_onSheepSpawn(*sheepPtr);
-			cb_onBoardChange(board_);
+			cb_onBoardChange(_board);
 		}
 	}
 
 	void Environnement::onEntityDeath(const Entity& value) {
 		cb_onEntityDeath(value);
 
-		board_.lock();
+		_board.lock();
 		popOdour(value.getLocation());
-		value.removeAtLoc(board_);
-		board_.unlock();
-		cb_onBoardChange(board_);
+		value.removeAtLoc(_board);
+		_board.unlock();
+		cb_onBoardChange(_board);
 		EntityPtrSet::iterator it = entityList_.find(&value);
 		if (it != entityList_.end()) {
 			entityList_.erase(it);
 		}
-		board_.dump();
+		_board.dump();
 	}
 
 	void Environnement::popOdour(const Coord& loc, unsigned int power) {
@@ -222,7 +234,7 @@ namespace Logique {
 
 	void Environnement::addOdour(int x, int y, unsigned int value) {
 		if (x >= 0 && x < BOARD_SIZE  && y >= 0 && y < BOARD_SIZE ) {
-			board_[x][y].addOdour(value);
+			_board[x][y].addOdour(value);
 		}
 	}
 }

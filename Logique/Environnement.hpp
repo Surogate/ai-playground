@@ -39,13 +39,13 @@ namespace Logique {
 		void run();
 		void Environnement::test(int x, int y) {
 			popOdour(Coord(x, y), 3);
-			board_.dump();
+			_board.dump();
 		}
 		void addAction(const Action& value);
 		void setBaseTime(const boost::posix_time::time_duration& time);
 		void addSheep(const Coord& loc);
 		void addSheep(unsigned int num);
-		unsigned int getSheepNUm() const;
+		unsigned int getSheepNum() const;
 		unsigned int getWolfNum() const;
 
 	private:
@@ -60,10 +60,10 @@ namespace Logique {
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
 
-		unsigned int sheepNum_;
-		unsigned int wolfNum_;
+		unsigned int _sheepNum;
+		unsigned int _wolfNum;
 
-		Board board_;
+		Board _board;
 		boost::posix_time::time_duration baseTime_;
 		EntityPtrSet entityList_;
 		boost::mutex listMtx_;
