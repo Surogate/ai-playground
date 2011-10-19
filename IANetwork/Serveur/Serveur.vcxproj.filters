@@ -51,6 +51,9 @@
     <ClCompile Include="..\..\Logique\Coord.cpp">
       <Filter>Source Files\Logique</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Logique\Entity.cpp">
+      <Filter>Source Files\Logique</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Logique\Action.hpp">
@@ -87,6 +90,9 @@
       <Filter>Header Files\Wrapper</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Logique\Coord.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Callback_Environnement.hpp">
       <Filter>Header Files\Logique</Filter>
     </ClInclude>
   </ItemGroup>
