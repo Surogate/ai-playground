@@ -87,7 +87,7 @@ namespace Logique {
 		void boardPlay();
 		void initEntity(std::shared_ptr<Entity> value);
 		void spawnSheep();
-		void onEntityDeath(const Entity& value);
+		void onEntityDeath(Entity& value);
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
 

@@ -205,7 +205,7 @@ namespace Logique {
 		}
 	}
 
-	void Environnement::onEntityDeath(const Entity& value) {
+	void Environnement::onEntityDeath(Entity& value) {
 		Callback_Environnement::getInstance().cb_onEntityDeath(value);
 
 		_board.lock();
@@ -218,6 +218,7 @@ namespace Logique {
 		}
 		_board.unlock();
 		Callback_Environnement::getInstance().cb_onBoardChange(_board);
+		value.cleanVtable();
 		EntityPtrSet::iterator it = _entityList.find(&value);
 		if (it != _entityList.end()) {
 			_attriMtx.lock();

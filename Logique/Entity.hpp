@@ -35,10 +35,12 @@ namespace Logique  {
 
 		typedef std::shared_ptr<Entity> Ptr;
 		typedef std::function< void (const Action&) > ActionFunctor;
-		typedef std::function< void (const Entity&) > EntityFunctor;
+		typedef std::function< void (Entity&) > EntityFunctor;
 
 		Entity(const Square::EntityContain& type);
 		virtual ~Entity();
+
+		void Entity::cleanVtable();
 
 		void addFood(unsigned int value);
 		bool isAlive() const;

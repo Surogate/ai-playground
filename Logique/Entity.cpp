@@ -15,6 +15,12 @@ namespace Logique {
 		std::cout << "entity delete" << std::endl;
 	}
 
+	void Entity::cleanVtable() {
+		for (unsigned int i = 0; i < _actionArray.size(); i++) {
+			_actionArray[i] = Action();
+		}
+	}
+
 	void Entity::addFood(unsigned int value) {
 		_foodCount += value;
 		if (_foodCount > FOODMAX)
