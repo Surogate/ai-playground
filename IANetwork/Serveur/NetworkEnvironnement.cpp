@@ -63,7 +63,7 @@ namespace Wrapper
 			{
 				std::stringstream sstreamp;
 				Networking::Package * pack = new Networking::Package();
-				sstreamp << BOARD << ";" << x << ";" << y << ";" << board.get(Coord(x, y)).title_ << ";" << board.get(Coord(x, y)).odour_;
+				sstreamp << BOARD << ";" << x << ";" << y << ";" << (int)board.get(Coord(x, y)).hasGrass() << ";" << board.get(Coord(x, y)).odour_;
 				pack->init(sstreamp.str());
 				packages.push_back(Networking::Server::Package_ptr(pack));
 			}

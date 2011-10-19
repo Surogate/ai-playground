@@ -8,34 +8,22 @@ namespace ClientXNA
 {
     public class Square
     {
-        public enum Title
-        {
-            NONE,
-            BLOCK,
-            GRASS,
-            SHEEP,
-            WOLF,
-            GRASS_SHEEP,
-            GRASS_WOLF,
-            GRASS_SHEEP_WOLF,
-            SHEEP_WOLF
-        };
+        enum Title {
+			USEABLE = 1,
+			GRASS = 2,
+			SHEEP = 4,
+			WOLF = 8
+		};
 
         #region Attributes
-        private Title title_;
+        private bool hasGrass_;
         private int   odour_;
         #endregion
 
         public Square()
         {
-            title_ = Title.NONE;
+            hasGrass_ = false;
             odour_ = 0;
-        }
-
-        public Title OnSquare
-        {
-            get { return title_; }
-            set { title_ = value; }
         }
 
         public int Odour
@@ -44,12 +32,15 @@ namespace ClientXNA
             set { odour_ = value; }
         }
 
+        public void setHasGrass(bool hasGrass)
+        {
+            hasGrass_ = hasGrass;
+        }
+
         public bool hasGrass()
         {
-            return (((int)OnSquare == (int)Title.GRASS ||
-                     (int)OnSquare == (int)Title.GRASS_SHEEP ||
-                     (int)OnSquare == (int)Title.GRASS_WOLF ||
-                     (int)OnSquare == (int)Title.GRASS_SHEEP_WOLF));
+            return (hasGrass_);
         }
+
     }
 }
