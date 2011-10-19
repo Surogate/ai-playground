@@ -10,10 +10,10 @@
 namespace Logique {
 
 	Environnement::Environnement()
-		: _board(), baseTime_(), entityList_(), listMtx_(), actionList_(), actionTmpStack_()
-		, randomD_(), gen_(randomD_), distri_(0, BOARD_SIZE - 1)
+		: _board(), _baseTime(), _entityList(), _listMtx(), _attriMtx(), _actionList(), _actionTmpStack()
+		, _randomD(), _gen(_randomD), _distri(0, BOARD_SIZE - 1)
 	{
-		baseTime_ = boost::posix_time::seconds(1);
+		_baseTime = boost::posix_time::seconds(1);
 		addAction(createBoardPlay());
 	}
 
@@ -23,7 +23,7 @@ namespace Logique {
 		spawnSheep();
 		insertActionStack();
 
-		if (actionList_.empty()) {
+		if (_actionList.empty()) {
 			std::cout << "no action" << std::endl;
 		}
 	}
@@ -40,20 +40,20 @@ namespace Logique {
 		boost::chrono::system_clock::time_point timer_start;
 		boost::chrono::system_clock::time_point timer_end = boost::chrono::system_clock::now();
 		boost::chrono::duration<double> sec;
-		while (!actionList_.empty()) {
+		while (!_actionList.empty()) {
 			timer_start = boost::chrono::system_clock::now();
-			tickwait = actionList_.begin()->tickBeforeAction_ - static_cast<unsigned int>(sec.count());
-			sleep_time =  baseTime_ * tickwait;
+			tickwait = _actionList.begin()->_tickBeforeAction - static_cast<unsigned int>(sec.count());
+			sleep_time =  _baseTime * tickwait;
 			if (sleep_time != zero) {
 				boost::this_thread::sleep(sleep_time);
 			}
 
-			executor = actionList_.begin();
-			end = actionList_.end();
+			executor = _actionList.begin();
+			end = _actionList.end();
 
 			//on execute toute les action qui se sont deroulé pendant l'attente
-			while (executor != end && executor->tickBeforeAction_ <= tickwait) {
-				executor->action_();
+			while (executor != end && executor->_tickBeforeAction <= tickwait) {
+				executor->_action();
 				++executor;
 			}
 
@@ -61,25 +61,25 @@ namespace Logique {
 
 			//les action restante voient leurs temps avant execution diminuer
 			while (executor != end) {
-				executor->tickBeforeAction_ -= tickwait;
+				executor->_tickBeforeAction -= tickwait;
 				++executor;
 			}
 
-			actionList_.erase(actionList_.begin(), toDeleteEnd);
+			_actionList.erase(_actionList.begin(), toDeleteEnd);
 
 			//on insere les nouvelle actions
 			insertActionStack();
 
 			//on calcule le temps qu'on a mis pour accomplir les operation, pour le soustraire plus tard
 			timer_end = boost::chrono::system_clock::now();
-			sec = (timer_end - timer_start) / (baseTime_.total_milliseconds() / 1000);
+			sec = (timer_end - timer_start) / (_baseTime.total_milliseconds() / 1000);
 		}
 
 		std::cout << "Simulation end" << std::endl;
 	}
 
 	void Environnement::setBaseTime(const boost::posix_time::time_duration& time) {
-		baseTime_ = time;
+		_baseTime = time;
 	}
 
 	void Environnement::addSheep(const Coord& loc) {}
@@ -94,36 +94,40 @@ namespace Logique {
 		return _wolfNum;
 	}
 
+	const Environnement::EntityPtrSet& Environnement::getEntityList() const {
+		return _entityList;
+	}
+
 	void Environnement::addAction(const Action& value) {
-		listMtx_.lock(); // ##list lock
-		actionTmpStack_.push(value);
-		listMtx_.unlock(); // ## list unlock
+		_listMtx.lock(); // ##list lock
+		_actionTmpStack.push(value);
+		_listMtx.unlock(); // ## list unlock
 	}
 
 	void Environnement::unsafeInsertAction(const Action& value) {
-		ActionList::iterator it = actionList_.begin();
-		ActionList::iterator ite = actionList_.end();
+		ActionList::iterator it = _actionList.begin();
+		ActionList::iterator ite = _actionList.end();
 
-		while (it != ite && it->tickBeforeAction_ < value.tickBeforeAction_) {
+		while (it != ite && it->_tickBeforeAction < value._tickBeforeAction) {
 			++it;
 		}
-		actionList_.insert(it, value);
+		_actionList.insert(it, value);
 	}
 
 	void Environnement::insertActionStack() {
-		listMtx_.lock(); // ##list lock
-		while (actionTmpStack_.size()) {
-			unsafeInsertAction(actionTmpStack_.top());
-			actionTmpStack_.pop();
+		_listMtx.lock(); // ##list lock
+		while (_actionTmpStack.size()) {
+			unsafeInsertAction(_actionTmpStack.top());
+			_actionTmpStack.pop();
 		}
-		listMtx_.unlock(); // ## list unlock
+		_listMtx.unlock(); // ## list unlock
 	}
 
 	Action Environnement::createBoardPlay() {
 		Action act;
 
-		act.action_ = std::bind(&Environnement::boardPlay, this);
-		act.tickBeforeAction_ = 1;
+		act._action = std::bind(&Environnement::boardPlay, this);
+		act._tickBeforeAction = 1;
 		return act;
 	}
 
@@ -133,18 +137,18 @@ namespace Logique {
 
 		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
 			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
-				if (_board[x][y].odour_ > odour_higher && !_board[x][y].hasGrass()) {
-					odour_higher = _board[x][y].odour_;
+				if (_board[x][y].odour() > odour_higher && !_board[x][y].hasGrass()) {
+					odour_higher = _board[x][y].odour();
 					grassSpawn.x = x;
 					grassSpawn.y = y;
 				}
-				if (_board[x][y].odour_)
-					_board[x][y].odour_--;
+				
+				_board[x][y].decreaseOdour(1);
 			}
 		}
 
 		if (!odour_higher) {
-			grassSpawn = Coord(distri_(gen_), distri_(gen_));
+			grassSpawn = Coord(_distri(_gen), _distri(_gen));
 		} else {
 			_board.dump();
 		}
@@ -157,7 +161,7 @@ namespace Logique {
 			int value = _board(grassSpawn).getInt();
 			//std::cout << "case value " << value << std::endl;
 			_board.unlock();
-			cb_onBoardChange(_board);
+			Callback_Environnement::getInstance().cb_onBoardChange(_board);
 		}
 
 		addAction(createBoardPlay());
@@ -166,8 +170,11 @@ namespace Logique {
 	void Environnement::initEntity(std::shared_ptr<Entity> value) {
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
 		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
-		entityList_[value.get()] = value;
+		_attriMtx.lock();
+		_entityList[value.get()] = value;
+		_attriMtx.unlock();
 		addAction(value->createFoodAction());
+		addAction(value->getNewAction());
 	}
 
 	void Environnement::spawnSheep() {
@@ -175,37 +182,47 @@ namespace Logique {
 		unsigned int limit = 0;
 
 		do {
-			loc = Coord(distri_(gen_), distri_(gen_));
+			loc = Coord(_distri(_gen), _distri(_gen));
 		} while (_board(loc).hasSheep() && limit < 10);
 
 		if (limit < 10) {
 			std::cout << "spawn sheep at " << loc << std::endl;
 			std::shared_ptr<Sheep> sheepPtr(new Sheep());
+			sheepPtr->initActionArray(_board);
+			initEntity(sheepPtr);
 
 			sheepPtr->addFood(Sheep::FOODMAX);
 			sheepPtr->setLocation(loc);
-			initEntity(sheepPtr);
 
 			_board.lock();
 			_board(loc).hasSheep(true);
 			_board.unlock();
+			_attriMtx.lock();
 			_sheepNum++;
-			cb_onSheepSpawn(*sheepPtr);
-			cb_onBoardChange(_board);
+			_attriMtx.unlock();
+			Callback_Environnement::getInstance().cb_onSheepSpawn(*sheepPtr);
+			Callback_Environnement::getInstance().cb_onBoardChange(_board);
 		}
 	}
 
 	void Environnement::onEntityDeath(const Entity& value) {
-		cb_onEntityDeath(value);
+		Callback_Environnement::getInstance().cb_onEntityDeath(value);
 
 		_board.lock();
 		popOdour(value.getLocation());
-		value.removeAtLoc(_board);
+		_board(value.getLocation()).hasEntity(value.getType(), false);
+		if (value.getType() == Square::SHEEP) {
+			_attriMtx.lock();
+			_sheepNum --;
+			_attriMtx.unlock();
+		}
 		_board.unlock();
-		cb_onBoardChange(_board);
-		EntityPtrSet::iterator it = entityList_.find(&value);
-		if (it != entityList_.end()) {
-			entityList_.erase(it);
+		Callback_Environnement::getInstance().cb_onBoardChange(_board);
+		EntityPtrSet::iterator it = _entityList.find(&value);
+		if (it != _entityList.end()) {
+			_attriMtx.lock();
+			_entityList.erase(it);
+			_attriMtx.unlock();
 		}
 		_board.dump();
 	}

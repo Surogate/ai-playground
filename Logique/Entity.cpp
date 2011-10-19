@@ -1,60 +1,133 @@
 
 #include "Entity.hpp"
+#include "Board.hpp"
+#include "Callback_Environnement.hpp"
 
 namespace Logique {
 
-	Entity::Entity()
-		: loc_(), addAction_(), foodCount_(0)
+	Entity::Entity(const Square::EntityContain& type)
+		: _type(type), _loc(), _add_action(), _foodCount(0)
+		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
 	{}
 
 	Entity::~Entity() 
-	{}
+	{
+		std::cout << "entity delete" << std::endl;
+	}
 
 	void Entity::addFood(unsigned int value) {
-		foodCount_ += value;
-		if (foodCount_ > FOODMAX)
-			foodCount_ = FOODMAX;
+		_foodCount += value;
+		if (_foodCount > FOODMAX)
+			_foodCount = FOODMAX;
 	}
 
 	bool Entity::isAlive() const {
-		return foodCount_ >= 0;
+		return _foodCount > 0;
 	}
 
 	void Entity::setAddAction(const Entity::ActionFunctor& func) {
-		addAction_ = func;
+		_add_action = func;
 	}
 
 	void Entity::setOnDeath(const Entity::EntityFunctor& func) {
-		onDeath_ = func;
+		_onDeath = func;
 	}
 
 	void Entity::setLocation(Coord loc) {
-		loc_ = loc;
+		_loc = loc;
 	}
 
 	Action Entity::createFoodAction(unsigned int time, unsigned int value) {
 		Action food;
 
-		food.tickBeforeAction_ = time;
-		food.action_ = std::bind(&Entity::decreaseFood, this->shared_from_this(), value);
+		food._tickBeforeAction = time;
+		food._action = std::bind(&Entity::decreaseFood, this->shared_from_this(), value);
 
 		return food;
 	}
 
 	void Entity::decreaseFood(unsigned int value) {
-		if (value <= foodCount_)
-			foodCount_ -= value;
+		if (value <= _foodCount)
+			_foodCount -= value;
 		else
-			foodCount_ = 0;
+			_foodCount = 0;
 
-		std::cout << "food at " << foodCount_ << std::endl;
-		if (foodCount_)
+		std::cout << "food at " << _foodCount << std::endl;
+		if (_foodCount)
 			addAction(createFoodAction());
-		else if (onDeath_)
-			onDeath_(*this);
+		else if (_onDeath)
+			_onDeath(*this);
 	}
 
 	const Coord& Entity::getLocation() const {
-		return loc_;
+		return _loc;
+	}
+
+	Square::EntityContain Entity::getType() const {
+		return _type;
+	}
+
+	void Entity::initActionArray(Board& board) {
+		_actionArray[MOVE_UP] = Action(MOVE_TIME, std::bind(&Entity::goUp, shared_from_this(), std::ref(board)));
+		_actionArray[MOVE_DOWN] = Action(MOVE_TIME, std::bind(&Entity::goDown, shared_from_this(), std::ref(board)));
+		_actionArray[MOVE_LEFT] = Action(MOVE_TIME, std::bind(&Entity::goLeft, shared_from_this(), std::ref(board)));
+		_actionArray[MOVE_RIGHT] = Action(MOVE_TIME, std::bind(&Entity::goRight, shared_from_this(), std::ref(board)));
+	}
+
+
+	void Entity::goUp(Board& board) {
+		if (isAlive() && _loc.x > 0) {
+			std::cout << "move up" << std::endl;
+			Coord newLoc(_loc.x - 1, _loc.y);
+			moveToThisLocation(board, newLoc);
+		}
+		generateNewAction();
+	}
+
+	void Entity::goLeft(Board& board) {
+		if (isAlive() && _loc.y > 0) {
+			std::cout << "move left" << std::endl;
+			Coord newLoc(_loc.x, _loc.y - 1);
+			moveToThisLocation(board, newLoc);
+		}
+		generateNewAction();
+	}
+
+	void Entity::goRight(Board& board) {
+		if (isAlive() && _loc.y < BOARD_SIZE - 1) {
+			std::cout << "move right" << std::endl;
+			Coord newLoc(_loc.x, _loc.y + 1);
+			moveToThisLocation(board, newLoc);
+		}
+		generateNewAction();
+	}
+
+	void Entity::goDown(Board& board) {
+		if (isAlive() && _loc.x < BOARD_SIZE - 1) {
+			std::cout << "move down" << std::endl;
+			Coord newLoc(_loc.x + 1, _loc.y);
+			moveToThisLocation(board, newLoc);
+		}
+		generateNewAction();
+	}
+
+	bool Entity::moveToThisLocation(Board& board, const Coord& newLoc) {
+		if (!board(newLoc).hasEntity(_type)) {
+			board.lock();
+			board(_loc).hasEntity(_type, false);
+			board(newLoc).hasEntity(_type, true);
+			board.unlock();
+			_loc = newLoc;
+			Callback_Environnement::getInstance().cb_onEntityMove(*this);
+			Callback_Environnement::getInstance().cb_onBoardChange(board);
+			return true;
+		}
+		return false;
+	}
+
+	void Entity::generateNewAction() {
+		if (isAlive()) _add_action(getNewAction());
 	}
 }
+
+
