@@ -36,6 +36,8 @@ namespace Networking
 			std::clog << "[LOG] new connection from : " << socket->remote_endpoint().address().to_string() << std::endl;
 			sockets_[socket->native_handle()] = socket;
 			set_handle_read(socket, error);
+			if (!synchronize_.empty())
+				synchronize_();
 		}
 		else
 		{
@@ -100,6 +102,11 @@ namespace Networking
 			sending_packages_.push_back(packages.back());
 			packages.pop_back();
 		}
+	}
+
+	void Server::setSynchronize(boost::function<void (void)> & synchronize)
+	{
+		synchronize_ = synchronize;
 	}
 
 	void Server::set_handle_read(socket_ptr & socket, boost::system::error_code const & error)
