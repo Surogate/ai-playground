@@ -2,40 +2,33 @@
 #ifndef SHEEP_HPP
 #define SHEEP_HPP
 
+#include <cmath>
 #include "Entity.hpp"
 
 namespace Logique {
 
 	class Sheep : public Entity {
 	public:
-		enum SheepAction {
-			MOVE_UP,
-			MOVE_DOWN,
-			MOVE_LEFT,
-			MOVE_RIGHT,
-			EAT,
-			REPRODUCE
+		enum Constant {
+			FOOD_GAIN = 2,
+			EAT_TIME = 3,
+			REPRODUCE_TIME = 5
 		};
 
-		typedef std::function< void() > func;
-		typedef std::map< SheepAction, Action > funcMap;
+		Sheep();
 
-		Sheep() : Entity(), _actionMap() {}
+		void initActionArray(Board& board);
 
-		SheepAction computeAction() {
-			return MOVE_UP;
-		}
+		void eat(Board& board);
+		void reproduce(Board& board);
 
-		Action getNewAction() {
-			return _actionMap[computeAction()];
-		}
+		EntityAction computeAction();
 
-		void removeAtLoc(Board& board) const {
-			board(loc_).hasSheep(false);
-		}
+		Action getNewAction();
+		unsigned int evaluate() const;
 
 	private:
-		funcMap _actionMap;
+		unsigned int _numberEat;
 	};
 
 }
