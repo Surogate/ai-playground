@@ -34,6 +34,7 @@ namespace Logique {
 		typedef std::stack< Action > ActionTmpStack;
 
 		Environnement();
+		~Environnement();
 
 		void run();
 		void Environnement::test(int x, int y) {
@@ -42,6 +43,10 @@ namespace Logique {
 		}
 		void addAction(const Action& value);
 		void setBaseTime(const boost::posix_time::time_duration& time);
+		void addSheep(const Coord& loc);
+		void addSheep(unsigned int num);
+		unsigned int getSheepNUm() const;
+		unsigned int getWolfNum() const;
 
 	private:
 		void unsafeInsertAction(const Action& value);
@@ -54,6 +59,9 @@ namespace Logique {
 		void onEntityDeath(const Entity& value);
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
+
+		unsigned int sheepNum_;
+		unsigned int wolfNum_;
 
 		Board board_;
 		boost::posix_time::time_duration baseTime_;

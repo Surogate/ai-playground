@@ -14,38 +14,41 @@ namespace Logique {
 		typedef boost::function< void (const Entity&) > EntityFunctor;
 		typedef boost::function< void (const Board&) > BoardFunctor;
 
-		Callback_Environnement() : onBoardChange_(), onEntityDeath_() {}
+		Callback_Environnement();
 
-		void setSpawnSheep(const EntityFunctor& onSpawnSheep) {
-		}
+		virtual ~Callback_Environnement();
 
-		void setSpawnWolf(const EntityFunctor& onSpawnWolf) {
-		}
+		void setSpawnSheep(const EntityFunctor& onSpawnSheep);
 
-		void setOnEntityMove(const EntityFunctor& onEntityMove) {
-		}
+		void setSpawnWolf(const EntityFunctor& onSpawnWolf);
 
-		void setOnReproduce(const EntityFunctor& onEntityMove) {
-		}
+		void setOnEntityMove(const EntityFunctor& onEntityMove);
 
-		void setOnEntityEat(const EntityFunctor& onEntityEat) {
-		}
+		void setOnReproduce(const EntityFunctor& onEntityMove);
 
-		void setOnEntityDead(const EntityFunctor& onEntityDead) {
-			onEntityDeath_ = onEntityDead;
-		}
+		void setOnEntityEat(const EntityFunctor& onEntityEat);
 
-		void setOnBoardChange(const BoardFunctor& onBoardChange) {
-			onBoardChange_ = onBoardChange;
-		}
+		void setOnEntityDead(const EntityFunctor& onEntityDead);
+
+		void setOnBoardChange(const BoardFunctor& onBoardChange);
 
 	protected:
 		//functor
-		BoardFunctor onBoardChange_;
-		EntityFunctor onEntityDeath_;
+		BoardFunctor _onBoardChange;
+		EntityFunctor _onEntityDeath;
+		EntityFunctor _onSheepSpawn;
+		EntityFunctor _onWolfSpawn;
+		EntityFunctor _onEntityEat;
+		EntityFunctor _onEntityReproduce;
+		EntityFunctor _onEntityMove;
 
-		inline void cb_onBoardChange(const Board& value) const { if (onBoardChange_) onBoardChange_(value); }
-		inline void cb_onEntityDeath(const Entity& value) const { if (onEntityDeath_) onEntityDeath_(value); }
+		void cb_onBoardChange(const Board& value) const;
+		void cb_onEntityDeath(const Entity& value) const;
+		void cb_onSheepSpawn(const Entity& value) const;
+		void cb_onWolfSpawn(const Entity& value) const;
+		void cb_onEntityMove(const Entity& value) const;
+		void cb_onEntityReproduce(const Entity& value) const;
+		void cb_onEntityEat(const Entity& value) const;
 	};
 
 }
