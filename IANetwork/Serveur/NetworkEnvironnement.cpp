@@ -9,6 +9,7 @@ namespace Wrapper
 {
 	NetworkEnvironnement::NetworkEnvironnement(Networking::Server * server) : env_(), server_(server)
 	{
+		server_->setSynchronize(boost::bind(&NetworkEnvironnement::synchronize, this));
 		env_.setSpawnSheep(boost::bind(&NetworkEnvironnement::onSpawnSheep, this, _1));
 		env_.setSpawnWolf(boost::bind(&NetworkEnvironnement::onSpawnWolf, this, _1));
 		env_.setOnEntityMove(boost::bind(&NetworkEnvironnement::onEntityMove, this, _1));
@@ -21,6 +22,20 @@ namespace Wrapper
 
 	NetworkEnvironnement::~NetworkEnvironnement(void)
 	{
+	}
+
+	void NetworkEnvironnement::synchronize()
+	{
+		std::clog << "[Log] synchronize... entity..." << std::endl;
+		env_.lock();
+		Logique::Environnement::EntityPtrSet::const_iterator it = env_.getEntityList().begin();
+		Logique::Environnement::EntityPtrSet::const_iterator ite = env_.getEntityList().end();
+		for (; it != ite; ++it)
+		{
+			onSpawnSheep((*it->first));
+		}
+		env_.unlock();
+		std::clog << "[Log] synchronize finished..." << std::endl;
 	}
 
 	void NetworkEnvironnement::onSpawnSheep(Logique::Entity const & entity)
@@ -75,7 +90,7 @@ namespace Wrapper
 			{
 				std::stringstream sstreamp;
 				Networking::Package * pack = new Networking::Package();
-				sstreamp << BOARD << ";" << x << ";" << y << ";" << (int)board.get(Coord(x, y)).hasGrass() << ";" << board.get(Coord(x, y)).odour_;
+				sstreamp << BOARD << ";" << x << ";" << y << ";" << (int)board.get(Coord(x, y)).hasGrass() << ";" << board.get(Coord(x, y)).odour();
 				pack->init(sstreamp.str());
 				packages.push_back(Networking::Server::Package_ptr(pack));
 			}

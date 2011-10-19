@@ -311,6 +311,8 @@ namespace ClientXNA
                 int x = int.Parse(tokens[0]);
                 int y = int.Parse(tokens[1]);
                 int title = int.Parse(tokens[2]);
+                int odour = int.Parse(tokens[3]);
+                gcl.board_.Data[x][y].Odour = odour;
                 gcl.board_.Data[x][y].setHasGrass((title == 1));
             }
             catch (Exception e)

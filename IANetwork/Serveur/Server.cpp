@@ -104,7 +104,7 @@ namespace Networking
 		}
 	}
 
-	void Server::setSynchronize(boost::function<void (void)> & synchronize)
+	void Server::setSynchronize(func_t const & synchronize)
 	{
 		synchronize_ = synchronize;
 	}

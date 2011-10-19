@@ -24,6 +24,7 @@ namespace Networking
 		typedef std::map<tcp::socket::native_handle_type, socket_ptr>			socket_container;
 		typedef std::vector<tcp::socket::native_handle_type>	mark_container;	
 		typedef std::deque<Package_ptr> Package_queue;	
+		typedef boost::function<void (void)> func_t;
 
 	private:
 		tcp::acceptor acceptor_;
@@ -35,7 +36,7 @@ namespace Networking
 		boost::mutex	in_packages_mut_;
 		boost::mutex	out_packages_mut_;
 		boost::mutex	sockets_mut_;
-		boost::function<void (void)> synchronize_;
+		func_t synchronize_;
 
 	public:
 		Server(boost::asio::io_service & io_service, boost::asio::ip::tcp & protocol, int32_t port);
@@ -44,7 +45,7 @@ namespace Networking
 		void run();
 		void add_sending_package(Package_ptr & package);
 		void add_sending_packages(Package_queue & packages);
-		void setSynchronize(boost::function<void (void)> & synchronize);
+		void setSynchronize(func_t const & synchronize);
 
 	private:
 		void start();
