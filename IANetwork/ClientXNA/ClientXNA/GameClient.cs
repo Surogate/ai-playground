@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,6 +43,7 @@ namespace ClientXNA
                                     , new Command(die) , new Command(starving) , new Command(clone)
                                     , new Command(board_beg) , new Command(board) , new Command(board_end)};
         private Board board_ = null;
+        private Hashtable entities_ = null;
         #endregion
 
         public GameClient()
@@ -54,6 +56,7 @@ namespace ClientXNA
             client_ = new TcpClient("127.0.0.1", 16000);
             incoming_packages_ = new List<string>();
             camera_ = new Vector2();
+            entities_ = new Hashtable();
         }
 
         #region OverrideMethods
@@ -211,32 +214,72 @@ namespace ClientXNA
 
         private static void spawn(GameClient gcl, string msg)
         {
-
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
+            try
+            {
+                string type = tokens[0];
+                int id = int.Parse(tokens[1]);
+                int x = int.Parse(tokens[2]);
+                int y = int.Parse(tokens[3]);
+                if (type == "s")
+                {
+                    gcl.entities_.Add(id, new Sheep(new Vector2(x, y)));
+                }
+                else
+                {
+                    gcl.entities_.Add(id, new Wolf(new Vector2(x, y)));
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         private static void move(GameClient gcl, string msg)
         {
-
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
         }
 
         private static void eat(GameClient gcl, string msg)
         {
-
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
         }
 
         private static void die(GameClient gcl, string msg)
         {
-
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
+            try
+            {
+                int id = int.Parse(tokens[0]);
+                gcl.entities_.Remove(id);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         private static void starving(GameClient gcl, string msg)
         {
-
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
         }
 
         private static void clone(GameClient gcl, string msg)
         {
-
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
         }
 
         private static void board_beg(GameClient gcl, string msg)

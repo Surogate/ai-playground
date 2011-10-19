@@ -54,6 +54,9 @@
     <ClCompile Include="..\..\Logique\Entity.cpp">
       <Filter>Source Files\Logique</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Logique\Callback_Environnement.cpp">
+      <Filter>Source Files\Logique</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Logique\Action.hpp">

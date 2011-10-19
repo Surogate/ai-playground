@@ -3,6 +3,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+#include <boost/bind.hpp>
 #include <stdint.h>
 #include <string>
 #include <map>
@@ -34,6 +35,7 @@ namespace Networking
 		boost::mutex	in_packages_mut_;
 		boost::mutex	out_packages_mut_;
 		boost::mutex	sockets_mut_;
+		boost::function<void (void)> synchronize_;
 
 	public:
 		Server(boost::asio::io_service & io_service, boost::asio::ip::tcp & protocol, int32_t port);
@@ -42,6 +44,7 @@ namespace Networking
 		void run();
 		void add_sending_package(Package_ptr & package);
 		void add_sending_packages(Package_queue & packages);
+		void setSynchronize(boost::function<void (void)> & synchronize);
 
 	private:
 		void start();

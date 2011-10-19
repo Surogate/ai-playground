@@ -25,6 +25,12 @@ namespace Wrapper
 
 	void NetworkEnvironnement::onSpawnSheep(Logique::Entity const & entity)
 	{
+		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
+
+		std::stringstream sstream;
+		sstream << SPAWN << ";s;" << &entity << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
+		package->init(sstream.str());
+		server_->add_sending_package(package);
 	}
 
 	void NetworkEnvironnement::onSpawnWolf(Logique::Entity const & entity)
@@ -41,6 +47,12 @@ namespace Wrapper
 
 	void NetworkEnvironnement::onEntityDead(Logique::Entity const & entity)
 	{
+		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
+
+		std::stringstream sstream;
+		sstream << DIE << ";" << &entity;
+		package->init(sstream.str());
+		server_->add_sending_package(package);
 	}
 
 	void NetworkEnvironnement::onReproduce(Logique::Entity const & entity)
