@@ -5,24 +5,47 @@
 #include <memory>
 
 #include "Action.hpp"
+#include "Coord.hpp"
+#include "Board.hpp"
 
-namespace Logique {
+namespace Logique  {
 
-	class Entity {
+	class Entity : std::enable_shared_from_this<Entity> {
 	public:
+		enum {
+			BASEFOODTIME = 3,
+			BASEFOODDECREASE = 1,
+			FOODMAX = 10
+		};
+
 		typedef std::shared_ptr<Entity> Ptr;
 		typedef std::function< void (const Action&) > ActionFunctor;
+		typedef std::function< void (const Entity&) > EntityFunctor;
 
-		inline bool isAlive() {
-			return foodCount_ >= 0; 
-		}
-		
-		inline void setAddAction(const ActionFunctor& func) {
-			addAction_ = func;
-		}
+		Entity();
+		virtual ~Entity();
+
+		void addFood(unsigned int value);
+		bool isAlive() const;
+		void setAddAction(const ActionFunctor& func);
+		void setOnDeath(const EntityFunctor& func);
+		void setLocation(Coord loc);
+		const Coord& getLocation() const;
+		Action createFoodAction(unsigned int time = BASEFOODTIME, unsigned int value = BASEFOODDECREASE);
+		void decreaseFood(unsigned int value);
+
+		virtual void removeAtLoc(Board& board) const = 0;
 
 	protected:
-		std::function< void (const Action&) > addAction_;
+		inline bool addAction(const Action& value) {
+			if (addAction_ && foodCount_) 
+				addAction_(value);
+			return foodCount_ != 0;
+		}
+
+		Coord loc_;
+		ActionFunctor addAction_;
+		EntityFunctor onDeath_;
 		unsigned int foodCount_;
 	};
 

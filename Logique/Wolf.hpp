@@ -9,6 +9,10 @@ namespace Logique {
 	class Wolf : public Entity {
 	public:
 		Action getNewAction() {}
+
+		void removeAtLoc(Board& board) const {
+			board(loc_).hasWolf(false);
+		}
 	};
 
 }
