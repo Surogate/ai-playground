@@ -28,6 +28,7 @@ namespace Wrapper
 		Logique::Environnement	env_;
 		Networking::Server *	server_;
 
+		void synchronize();
 		void onSpawnSheep(Logique::Entity const &);
 		void onSpawnWolf(Logique::Entity const &);
 		void onEntityMove(Logique::Entity const &);
