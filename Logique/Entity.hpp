@@ -63,6 +63,8 @@ namespace Logique  {
 		virtual void eat(Board& board) = 0;
 		virtual void reproduce(Board& board) = 0;
 		void generateNewAction();
+		
+		// TODO : Une methode pour recupere la derniere action serait pratique pour les messages.
 
 	protected:
 		inline bool addAction(const Action& value) {

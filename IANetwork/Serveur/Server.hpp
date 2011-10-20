@@ -24,7 +24,7 @@ namespace Networking
 		typedef std::map<tcp::socket::native_handle_type, socket_ptr>			socket_container;
 		typedef std::vector<tcp::socket::native_handle_type>	mark_container;	
 		typedef std::deque<Package_ptr> Package_queue;	
-		typedef boost::function<void (void)> func_t;
+		typedef boost::function<void (socket_ptr &)> func_t;
 
 	private:
 		tcp::acceptor acceptor_;
@@ -46,6 +46,7 @@ namespace Networking
 		void add_sending_package(Package_ptr & package);
 		void add_sending_packages(Package_queue & packages);
 		void setSynchronize(func_t const & synchronize);
+		bool send_message(socket_ptr & socket, Package_ptr & message);
 
 	private:
 		void start();
@@ -56,7 +57,7 @@ namespace Networking
 		void handle_accept(socket_ptr & socket, boost::system::error_code const & error);
 		void set_handle_read(socket_ptr & socket, boost::system::error_code const & error);
 		void handle_incomming_package(Package_ptr & package, socket_ptr & socket, boost::system::error_code const & error);
-		bool send_message(socket_ptr & socket, Package_ptr & message);
+		
 	};
 
 }

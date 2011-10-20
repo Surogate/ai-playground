@@ -140,6 +140,14 @@ namespace ClientXNA
                     incoming_packages_.RemoveAt(0);
                 }
             }
+            lock (entities_)
+            {
+                IDictionaryEnumerator it = entities_.GetEnumerator();
+                while (it.MoveNext())
+                {
+                    ((Entity)it.Value).Update(gameTime);
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -162,6 +170,14 @@ namespace ClientXNA
                         if (board_.Data[x][y].hasGrass())
                             spriteBatch.Draw(grass_, new Rectangle((int)camera_.X + (x * 32), (int)camera_.Y + (y * 32), 32, 32), new Rectangle(32, 0, 32, 32), Color.White);
                     }
+            }
+            lock (entities_)
+            {
+                IDictionaryEnumerator it = entities_.GetEnumerator();
+                while (it.MoveNext())
+                {
+                    ((Entity)it.Value).Draw(spriteBatch, camera_);
+                }
             }
             spriteBatch.End();
             base.Draw(gameTime);
@@ -223,13 +239,17 @@ namespace ClientXNA
                 int id = int.Parse(tokens[1]);
                 int x = int.Parse(tokens[2]);
                 int y = int.Parse(tokens[3]);
-                if (type == "s")
+                lock (gcl.entities_)
                 {
-                    gcl.entities_.Add(id, new Sheep(new Vector2(x, y)));
-                }
-                else
-                {
-                    gcl.entities_.Add(id, new Wolf(new Vector2(x, y)));
+                    if (type == "s")
+                    {
+
+                        gcl.entities_.Add(id, new Sheep(new Vector2(x, y), gcl.Content.Load<Texture2D>("sheep")));
+                    }
+                    else
+                    {
+                        gcl.entities_.Add(id, new Wolf(new Vector2(x, y), gcl.Content.Load<Texture2D>("wolf")));
+                    }
                 }
             }
             catch (Exception e)
@@ -254,13 +274,13 @@ namespace ClientXNA
 
         private static void die(GameClient gcl, string msg)
         {
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
             try
             {
-                int id = int.Parse(tokens[0]);
-                gcl.entities_.Remove(id);
+                lock (gcl.entities_)
+                {
+                    int id = int.Parse(msg);
+                    gcl.entities_.Remove(id);
+                }
             }
             catch (Exception e)
             {
