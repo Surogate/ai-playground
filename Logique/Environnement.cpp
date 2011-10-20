@@ -82,9 +82,43 @@ namespace Logique {
 		_baseTime = time;
 	}
 
-	void Environnement::addSheep(const Coord& loc) {}
+	void Environnement::addSheep(const Coord& loc) {
+		if (!_board(loc).hasSheep()) {
+			std::cout << "spawn sheep at " << loc << std::endl;
+			std::shared_ptr<Sheep> sheepPtr(new Sheep());
+			sheepPtr->initActionArray(_board);
+			initEntity(sheepPtr);
 
-	void Environnement::addSheep(unsigned int num) {}
+			sheepPtr->addFood(Sheep::FOODMAX);
+			sheepPtr->setLocation(loc);
+
+			_board.lock();
+			_board(loc).hasSheep(true);
+			_board.unlock();
+			_attriMtx.lock();
+			_sheepNum++;
+			_attriMtx.unlock();
+			Callback_Environnement::getInstance().cb_onSheepSpawn(*sheepPtr);
+			Callback_Environnement::getInstance().cb_onBoardChange(_board);
+		}
+	}
+
+	void Environnement::addSheep(unsigned int num) {
+		Coord loc;
+		unsigned int i = 0;
+
+		while (i < num) {
+			unsigned int limit = 0;
+
+			do {
+				loc = Coord(_distri(_gen), _distri(_gen));
+			} while (_board(loc).hasSheep() && limit < 10);
+
+			if (limit < 10)
+				addSheep(loc);
+			++i;
+		}
+	}
 
 	unsigned int Environnement::getSheepNum() const {
 		return _sheepNum;
@@ -193,24 +227,8 @@ namespace Logique {
 			loc = Coord(_distri(_gen), _distri(_gen));
 		} while (_board(loc).hasSheep() && limit < 10);
 
-		if (limit < 10) {
-			std::cout << "spawn sheep at " << loc << std::endl;
-			std::shared_ptr<Sheep> sheepPtr(new Sheep());
-			sheepPtr->initActionArray(_board);
-			initEntity(sheepPtr);
-
-			sheepPtr->addFood(Sheep::FOODMAX);
-			sheepPtr->setLocation(loc);
-
-			_board.lock();
-			_board(loc).hasSheep(true);
-			_board.unlock();
-			_attriMtx.lock();
-			_sheepNum++;
-			_attriMtx.unlock();
-			Callback_Environnement::getInstance().cb_onSheepSpawn(*sheepPtr);
-			Callback_Environnement::getInstance().cb_onBoardChange(_board);
-		}
+		if (limit < 10)
+			addSheep(loc);
 	}
 
 	void Environnement::onEntityDeath(Entity& value) {

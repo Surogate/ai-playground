@@ -115,7 +115,6 @@ namespace Logique {
 			return _odour;
 		}
 
-
 	private:
 		enum {
 			USEABLE_MASK = 1,
