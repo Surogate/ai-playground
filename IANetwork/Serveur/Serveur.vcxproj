@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Logique;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\boost\boost_1_47;..\..\Logique;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -83,10 +83,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Logique\Board.cpp" />
     <ClCompile Include="..\..\Logique\Callback_Environnement.cpp" />
     <ClCompile Include="..\..\Logique\Coord.cpp" />
     <ClCompile Include="..\..\Logique\Entity.cpp" />
     <ClCompile Include="..\..\Logique\Environnement.cpp" />
+    <ClCompile Include="..\..\Logique\Sheep.cpp" />
     <ClCompile Include="NetworkEnvironnement.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="main.cpp" />

@@ -57,6 +57,12 @@
     <ClCompile Include="..\..\Logique\Callback_Environnement.cpp">
       <Filter>Source Files\Logique</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Logique\Board.cpp">
+      <Filter>Source Files\Logique</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Logique\Sheep.cpp">
+      <Filter>Source Files\Logique</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Logique\Action.hpp">
