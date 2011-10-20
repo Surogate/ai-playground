@@ -37,7 +37,7 @@ namespace Networking
 			sockets_[socket->native_handle()] = socket;
 			set_handle_read(socket, error);
 			if (!synchronize_.empty())
-				synchronize_();
+				synchronize_(socket);
 		}
 		else
 		{

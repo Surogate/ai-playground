@@ -9,7 +9,7 @@ namespace Wrapper
 {
 	NetworkEnvironnement::NetworkEnvironnement(Networking::Server * server) : env_(), server_(server)
 	{
-		server_->setSynchronize(boost::bind(&NetworkEnvironnement::synchronize, this));
+		server_->setSynchronize(boost::bind(&NetworkEnvironnement::synchronize, this, _1));
 		env_.setSpawnSheep(boost::bind(&NetworkEnvironnement::onSpawnSheep, this, _1));
 		env_.setSpawnWolf(boost::bind(&NetworkEnvironnement::onSpawnWolf, this, _1));
 		env_.setOnEntityMove(boost::bind(&NetworkEnvironnement::onEntityMove, this, _1));
@@ -24,7 +24,7 @@ namespace Wrapper
 	{
 	}
 
-	void NetworkEnvironnement::synchronize()
+	void NetworkEnvironnement::synchronize(Networking::Server::socket_ptr & socket)
 	{
 		std::clog << "[Log] synchronize... entity..." << std::endl;
 		env_.lock();
@@ -32,7 +32,12 @@ namespace Wrapper
 		Logique::Environnement::EntityPtrSet::const_iterator ite = env_.getEntityList().end();
 		for (; it != ite; ++it)
 		{
-			onSpawnSheep((*it->first));
+			Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
+
+			std::stringstream sstream;
+			sstream << SPAWN << ";s;" << (uint32_t)(it->first) << ";" << it->first->getLocation().x << ";" << it->first->getLocation().y;
+			package->init(sstream.str());
+			if (!server_->send_message(socket, package)) break;
 		}
 		env_.unlock();
 		std::clog << "[Log] synchronize finished..." << std::endl;
@@ -43,7 +48,7 @@ namespace Wrapper
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 		std::stringstream sstream;
-		sstream << SPAWN << ";s;" << &entity << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
+		sstream << SPAWN << ";s;" << (uint32_t)&entity << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
 		package->init(sstream.str());
 		server_->add_sending_package(package);
 	}
@@ -65,7 +70,7 @@ namespace Wrapper
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 		std::stringstream sstream;
-		sstream << DIE << ";" << &entity;
+		sstream << DIE << ";" <<  (uint32_t)&entity;
 		package->init(sstream.str());
 		server_->add_sending_package(package);
 	}

@@ -7,15 +7,27 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ClientXNA
 {
-    public class Entity
+    public abstract class Entity
     {
+        public enum EntityAction {
+			MOVE_DOWN,
+			MOVE_LEFT,
+			MOVE_RIGHT,
+            MOVE_UP,
+			EAT,
+			REPRODUCE,
+            NONE
+		};
+
         #region Attributes
         protected Vector2 position_;
+        protected EntityAction action_;
         #endregion
 
         public Entity(Vector2 position)
         {
             position_ = position;
+            action_ = EntityAction.NONE;
         }
 
         public Vector2 Position
@@ -31,7 +43,22 @@ namespace ClientXNA
             }
         }
 
-        public abstract void Draw(SpriteBatch graphics);
+        public EntityAction Action
+        {
+
+            get
+            {
+                return (action_);
+            }
+            set
+            {
+                action_ = value;
+            }
+        }
+
+        public abstract void Update(GameTime gameTime);
+
+        public abstract void Draw(SpriteBatch graphics, Vector2 camera);
 
     }
 }

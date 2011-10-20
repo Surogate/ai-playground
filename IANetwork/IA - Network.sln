@@ -5,7 +5,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serveur", "Serveur\Serveur.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientXNA", "ClientXNA\ClientXNA\ClientXNA.csproj", "{A8B88B80-6433-4704-A5B8-9EAA19C44D00}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "ClientXNAContent", "ClientXNA\ClientXNAContent\ClientXNAContent.contentproj", "{7899C2DC-FC3E-48D6-B440-50059FB67ED6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientXNAContent", "ClientXNA\ClientXNAContent\ClientXNAContent.contentproj", "{7899C2DC-FC3E-48D6-B440-50059FB67ED6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client2D", "Client2D\Client2D.csproj", "{CB728297-0A76-47B3-8E40-34240B6EFCCE}"
 EndProject
