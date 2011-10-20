@@ -98,6 +98,14 @@ namespace Logique {
 		return _entityList;
 	}
 
+	void Environnement::lock() {
+		_attriMtx.lock();
+	}
+
+	void Environnement::unlock() {
+		_attriMtx.unlock();
+	}
+
 	void Environnement::addAction(const Action& value) {
 		_listMtx.lock(); // ##list lock
 		_actionTmpStack.push(value);
