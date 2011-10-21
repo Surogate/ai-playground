@@ -6,13 +6,28 @@
 
 namespace Logique {
 
-	class Wolf {
+	class Wolf : public Entity {
 	public:
-		Action getNewAction() {}
+		enum Constant {
+			FOOD_GAIN = 2,
+			EAT_TIME = 3,
+			REPRODUCE_TIME = 5
+		};
 
-		void removeAtLoc(Board& board) const {
-			board(loc_).hasWolf(false);
-		}
+		Wolf();
+
+		Action getNewAction();
+
+		void initActionArray(Board& board);
+
+		void eat(Board& board);
+		void reproduce(Board& board);
+
+		EntityAction computeAction();
+		unsigned int evaluate() const;
+
+	private:
+		unsigned int _numberEat;
 	};
 
 }
