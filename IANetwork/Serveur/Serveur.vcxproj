@@ -89,6 +89,7 @@
     <ClCompile Include="..\..\Logique\Entity.cpp" />
     <ClCompile Include="..\..\Logique\Environnement.cpp" />
     <ClCompile Include="..\..\Logique\Sheep.cpp" />
+    <ClCompile Include="..\..\Logique\Wolf.cpp" />
     <ClCompile Include="NetworkEnvironnement.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="main.cpp" />
