@@ -6,7 +6,7 @@
 namespace Logique {
 
 	Entity::Entity(const Square::EntityContain& type)
-		: _type(type), _loc(), _add_action(), _foodCount(0)
+		: _type(type), _loc(), _add_action(), _foodCount(0), _lastAction()
 		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
 	{}
 

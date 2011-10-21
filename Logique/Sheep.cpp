@@ -7,7 +7,7 @@
 
 namespace Logique {
 
-	Sheep::Sheep() : Entity(Square::SHEEP) 
+	Sheep::Sheep() : Entity(Square::SHEEP), _numberEat(0)
 	{}
 
 	void Sheep::initActionArray(Board& board) {
