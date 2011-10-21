@@ -48,14 +48,27 @@ namespace ClientXNA
             {
                 elapsedTime_ = 0;
                 x_frame_ = (x_frame_ < 3) ? (x_frame_ + 1) : (0);
+                if (Action == EntityAction.MOVE_UP)
+                    if (Position.Y > NextPosition.Y)
+                        position_.Y -= 0.1f;
+                if (Action == EntityAction.MOVE_DOWN)
+                    if (Position.Y < NextPosition.Y)
+                        position_.Y += 0.1f;
+                if (Action == EntityAction.MOVE_LEFT)
+                    if (Position.X > NextPosition.X)
+                        position_.X -= 0.1f;
+                if (Action == EntityAction.MOVE_RIGHT)
+                    if (Position.X < NextPosition.X)
+                        position_.X += 0.1f;
             }
             elapsedTime_ += gameTime.ElapsedGameTime.Milliseconds;
+           
         }
 
         public override void Draw(SpriteBatch graphics, Vector2 camera)
         {
-            graphics.Draw(image_, new Rectangle((((int)Position.X * 32)) + (int)camera.X
-                                                , (((int)Position.Y * 32)) + (int) camera.Y,
+            graphics.Draw(image_, new Rectangle(((int)(Position.X * 32)) + (int)camera.X
+                                                , ((int)(Position.Y * 32)) + (int) camera.Y,
                                                 width_, height_),
                           frames_[y_frame_][x_frame_], Color.White);
         }
