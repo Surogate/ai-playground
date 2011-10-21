@@ -243,12 +243,11 @@ namespace ClientXNA
                 {
                     if (type == "s")
                     {
-
-                        gcl.entities_.Add(id, new Sheep(new Vector2(x, y), gcl.Content.Load<Texture2D>("sheep")));
+                        gcl.entities_.Add(id, new Sheep(new Vector2(y, x), gcl.Content.Load<Texture2D>("sheep")));
                     }
                     else
                     {
-                        gcl.entities_.Add(id, new Wolf(new Vector2(x, y), gcl.Content.Load<Texture2D>("wolf")));
+                        gcl.entities_.Add(id, new Wolf(new Vector2(y, x), gcl.Content.Load<Texture2D>("wolf")));
                     }
                 }
             }
@@ -263,6 +262,19 @@ namespace ClientXNA
             string[] tokens = msg.Split(new char[] { ';' });
             if (tokens.Count() < 0)
                 return;
+            try
+            {
+                int id = int.Parse(tokens[0]);
+                int action = int.Parse(tokens[1]);
+                int x = int.Parse(tokens[2]);
+                int y = int.Parse(tokens[3]);
+                ((Entity)gcl.entities_[id]).Action = (Entity.EntityAction)action;
+                ((Entity)gcl.entities_[id]).NextPosition = new Vector2(y, x);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         private static void eat(GameClient gcl, string msg)
@@ -332,8 +344,8 @@ namespace ClientXNA
                 int y = int.Parse(tokens[1]);
                 int title = int.Parse(tokens[2]);
                 int odour = int.Parse(tokens[3]);
-                gcl.board_.Data[x][y].Odour = odour;
-                gcl.board_.Data[x][y].setHasGrass((title == 1));
+                gcl.board_.Data[y][x].Odour = odour;
+                gcl.board_.Data[y][x].setHasGrass((title == 1));
             }
             catch (Exception e)
             {
