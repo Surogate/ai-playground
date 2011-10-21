@@ -11,6 +11,7 @@
 #include <functional>
 
 #include "TypedTree.hpp"
+#include "ConditionnalFunctor.hpp"
 
 
 namespace ID3 {
@@ -213,17 +214,14 @@ Hold Class that construct Tree
 			typedef typename SpecializedContainer::value_type					Specialized;
 			typedef typename ResultContainer::value_type						Result;
 			typedef typename Tree::ATree										ATree;
-			typedef typename Tree::TreeNode< SpecializedContainer::value_type > TreeNode;
-			typedef typename Builder< Tree >									Builder;
+			typedef typename Tree::template TreeNode< SpecializedContainer::value_type > TreeNode;
 			typedef typename ConditionnalFunctor1< SpecializedContainer >		ConditionnalFunctor1;
-			typedef typename ConditionnalFunctorVal< SpecializedContainer >		ConditionnalFunctorVal;
-			typedef typename Gain< Specialized, Result >						Gain;
-			typedef typename Gain::AttribueMap									AttribueMap;
+			typedef typename Gain< Specialized, Result >::AttribueMap			AttribueMap;
 
 			const SpecializedContainer& attr_;
 			const ResultContainer& res_;
 			ConditionnalFunctor* func_;
-			Gain gain_;
+			Gain< Specialized, Result > gain_;
 
 		public:
 			template <typename Conditional>
@@ -256,7 +254,7 @@ Hold Class that construct Tree
 				typename AttribueMap::const_iterator ite = map.end();
 
 				while (it != ite) {
-					Builder build(getMainValue());
+					Builder< Tree >	 build(getMainValue());
 
 					ConditionnalFunctor1 func(spe, it->first, func_);
 
@@ -296,7 +294,7 @@ Hold Class that construct Tree
 				typename AttribueMap::const_iterator ite = map.end();
 
 				while (it != ite) {
-					Builder build(getMainValue());
+					Builder< Tree >	 build(getMainValue());
 					ConditionnalFunctor1 func(spe, it->first, func_);
 
 					func.reset();
@@ -328,7 +326,7 @@ Hold Class that construct Tree
 
 				//Evaluate every value of the current Node Attribute.
 				while (it != ite) {
-					Builder build(getMainValue());
+					Builder< Tree >	 build(getMainValue());
 
 					ConditionnalFunctor1 func(spe, it->first, func_);
 
@@ -356,7 +354,7 @@ Hold Class that construct Tree
 				typename AttribueMap::const_iterator ite = map.end();
 
 				while (it != ite) {
-					Builder build(getMainValue());
+					Builder< Tree > build(getMainValue());
 
 					ConditionnalFunctor1 func(spe, it->first, func_);
 
@@ -383,7 +381,7 @@ Hold Class that construct Tree
 					ConditionnalFunctor1 func(spe, it->first, func_);
 
 					func.reset();
-					Gain gain;
+					Gain< Specialized, Result > gain;
 					gain.getGain(spe, res_, func);
 
 					ATree* leaf;
