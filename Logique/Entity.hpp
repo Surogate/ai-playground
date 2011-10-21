@@ -63,6 +63,7 @@ namespace Logique  {
 		virtual void eat(Board& board) = 0;
 		virtual void reproduce(Board& board) = 0;
 		void generateNewAction();
+		EntityAction getLastAction() const;
 		
 		// TODO : Une methode pour recupere la derniere action serait pratique pour les messages.
 
@@ -79,6 +80,7 @@ namespace Logique  {
 		ActionFunctor _add_action;
 		EntityFunctor _onDeath;
 		unsigned int _foodCount;
+		EntityAction _lastAction;
 
 		std::random_device _randomD;
 		std::mt19937 _gen;

@@ -202,7 +202,7 @@ namespace ID3 {
 
 				template <typename N, typename B, typename V, typename C>
 				inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3, const C& val4) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(value, val1, val2, val3, val4);
@@ -213,7 +213,7 @@ namespace ID3 {
 
 				template <typename N, typename B, typename V, typename C>
 				inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, value, val2, val3, val4);
@@ -224,7 +224,7 @@ namespace ID3 {
 	 
 				template <typename N, typename B, typename V, typename C>
 				inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, val2, value, val3, val4);
@@ -235,7 +235,7 @@ namespace ID3 {
 	
 				template <typename N, typename B, typename V, typename C>
 				inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, val2, val3, value, val4);
@@ -246,7 +246,7 @@ namespace ID3 {
 
 				template <typename N, typename B, typename V, typename C>
 				inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, val2, val3, val4, value);
@@ -312,7 +312,7 @@ namespace ID3 {
 
 				template <typename N, typename B, typename V>
 				inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(value, val1, val2, val3);
@@ -323,7 +323,7 @@ namespace ID3 {
 
 				template <typename N, typename B, typename V>
 				inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, value, val2, val3);
@@ -334,7 +334,7 @@ namespace ID3 {
 	 
 				template <typename N, typename B, typename V>
 				inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, val2, value, val3);
@@ -345,7 +345,7 @@ namespace ID3 {
 	
 				template <typename N, typename B, typename V>
 				inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, val2, val3, value);
@@ -411,7 +411,7 @@ namespace ID3 {
 
 				template <typename N, typename B>
 				inline Answer test(const Specialized& value, const N& val1, const B& val2) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(value, val1, val2);
@@ -422,7 +422,7 @@ namespace ID3 {
 
 				template <typename N, typename B>
 				inline Answer test(const N& val1, const Specialized& value, const B& val2) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, value, val2);
@@ -433,7 +433,7 @@ namespace ID3 {
 	 
 				template <typename N, typename B>
 				inline Answer test(const N& val1, const B& val2, const Specialized& value) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, val2, value);
@@ -498,7 +498,7 @@ namespace ID3 {
 
 				template <typename N>
 				inline Answer test(const Specialized& value, const N& val1) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(value, val1);
@@ -509,7 +509,7 @@ namespace ID3 {
 
 				template <typename N>
 				inline Answer test(const N& val1, const Specialized& value) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(val1, value);
@@ -573,7 +573,7 @@ namespace ID3 {
 				}
 
 				inline Answer test(const Specialized& value) const {
-					ChildMap::const_iterator it = child_.find(value);
+					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
 						return it->second->evaluate(value);

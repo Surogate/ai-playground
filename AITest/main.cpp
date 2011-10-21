@@ -35,64 +35,72 @@ enum PlayBall {
 	Yes
 };
 
-template <>
-struct ID3::TypedTree::Debugger<Wind> {
-	Debugger() { std::cout << "Wind" << std::endl; }
-	Debugger(const Wind& value) { std::cout << "Wind value " << getValue(value) << std::endl; }
-	const char* getValue(const Wind& value) {
-		if (value == Weak)
-			return "Weak";
-		return "Strong";
-	}
-};
+namespace ID3 {
 
-template <>
-struct ID3::TypedTree::Debugger<Humidity> {
-	Debugger() { std::cout << "Humidity" << std::endl; }
-	Debugger(const Humidity& value) { std::cout << "Humidity value " << getValue(value) << std::endl; }
-	const char* getValue(const Humidity& value) {
-		if (value == High)
-			return "High";
-		return "Normal";
-	}
-};
+	namespace TypedTree {
 
-template <>
-struct ID3::TypedTree::Debugger<Temperature> {
-	Debugger() { std::cout << "Temperature" << std::endl; }
-	Debugger(const Temperature& value) { std::cout << "Temperature value " << getValue(value) << std::endl; }
-	const char* getValue(const Temperature& value) {
-		if (value == Hot)
-			return "Hot";
-		if (value == Mild)
-			return "Mild";
-		return "Cool";
-	}
-};
+		template <>
+		struct Debugger<Wind> {
+			Debugger() { std::cout << "Wind" << std::endl; }
+			Debugger(const Wind& value) { std::cout << "Wind value " << getValue(value) << std::endl; }
+			const char* getValue(const Wind& value) {
+				if (value == Weak)
+					return "Weak";
+				return "Strong";
+			}
+		};
 
-template <>
-struct ID3::TypedTree::Debugger<Outlook> {
-	Debugger() { std::cout << "Outlook" << std::endl; }
-	Debugger(const Outlook& value) { std::cout << "Outlook value " << getValue(value) << std::endl;}
-	const char* getValue(const Outlook& value) {
-		if (value == Sunny)
-			return "Sunny";
-		if (value == Overcast)
-			return "Overcast";
-		return "Rain";
-	}
-};
+		template <>
+		struct Debugger<Humidity> {
+			Debugger() { std::cout << "Humidity" << std::endl; }
+			Debugger(const Humidity& value) { std::cout << "Humidity value " << getValue(value) << std::endl; }
+			const char* getValue(const Humidity& value) {
+				if (value == High)
+					return "High";
+				return "Normal";
+			}
+		};
 
-template <>
-struct ID3::TypedTree::Debugger<PlayBall> {
-	Debugger() { std::cout << "PlayBall" << std::endl; }
-	Debugger(const PlayBall& value) { std::cout << "PlayBall value " << getValue(value) << std::endl;}
-	const char* getValue(const PlayBall& value) {
-		if (value == Yes)
-			return "Yes";
-		return "No";
+		template <>
+		struct Debugger<Temperature> {
+			Debugger() { std::cout << "Temperature" << std::endl; }
+			Debugger(const Temperature& value) { std::cout << "Temperature value " << getValue(value) << std::endl; }
+			const char* getValue(const Temperature& value) {
+				if (value == Hot)
+					return "Hot";
+				if (value == Mild)
+					return "Mild";
+				return "Cool";
+			}
+		};
+
+		template <>
+		struct Debugger<Outlook> {
+			Debugger() { std::cout << "Outlook" << std::endl; }
+			Debugger(const Outlook& value) { std::cout << "Outlook value " << getValue(value) << std::endl;}
+			const char* getValue(const Outlook& value) {
+				if (value == Sunny)
+					return "Sunny";
+				if (value == Overcast)
+					return "Overcast";
+				return "Rain";
+			}
+		};
+
+		template <>
+		struct Debugger<PlayBall> {
+			Debugger() { std::cout << "PlayBall" << std::endl; }
+			Debugger(const PlayBall& value) { std::cout << "PlayBall value " << getValue(value) << std::endl;}
+			const char* getValue(const PlayBall& value) {
+				if (value == Yes)
+					return "Yes";
+				return "No";
+			}
+		};
+
 	}
-};
+
+}
 
 typedef ID3::ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall> ID3Test5;
 typedef ID3Test5::Answer Answer;

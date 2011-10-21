@@ -83,6 +83,7 @@ namespace Logique {
 
 	void Entity::goUp(Board& board) {
 		if (isAlive() && _loc.x > 0) {
+			_lastAction = MOVE_UP;
 			std::cout << "move up" << std::endl;
 			Coord newLoc(_loc.x - 1, _loc.y);
 			moveToThisLocation(board, newLoc);
@@ -92,6 +93,7 @@ namespace Logique {
 
 	void Entity::goLeft(Board& board) {
 		if (isAlive() && _loc.y > 0) {
+			_lastAction = MOVE_LEFT;
 			std::cout << "move left" << std::endl;
 			Coord newLoc(_loc.x, _loc.y - 1);
 			moveToThisLocation(board, newLoc);
@@ -101,6 +103,7 @@ namespace Logique {
 
 	void Entity::goRight(Board& board) {
 		if (isAlive() && _loc.y < BOARD_SIZE - 1) {
+			_lastAction = MOVE_RIGHT;
 			std::cout << "move right" << std::endl;
 			Coord newLoc(_loc.x, _loc.y + 1);
 			moveToThisLocation(board, newLoc);
@@ -110,6 +113,7 @@ namespace Logique {
 
 	void Entity::goDown(Board& board) {
 		if (isAlive() && _loc.x < BOARD_SIZE - 1) {
+			_lastAction = MOVE_DOWN;
 			std::cout << "move down" << std::endl;
 			Coord newLoc(_loc.x + 1, _loc.y);
 			moveToThisLocation(board, newLoc);
@@ -133,6 +137,10 @@ namespace Logique {
 
 	void Entity::generateNewAction() {
 		if (isAlive()) _add_action(getNewAction());
+	}
+
+	Entity::EntityAction Entity::getLastAction() const {
+		return _lastAction;
 	}
 }
 

@@ -27,6 +27,7 @@ namespace Logique {
 
 	void Sheep::eat(Board& board) {
 		if (isAlive() && board(_loc).hasGrass()) {
+			_lastAction = EAT;
 			std::cout << "eat" << std::endl;
 			board(_loc).hasGrass(false);
 			_foodCount += FOOD_GAIN;
@@ -36,8 +37,10 @@ namespace Logique {
 	}
 
 	void Sheep::reproduce(Board& board) {
-		if (isAlive())
+		if (isAlive()) {
 			std::cout << "reproduce" << std::endl;
+			_lastAction = REPRODUCE;
+		}
 		generateNewAction();
 	}
 
