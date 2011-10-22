@@ -4,6 +4,7 @@
 #include "Sheep.hpp"
 #include "Board.hpp"
 #include "Callback_Environnement.hpp"
+#include "DecisionTree.hpp"
 
 namespace Logique {
 
@@ -17,8 +18,8 @@ namespace Logique {
 	}
 
 	Entity::EntityAction Sheep::computeAction() {
-		//mettre l'id3 la dedans
-		return EntityAction(_distri(_gen));
+		static DecisionTree _tree;
+		return _tree.randomAction();
 	}
 
 	Action Sheep::getNewAction() {
