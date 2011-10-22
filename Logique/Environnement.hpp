@@ -85,14 +85,13 @@ namespace Logique {
 		void preRun();
 		Action createBoardPlay();
 		void boardPlay();
-		void initEntity(std::shared_ptr<Entity> value);
+		void initEntity(std::shared_ptr<Entity> value, const Coord& loc);
 		void spawnSheep();
 		void onEntityDeath(Entity& value);
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
 
-		unsigned int _sheepNum;
-		unsigned int _wolfNum;
+		std::array<unsigned int, Square::ENTITY_CONTAINER_SIZE> _entityNum;
 
 		Board _board;
 		boost::posix_time::time_duration _baseTime;

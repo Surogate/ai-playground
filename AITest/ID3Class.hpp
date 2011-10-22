@@ -24,7 +24,7 @@ namespace ID3 {
 		typedef typename Tree::Answer Answer;
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
-		ID3Class7() : first_(), second_(), third_(), fourth_(), fifth_, sixth_, result_(), actualize_(false), tree_(0)
+		ID3Class7() : first_(), second_(), third_(), fourth_(), fifth_(), sixth_(), result_(), actualize_(false), tree_(0)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Result& res) {
@@ -64,6 +64,10 @@ namespace ID3 {
 			return Answer();
 		}
 
+		std::size_t size() const {
+			return result.size();
+		}
+
 	private:
 		std::deque<First> first_;
 		std::deque<Second> second_;
@@ -85,7 +89,8 @@ namespace ID3 {
 		typedef typename Tree::Answer Answer;
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
-		ID3Class6() : first_(), second_(), third_(), fourth_(), fifth_, result_(), actualize_(false), tree_(0)
+		ID3Class6() 
+			: first_(), second_(), third_(), fourth_(), fifth_(), result_(), actualize_(false), tree_(0)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Result& res) {
@@ -122,6 +127,10 @@ namespace ID3 {
 				return getRandomResult_();
 			}
 			return Answer();
+		}
+
+		std::size_t size() const {
+			return result.size();
 		}
 
 	private:
@@ -182,6 +191,10 @@ namespace ID3 {
 			return Answer();
 		}
 
+		std::size_t size() const {
+			return result.size();
+		}
+
 	private:
 		std::deque<First> first_;
 		std::deque<Second> second_;
@@ -238,6 +251,10 @@ namespace ID3 {
 			return Answer();
 		}
 
+		std::size_t size() const {
+			return result.size();
+		}
+
 	private:
 		std::deque<First> first_;
 		std::deque<Second> second_;
@@ -292,6 +309,10 @@ namespace ID3 {
 			return Answer();
 		}
 
+		std::size_t size() const {
+			return result.size();
+		}
+
 	private:
 		std::deque<First> first_;
 		std::deque<Second> second_;
@@ -342,6 +363,10 @@ namespace ID3 {
 				return getRandomResult_();
 			}
 			return Answer();
+		}
+
+		std::size_t size() const {
+			return result.size();
 		}
 
 	private:
