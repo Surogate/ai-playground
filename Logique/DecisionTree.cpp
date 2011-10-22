@@ -4,13 +4,12 @@
 namespace Logique {
 	DecisionTree::DecisionTree() 
 		: _moyenne(0.f)
+		, _randomD(), _gen(_randomD), _distri(0, Entity::ACTION_CONTAINER_SIZE - 1)
 	{
-		_randomArray[Entity::MOVE_UP] = Entity::MOVE_UP;
-		_randomArray[Entity::MOVE_DOWN] = Entity::MOVE_DOWN;
-		_randomArray[Entity::MOVE_LEFT] = Entity::MOVE_LEFT;
-		_randomArray[Entity::MOVE_RIGHT] = Entity::MOVE_RIGHT;
-		_randomArray[Entity::EAT] = Entity::EAT;
-		_randomArray[Entity::REPRODUCE] = Entity::REPRODUCE;
+	}
+
+	Entity::EntityAction DecisionTree::randomAction() {
+		return static_cast<Entity::EntityAction>(_distri(_gen));
 	}
 
 	Entity::EntityAction DecisionTree::computeAction(int present, int haut, int gauche, int bas, int droite) {
@@ -18,12 +17,9 @@ namespace Logique {
 		if (ans) {
 			return *ans;
 		}
-		return Entity::EntityAction();
+		return randomAction();
 	}
 
-	std::random_device _randomD;
-	std::mt19937 _gen;
-	std::uniform_int_distribution<unsigned int> _distri;
 
 }
 

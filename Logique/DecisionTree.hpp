@@ -14,11 +14,15 @@ namespace Logique {
 		DecisionTree();
 
 		Entity::EntityAction computeAction(int present, int haut, int gauche, int bas, int droite);
+		Entity::EntityAction randomAction();
+
 	private:
 		ID3Algo _id3;
 
-		std::array<Entity::EntityAction, Entity::ACTION_CONTAINER_SIZE> _randomArray;
 		float _moyenne;
+		std::random_device _randomD;
+		std::mt19937 _gen;
+		std::uniform_int_distribution<unsigned int> _distri;
 	};
 
 }

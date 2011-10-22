@@ -79,11 +79,6 @@ namespace Logique  {
 		EntityFunctor _onDeath;
 		unsigned int _foodCount;
 		EntityAction _lastAction;
-
-		std::random_device _randomD;
-		std::mt19937 _gen;
-		std::uniform_int_distribution<unsigned int> _distri;
-
 	private:
 		bool moveToThisLocation(Board& board, const Coord& newLoc);
 	};
