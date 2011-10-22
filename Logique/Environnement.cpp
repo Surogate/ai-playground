@@ -13,6 +13,8 @@ namespace Logique {
 		: _board(), _baseTime(), _entityList(), _listMtx(), _attriMtx(), _actionList(), _actionTmpStack()
 		, _randomD(), _gen(_randomD), _distri(0, BOARD_SIZE - 1)
 	{
+		_entityNum[Square::SHEEP] = 0;
+		_entityNum[Square::WOLF] = 0;
 		_baseTime = boost::posix_time::seconds(1);
 		addAction(createBoardPlay());
 	}
@@ -86,18 +88,10 @@ namespace Logique {
 		if (!_board(loc).hasSheep()) {
 			std::cout << "spawn sheep at " << loc << std::endl;
 			std::shared_ptr<Sheep> sheepPtr(new Sheep());
-			sheepPtr->initActionArray(_board);
-			initEntity(sheepPtr);
-
 			sheepPtr->addFood(Sheep::FOODMAX);
-			sheepPtr->setLocation(loc);
+			sheepPtr->initActionArray(_board);
 
-			_board.lock();
-			_board(loc).hasSheep(true);
-			_board.unlock();
-			_attriMtx.lock();
-			_sheepNum++;
-			_attriMtx.unlock();
+			initEntity(sheepPtr, loc);
 			Callback_Environnement::getInstance().cb_onSheepSpawn(*sheepPtr);
 			Callback_Environnement::getInstance().cb_onBoardChange(_board);
 		}
@@ -121,11 +115,11 @@ namespace Logique {
 	}
 
 	unsigned int Environnement::getSheepNum() const {
-		return _sheepNum;
+		return _entityNum[Square::SHEEP];
 	}
 
 	unsigned int Environnement::getWolfNum() const {
-		return _wolfNum;
+		return _entityNum[Square::WOLF];
 	}
 
 	const Environnement::EntityPtrSet& Environnement::getEntityList() const {
@@ -209,11 +203,16 @@ namespace Logique {
 		addAction(createBoardPlay());
 	}
 
-	void Environnement::initEntity(std::shared_ptr<Entity> value) {
+	void Environnement::initEntity(std::shared_ptr<Entity> value, const Coord& loc) {
+		_board.lock();
+		_board(loc).hasEntity(value->getType(), true);
+		_board.unlock();
+		value->setLocation(loc);
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
 		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
 		_attriMtx.lock();
 		_entityList[value.get()] = value;
+		_entityNum[value->getType()]++;
 		_attriMtx.unlock();
 		addAction(value->createFoodAction());
 		addAction(value->getNewAction());
@@ -237,12 +236,12 @@ namespace Logique {
 		_board.lock();
 		popOdour(value.getLocation());
 		_board(value.getLocation()).hasEntity(value.getType(), false);
-		if (value.getType() == Square::SHEEP) {
-			_attriMtx.lock();
-			_sheepNum --;
-			_attriMtx.unlock();
-		}
 		_board.unlock();
+		
+		_attriMtx.lock();
+		_entityNum[value.getType()]--;		
+		_attriMtx.unlock();
+
 		Callback_Environnement::getInstance().cb_onBoardChange(_board);
 		value.cleanVtable();
 		EntityPtrSet::iterator it = _entityList.find(&value);
@@ -251,11 +250,9 @@ namespace Logique {
 			_entityList.erase(it);
 			_attriMtx.unlock();
 		}
-		_board.dump();
 	}
 
 	void Environnement::popOdour(const Coord& loc, unsigned int power) {
-		
 		for (unsigned int size = power; size > 0; size--) {
 			int x_start = loc.x - size + 1;
 			int y_start;
@@ -273,7 +270,6 @@ namespace Logique {
 				x_start++;
 			}
 		}
-		
 	}
 
 	void Environnement::addOdour(int x, int y, unsigned int value) {

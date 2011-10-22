@@ -94,6 +94,10 @@ struct ID3::TypedTree::Debugger<PlayBall> {
 	}
 };
 
+
+typedef ID3::ID3Class6<Outlook, Outlook, Temperature, Humidity, Wind, PlayBall> ID3Test6;
+typedef ID3Test6::Answer Answer6;
+
 typedef ID3::ID3Class5<Outlook, Temperature, Humidity, Wind, PlayBall> ID3Test5;
 typedef ID3Test5::Answer Answer;
 
@@ -130,6 +134,7 @@ void initID3(ID3Test5& id3) {
 }
 
 int main(void) {
+	ID3Test6 id36;
 	ID3Test5 id3;
 	ID3Test4 id34;
 	ID3Test3 id33;
