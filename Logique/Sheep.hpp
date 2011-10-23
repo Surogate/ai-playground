@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include "Entity.hpp"
+#include "DecisionTree.hpp"
 
 namespace Logique {
 
@@ -27,8 +28,12 @@ namespace Logique {
 		Action getNewAction();
 		unsigned int evaluate() const;
 
+		static DecisionTree _tree;
+
 	private:
 		unsigned int _numberEat;
+
+
 	};
 
 }

@@ -36,6 +36,7 @@ namespace Logique  {
 		typedef std::shared_ptr<Entity> Ptr;
 		typedef std::function< void (const Action&) > ActionFunctor;
 		typedef std::function< void (Entity&) > EntityFunctor;
+		typedef std::function< int (const Coord&) > GetSquareFunctor;
 
 		Entity(const Square::EntityContain& type);
 		virtual ~Entity();
@@ -46,6 +47,7 @@ namespace Logique  {
 		bool isAlive() const;
 		void setAddAction(const ActionFunctor& func);
 		void setOnDeath(const EntityFunctor& func);
+		void setGetSquare(const GetSquareFunctor& func);
 		void setLocation(Coord loc);
 		const Coord& getLocation() const;
 		Action createFoodAction(unsigned int time = BASEFOODTIME, unsigned int value = BASEFOODDECREASE);
@@ -77,6 +79,8 @@ namespace Logique  {
 		Coord _loc;
 		ActionFunctor _add_action;
 		EntityFunctor _onDeath;
+		GetSquareFunctor _getSquare;
+
 		unsigned int _foodCount;
 		EntityAction _lastAction;
 	private:

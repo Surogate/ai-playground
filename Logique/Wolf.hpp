@@ -3,6 +3,7 @@
 #define WOLF_HPP
 
 #include "Entity.hpp"
+#include "DecisionTree.hpp"
 
 namespace Logique {
 
@@ -25,6 +26,8 @@ namespace Logique {
 
 		EntityAction computeAction();
 		unsigned int evaluate() const;
+
+		static DecisionTree _tree;
 
 	private:
 		unsigned int _numberEat;

@@ -210,6 +210,7 @@ namespace Logique {
 		value->setLocation(loc);
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
 		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
+		value->setGetSquare(boost::bind(&Board::getSquare, &_board, _1));
 		_attriMtx.lock();
 		_entityList[value.get()] = value;
 		_entityNum[value->getType()]++;

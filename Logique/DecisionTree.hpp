@@ -15,6 +15,7 @@ namespace Logique {
 
 		Entity::EntityAction computeAction(int present, int haut, int gauche, int bas, int droite);
 		Entity::EntityAction randomAction();
+		const float& getMoy() const;
 
 	private:
 		ID3Algo _id3;
