@@ -52,12 +52,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\boost\boost_1_47;..\..\Logique;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\AITest;C:\Program Files\boost\boost_1_47;..\..\Logique;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\boost\boost_1_47\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_47\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -86,6 +86,7 @@
     <ClCompile Include="..\..\Logique\Board.cpp" />
     <ClCompile Include="..\..\Logique\Callback_Environnement.cpp" />
     <ClCompile Include="..\..\Logique\Coord.cpp" />
+    <ClCompile Include="..\..\Logique\DecisionTree.cpp" />
     <ClCompile Include="..\..\Logique\Entity.cpp" />
     <ClCompile Include="..\..\Logique\Environnement.cpp" />
     <ClCompile Include="..\..\Logique\Sheep.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="..\..\Logique\Board.hpp" />
     <ClInclude Include="..\..\Logique\Callback_Environnement.hpp" />
     <ClInclude Include="..\..\Logique\Coord.hpp" />
+    <ClInclude Include="..\..\Logique\DecisionTree.hpp" />
     <ClInclude Include="..\..\Logique\Entity.hpp" />
     <ClInclude Include="..\..\Logique\Environnement.hpp" />
     <ClInclude Include="..\..\Logique\Sheep.hpp" />

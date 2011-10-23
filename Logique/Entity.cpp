@@ -38,6 +38,10 @@ namespace Logique {
 		_onDeath = func;
 	}
 
+	void Entity::setGetSquare(const GetSquareFunctor& func) {
+		_getSquare = func;
+	}
+
 	void Entity::setLocation(Coord loc) {
 		_loc = loc;
 	}

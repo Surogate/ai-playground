@@ -22,8 +22,12 @@ namespace Logique {
 
 		const Square& operator()(const Coord& pos) const;
 		Square& operator()(const Coord& pos);
+		
+		int getSquare(const Coord& pos) const;
 
 		void dump() const;
+
+		static bool coordValid(const Coord& pos);
 	private:
 		boost::mutex _mtx;
 	};

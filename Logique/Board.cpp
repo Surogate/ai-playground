@@ -36,4 +36,15 @@ namespace Logique {
 			std::cout << std::endl;
 		}
 	}
+
+	int Board::getSquare(const Coord& pos) const {
+		if (Board::coordValid(pos)) {
+			return get(pos).getInt();
+		}
+		return Square(false).getInt();
+	}
+
+	bool Board::coordValid(const Coord& pos) {
+		return (pos.x < BOARD_SIZE && pos.y < BOARD_SIZE);
+	}
 }

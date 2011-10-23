@@ -20,7 +20,9 @@ namespace Logique {
 		return randomAction();
 	}
 
-
+	const float& DecisionTree::getMoy() const {
+		return _moyenne;
+	}
 }
 
 

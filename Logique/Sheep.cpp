@@ -4,9 +4,10 @@
 #include "Sheep.hpp"
 #include "Board.hpp"
 #include "Callback_Environnement.hpp"
-#include "DecisionTree.hpp"
 
 namespace Logique {
+
+	DecisionTree Sheep::_tree;
 
 	Sheep::Sheep() : Entity(Square::SHEEP), _numberEat(0)
 	{}
@@ -18,8 +19,12 @@ namespace Logique {
 	}
 
 	Entity::EntityAction Sheep::computeAction() {
-		static DecisionTree _tree;
-		return _tree.randomAction();
+		return _tree.computeAction(
+			_getSquare(_loc), 
+			_getSquare(_loc - Coord::DOWN),
+			_getSquare(_loc - Coord::RIGHT),
+			_getSquare(_loc + Coord::DOWN),
+			_getSquare(_loc + Coord::RIGHT));
 	}
 
 	Action Sheep::getNewAction() {
