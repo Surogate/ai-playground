@@ -47,4 +47,8 @@ namespace Logique {
 	bool Board::coordValid(const Coord& pos) {
 		return (pos.x < BOARD_SIZE && pos.y < BOARD_SIZE);
 	}
+
+	bool Board::coordValid(unsigned int x, unsigned int y) {
+		return (x < BOARD_SIZE && y < BOARD_SIZE);
+	}
 }

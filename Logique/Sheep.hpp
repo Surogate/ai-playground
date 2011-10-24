@@ -2,7 +2,6 @@
 #ifndef SHEEP_HPP
 #define SHEEP_HPP
 
-#include <cmath>
 #include "Entity.hpp"
 #include "DecisionTree.hpp"
 
@@ -22,6 +21,7 @@ namespace Logique {
 
 		void eat(Board& board);
 		void reproduce(Board& board);
+		bool hasSheepNext();
 
 		EntityAction computeAction();
 
@@ -29,11 +29,6 @@ namespace Logique {
 		unsigned int evaluate() const;
 
 		static DecisionTree _tree;
-
-	private:
-		unsigned int _numberEat;
-
-
 	};
 
 }

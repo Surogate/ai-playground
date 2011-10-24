@@ -1,4 +1,6 @@
 
+#include <cmath>
+
 #include "Entity.hpp"
 #include "Board.hpp"
 #include "Callback_Environnement.hpp"
@@ -6,7 +8,7 @@
 namespace Logique {
 
 	Entity::Entity(const Square::EntityContain& type)
-		: _type(type), _loc(), _add_action(), _foodCount(0), _lastAction()
+		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _foodCount(0), _lastAction()
 	{}
 
 	Entity::~Entity() 
@@ -22,8 +24,8 @@ namespace Logique {
 
 	void Entity::addFood(unsigned int value) {
 		_foodCount += value;
-		if (_foodCount > FOODMAX)
-			_foodCount = FOODMAX;
+		if (_foodCount > FOOD_MAX)
+			_foodCount = FOOD_MAX;
 	}
 
 	bool Entity::isAlive() const {
@@ -40,6 +42,15 @@ namespace Logique {
 
 	void Entity::setGetSquare(const GetSquareFunctor& func) {
 		_getSquare = func;
+	}
+
+	void Entity::setGetNumberSpecies(const GetNumberSpeciesFunctor& func) {
+		_getSpecieNumber = func;
+		reInitPerf();
+	}
+
+	void Entity::setPopEntityFunctor(const PopEntityFunctor& func) {
+		_popEntity = func;
 	}
 
 	void Entity::setLocation(Coord loc) {
@@ -61,7 +72,6 @@ namespace Logique {
 		else
 			_foodCount = 0;
 
-		std::cout << "food at " << _foodCount << std::endl;
 		if (_foodCount)
 			addAction(createFoodAction());
 		else if (_onDeath)
@@ -144,6 +154,19 @@ namespace Logique {
 
 	Entity::EntityAction Entity::getLastAction() const {
 		return _lastAction;
+	}
+
+	void Entity::reInitPerf() {
+		_numberEat = 0;
+		_numberRep = 0;
+		_actual = 0;
+		_numberTot = static_cast<float>(_getSpecieNumber());
+	}
+
+	float Entity::computeMoy() const {
+		float moy = std::pow(_numberEat, _numberRep + 1.f);
+		moy /= _actual;
+		return moy;
 	}
 }
 

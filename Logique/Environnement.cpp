@@ -22,7 +22,7 @@ namespace Logique {
 	Environnement::~Environnement() {}
 
 	void Environnement::preRun() {
-		spawnSheep();
+		addSheep(10);
 		insertActionStack();
 
 		if (_actionList.empty()) {
@@ -88,9 +88,11 @@ namespace Logique {
 		if (!_board(loc).hasSheep()) {
 			std::cout << "spawn sheep at " << loc << std::endl;
 			std::shared_ptr<Sheep> sheepPtr(new Sheep());
-			sheepPtr->addFood(Sheep::FOODMAX);
+			sheepPtr->addFood(Sheep::FOOD_MAX);
 			sheepPtr->initActionArray(_board);
 
+			sheepPtr->setGetNumberSpecies(boost::bind(&Environnement::getSheepNum, this));
+			sheepPtr->setPopEntityFunctor(boost::bind(&Environnement::popSheepNear, this, _1));
 			initEntity(sheepPtr, loc);
 			Callback_Environnement::getInstance().cb_onSheepSpawn(*sheepPtr);
 			Callback_Environnement::getInstance().cb_onBoardChange(_board);
@@ -112,6 +114,27 @@ namespace Logique {
 				addSheep(loc);
 			++i;
 		}
+	}
+
+	bool Environnement::popSheepNear(const Coord& loc) {
+		bool found = false;
+		Coord locFound;
+
+		for (unsigned int x = loc.x - 1; x <= loc.x + 1 && !found; ++x) {
+			for (unsigned int y = loc.y - 1; y <= loc.y + 1 && !found; ++y) {
+				found = Board::coordValid(x, y) && !_board[x][y].hasSheep();
+				if (found) {
+					locFound.x = x;
+					locFound.y = y;
+				}
+			}
+		}
+
+		if (found) {
+			addSheep(locFound);
+			return true;
+		}
+		return false;
 	}
 
 	unsigned int Environnement::getSheepNum() const {
@@ -185,9 +208,10 @@ namespace Logique {
 
 		if (!odour_higher) {
 			grassSpawn = Coord(_distri(_gen), _distri(_gen));
-		} else {
+		} 
+		/*else {
 			_board.dump();
-		}
+		}*/
 
 		//std::cout << "try spawn grass on " << grassSpawn << std::endl;
 		if (!_board(grassSpawn).hasGrass()) {
@@ -207,14 +231,14 @@ namespace Logique {
 		_board.lock();
 		_board(loc).hasEntity(value->getType(), true);
 		_board.unlock();
-		value->setLocation(loc);
-		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
-		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
-		value->setGetSquare(boost::bind(&Board::getSquare, &_board, _1));
 		_attriMtx.lock();
 		_entityList[value.get()] = value;
 		_entityNum[value->getType()]++;
 		_attriMtx.unlock();
+		value->setLocation(loc);
+		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
+		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
+		value->setGetSquare(boost::bind(&Board::getSquare, &_board, _1));
 		addAction(value->createFoodAction());
 		addAction(value->getNewAction());
 	}
@@ -278,4 +302,6 @@ namespace Logique {
 			_board[x][y].addOdour(value);
 		}
 	}
+
+
 }

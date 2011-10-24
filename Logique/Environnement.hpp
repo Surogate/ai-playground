@@ -71,8 +71,15 @@ namespace Logique {
 		}
 		void addAction(const Action& value);
 		void setBaseTime(const boost::posix_time::time_duration& time);
+
 		void addSheep(const Coord& loc);
+		bool popSheepNear(const Coord& loc);
 		void addSheep(unsigned int num);
+		
+		void addWolf(const Coord& loc);
+		bool popWolfNear(const Coord& loc);
+		void addWolf(unsigned int num);
+
 		unsigned int getSheepNum() const;
 		unsigned int getWolfNum() const;
 		const EntityPtrSet& getEntityList() const;

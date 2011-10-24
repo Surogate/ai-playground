@@ -15,6 +15,13 @@ namespace Logique {
 			ENTITY_CONTAINER_SIZE
 		};
 
+		enum {
+			USEABLE_MASK = 1,
+			GRASS_MASK = 2,
+			SHEEP_MASK = 4,
+			WOLF_MASK = 8
+		};
+
 
 		Square() : _odour(0), _useable(true), _hasGrass(false)
 		{
@@ -116,13 +123,6 @@ namespace Logique {
 		}
 
 	private:
-		enum {
-			USEABLE_MASK = 1,
-			GRASS_MASK = 2,
-			SHEEP_MASK = 4,
-			WOLF_MASK = 8
-		};
-
 		const bool _useable;
 		bool _hasGrass;
 		std::array<bool, ENTITY_CONTAINER_SIZE> _entityIn;

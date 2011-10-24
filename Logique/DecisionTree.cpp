@@ -23,6 +23,14 @@ namespace Logique {
 	const float& DecisionTree::getMoy() const {
 		return _moyenne;
 	}
+
+	void DecisionTree::addAction(int present, int haut, int gauche, int bas, int droite, Entity::EntityAction result) {
+		_id3.addData(present, haut, gauche, bas, droite, result);
+	}
+
+	void DecisionTree::sendMoy(float value) {
+		_moyenne = (_moyenne + value) / 2.f;
+	}
 }
 
 

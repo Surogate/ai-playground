@@ -5,6 +5,7 @@
 #include <memory>
 #include <array>
 #include <random>
+#include <stack>
 
 #include "Action.hpp"
 #include "Coord.hpp"
@@ -17,9 +18,9 @@ namespace Logique  {
 	class Entity : public std::enable_shared_from_this<Entity> {
 	public:
 		enum Constant{
-			BASEFOODTIME = 3,
+			BASEFOODTIME = 10,
 			BASEFOODDECREASE = 1,
-			FOODMAX = 10,
+			FOOD_MAX = 10,
 			MOVE_TIME = 3
 		};
 
@@ -37,6 +38,8 @@ namespace Logique  {
 		typedef std::function< void (const Action&) > ActionFunctor;
 		typedef std::function< void (Entity&) > EntityFunctor;
 		typedef std::function< int (const Coord&) > GetSquareFunctor;
+		typedef std::function< int () > GetNumberSpeciesFunctor;
+		typedef std::function< bool (const Coord&) > PopEntityFunctor;
 
 		Entity(const Square::EntityContain& type);
 		virtual ~Entity();
@@ -45,9 +48,13 @@ namespace Logique  {
 
 		void addFood(unsigned int value);
 		bool isAlive() const;
+
 		void setAddAction(const ActionFunctor& func);
 		void setOnDeath(const EntityFunctor& func);
 		void setGetSquare(const GetSquareFunctor& func);
+		void setGetNumberSpecies(const GetNumberSpeciesFunctor& func);
+		void setPopEntityFunctor(const PopEntityFunctor& func);
+
 		void setLocation(Coord loc);
 		const Coord& getLocation() const;
 		Action createFoodAction(unsigned int time = BASEFOODTIME, unsigned int value = BASEFOODDECREASE);
@@ -74,15 +81,44 @@ namespace Logique  {
 			return _foodCount != 0;
 		}
 
+		void reInitPerf();
+		float computeMoy() const;
+		
+		struct ActionStore {
+			int present;
+			int up;
+			int left;
+			int down;
+			int right;
+
+			EntityAction result;
+
+			ActionStore(int _present_, int _up_, int _left_, int _down_, int _right_, EntityAction _result_)
+				: present (_present_), up(_up_), left(_left_), down(_down_), right(_right_), result(_result_)
+			{}
+		};
+
+		typedef std::stack< ActionStore > ActionStoreStack;
+
 		const Square::EntityContain _type;
 		std::array<Action, ACTION_CONTAINER_SIZE> _actionArray;
 		Coord _loc;
+
 		ActionFunctor _add_action;
 		EntityFunctor _onDeath;
 		GetSquareFunctor _getSquare;
+		GetNumberSpeciesFunctor _getSpecieNumber;
+		PopEntityFunctor _popEntity;
 
+		ActionStoreStack _actionStack;
+
+		float _numberEat;
+		float _numberRep;
+		float _actual;
+		float _numberTot;
 		unsigned int _foodCount;
 		EntityAction _lastAction;
+
 	private:
 		bool moveToThisLocation(Board& board, const Coord& newLoc);
 	};

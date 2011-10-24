@@ -14,8 +14,10 @@ namespace Logique {
 		DecisionTree();
 
 		Entity::EntityAction computeAction(int present, int haut, int gauche, int bas, int droite);
+		void addAction(int present, int haut, int gauche, int bas, int droite, Entity::EntityAction result);
 		Entity::EntityAction randomAction();
 		const float& getMoy() const;
+		void sendMoy(float value);
 
 	private:
 		ID3Algo _id3;
