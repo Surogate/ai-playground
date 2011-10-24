@@ -63,6 +63,7 @@ namespace Logique {
 			_numberRep++;
 			std::cout << "reproduce" << std::endl;
 			_lastAction = REPRODUCE;
+			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
 		}
 		generateNewAction();
 	}
