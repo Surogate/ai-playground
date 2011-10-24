@@ -312,6 +312,15 @@ namespace ClientXNA
             string[] tokens = msg.Split(new char[] { ';' });
             if (tokens.Count() < 0)
                 return;
+            try
+            {
+                int id = int.Parse(tokens[0]);
+                ((Entity)gcl.entities_[id]).Action = Entity.EntityAction.REPRODUCE;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         private static void board_beg(GameClient gcl, string msg)

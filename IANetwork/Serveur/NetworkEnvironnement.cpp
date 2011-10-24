@@ -75,6 +75,12 @@ namespace Wrapper
 
 	void NetworkEnvironnement::onEntityEat(Logique::Entity const & entity)
 	{
+		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
+
+		std::stringstream sstream;
+		sstream << EAT << ";" << (uint32_t)&entity;
+		package->init(sstream.str());
+		server_->add_sending_package(package);
 	}
 
 	void NetworkEnvironnement::onEntityDead(Logique::Entity const & entity)
@@ -89,6 +95,14 @@ namespace Wrapper
 
 	void NetworkEnvironnement::onReproduce(Logique::Entity const & entity)
 	{
+		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
+
+
+		std::cout << "[SERVER] REPRODUCE" << std::endl;
+		std::stringstream sstream;
+		sstream << CLONE << ";" <<  (uint32_t)&entity;
+		package->init(sstream.str());
+		server_->add_sending_package(package);
 	}
 	
 	void NetworkEnvironnement::onBoardChange(Logique::Board const & board)
