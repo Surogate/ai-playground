@@ -57,9 +57,9 @@ Hold Class that construct Tree
 
 			ATree* operator()() {
 				if (!node_->getSize())
-					return new Tree::Leaf(defaultValue_);
+					return new typename Tree::Leaf(defaultValue_);
 				if (!higher_ || higher_ == 1.0f) {
-					return new Tree::Leaf(node_->getMainValue());
+					return new typename Tree::Leaf(node_->getMainValue());
 				}
 				return construct_();
 			}
