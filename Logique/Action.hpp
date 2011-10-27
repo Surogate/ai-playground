@@ -2,12 +2,12 @@
 #ifndef ACTION_HPP
 #define ACTION_HPP
 
-#include <functional>
+#include <boost/function.hpp>
 
 namespace Logique {
 
 	struct Action {
-		typedef std::function< void () > Functor;
+		typedef boost::function< void () > Functor;
 
 		Action() : _tickBeforeAction(), _action() 
 		{}

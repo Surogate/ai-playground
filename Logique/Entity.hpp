@@ -2,10 +2,12 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 
-#include <memory>
-#include <array>
-#include <random>
 #include <stack>
+
+#include <boost/function.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/array.hpp>
 
 #include "Action.hpp"
 #include "Coord.hpp"
@@ -15,7 +17,7 @@ namespace Logique  {
 
 	class Board;
 
-	class Entity : public std::enable_shared_from_this<Entity> {
+	class Entity : public boost::enable_shared_from_this<Entity> {
 	public:
 		enum Constant{
 			BASEFOODTIME = 10,
@@ -34,12 +36,12 @@ namespace Logique  {
 			ACTION_CONTAINER_SIZE
 		};
 
-		typedef std::shared_ptr<Entity> Ptr;
-		typedef std::function< void (const Action&) > ActionFunctor;
-		typedef std::function< void (Entity&) > EntityFunctor;
-		typedef std::function< Square& (const Coord&) > GetSquareFunctor;
-		typedef std::function< int () > GetNumberSpeciesFunctor;
-		typedef std::function< bool (const Coord&) > PopEntityFunctor;
+		typedef boost::shared_ptr<Entity> Ptr;
+		typedef boost::function< void (const Action&) > ActionFunctor;
+		typedef boost::function< void (Entity&) > EntityFunctor;
+		typedef boost::function< Square& (const Coord&) > GetSquareFunctor;
+		typedef boost::function< int () > GetNumberSpeciesFunctor;
+		typedef boost::function< bool (const Coord&) > PopEntityFunctor;
 
 		Entity(const Square::EntityContain& type);
 		virtual ~Entity();
@@ -73,6 +75,8 @@ namespace Logique  {
 		virtual void reproduce(Board& board) = 0;
 		void generateNewAction();
 		EntityAction getLastAction() const;
+		int getIntFromSup(Coord loc, const Coord& dir); 
+		int getIntFromLess(Coord loc, const Coord& dir);
 
 	protected:
 		inline bool addAction(const Action& value) {
@@ -101,7 +105,7 @@ namespace Logique  {
 		typedef std::stack< ActionStore > ActionStoreStack;
 
 		const Square::EntityContain _type;
-		std::array<Action, ACTION_CONTAINER_SIZE> _actionArray;
+		boost::array<Action, ACTION_CONTAINER_SIZE> _actionArray;
 		Coord _loc;
 
 		ActionFunctor _add_action;

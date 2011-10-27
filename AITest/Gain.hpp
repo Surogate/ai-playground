@@ -10,7 +10,8 @@
 
 #include <map>
 #include <cmath>
-#include <random>
+#include <boost/random.hpp>
+#include <boost/random/random_device.hpp>
 
 #include "ConditionnalFunctor.hpp"
 
@@ -146,8 +147,8 @@ namespace ID3 {
 
 		template <typename ResultContainer>
 		static Result getRandomResult(const ResultContainer& container) {
-			std::uniform_int_distribution<int> distribution(0, container.size());
-			int value = distribution(std::mt19937());
+			boost::random::uniform_int_distribution<int> distribution(0, container.size());
+			int value = distribution(boost::random::mt19937());
 
 			typename ResultContainer::const_iterator it = container.begin();
 			typename ResultContainer::const_iterator ite = container.end();

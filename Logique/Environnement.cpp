@@ -87,7 +87,7 @@ namespace Logique {
 	void Environnement::addSheep(const Coord& loc) {
 		if (!_board(loc).hasSheep()) {
 			std::cout << "spawn sheep at " << loc << std::endl;
-			std::shared_ptr<Sheep> sheepPtr(new Sheep());
+			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
 			sheepPtr->addFood(Sheep::FOOD_MAX);
 			sheepPtr->initActionArray(_board);
 
@@ -185,7 +185,7 @@ namespace Logique {
 	Action Environnement::createBoardPlay() {
 		Action act;
 
-		act._action = std::bind(&Environnement::boardPlay, this);
+		act._action = boost::bind(&Environnement::boardPlay, this);
 		act._tickBeforeAction = 1;
 		return act;
 	}
@@ -227,7 +227,7 @@ namespace Logique {
 		addAction(createBoardPlay());
 	}
 
-	void Environnement::initEntity(std::shared_ptr<Entity> value, const Coord& loc) {
+	void Environnement::initEntity(boost::shared_ptr<Entity> value, const Coord& loc) {
 		_board.lock();
 		_board(loc).hasEntity(value->getType(), value.get());
 		_board.unlock();

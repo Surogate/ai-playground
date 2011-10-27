@@ -15,20 +15,16 @@ namespace Logique {
 
 	void Sheep::initActionArray(Board& board) {
 		Entity::initActionArray(board);
-		_actionArray[EAT] = Action(EAT_TIME, std::bind(&Entity::eat, shared_from_this(), std::ref(board)));
-		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, std::bind(&Entity::reproduce, shared_from_this(), std::ref(board)));
+		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Entity::eat, shared_from_this(), boost::ref(board)));
+		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, shared_from_this(), boost::ref(board)));
 	}
 
 	Entity::EntityAction Sheep::computeAction() {
-		Coord loc = _loc;
-		int present = _getSquare(loc).getInt();
-		int up = _getSquare(loc - Coord::DOWN).getInt();
-		loc = _loc;
-		int left = _getSquare(loc - Coord::RIGHT).getInt();
-		loc = _loc;
-		int down = _getSquare(loc + Coord::DOWN).getInt();
-		loc = _loc;
-		int right = _getSquare(loc + Coord::RIGHT).getInt();
+		int present = _getSquare(_loc).getInt();
+		int up = getIntFromLess(_loc, Coord::DOWN);
+		int left = getIntFromLess(_loc, Coord::RIGHT);
+		int down = getIntFromSup(_loc, Coord::DOWN);
+		int right = getIntFromSup(_loc, Coord::RIGHT);
 		EntityAction act = _tree.computeAction(present, up, left, down, right); 
 		_actionStack.push(ActionStore(present, up, left, down, right, act));
 		_actual++;
@@ -55,7 +51,9 @@ namespace Logique {
 			_lastAction = EAT;
 			_numberEat++;
 			std::cout << "eat" << std::endl;
+			board.lock();
 			board(_loc).hasGrass(false);
+			board.unlock();
 			addFood(FOOD_GAIN);
 			Callback_Environnement::getInstance().cb_onEntityEat(*this);
 		}
@@ -73,14 +71,10 @@ namespace Logique {
 	}
 
 	bool Sheep::hasSheepNext() {
-		Coord loc = _loc;
-		int up = _getSquare(loc - Coord::DOWN).getInt();
-		loc = _loc;
-		int left = _getSquare(loc - Coord::RIGHT).getInt();
-		loc = _loc;
-		int down = _getSquare(loc + Coord::DOWN).getInt();
-		loc = _loc;
-		int right = _getSquare(loc + Coord::RIGHT).getInt();
+		int up = getIntFromLess(_loc, Coord::DOWN);
+		int left = getIntFromLess(_loc, Coord::RIGHT);
+		int down = getIntFromSup(_loc, Coord::DOWN);
+		int right = getIntFromSup(_loc, Coord::RIGHT);
 		return (up & Square::SHEEP_MASK) 
 			|| (left & Square::SHEEP_MASK)
 			|| (down & Square::SHEEP_MASK)
