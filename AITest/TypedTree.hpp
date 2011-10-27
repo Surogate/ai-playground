@@ -183,7 +183,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const {
+				Answer evaluate(const Fi& , const Se& , const Th& , const Fo& , const Fifth& ) const {
 					return value_;
 				}
 			};
@@ -294,7 +294,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
+				Answer evaluate(const Fi& , const Se& , const Th& , const Fo& ) const {
 					return value_;
 				}
 			};
@@ -393,7 +393,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3) const {
+				Answer evaluate(const Fi& , const Se& , const Th& ) const {
 					return value_;
 				}
 			};
@@ -480,7 +480,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& val1, const Se& val2) const {
+				Answer evaluate(const Fi& , const Se& ) const {
 					return value_;
 				}
 			};
@@ -556,7 +556,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& val1) const {
+				Answer evaluate(const Fi& ) const {
 					return value_;
 				}
 			};
