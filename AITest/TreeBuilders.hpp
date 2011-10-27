@@ -85,8 +85,8 @@ Hold Class that construct Tree
 			typedef typename SpecializedContainer::value_type					Specialized;
 			typedef typename ResultContainer::value_type						Result;
 			typedef typename Tree::ATree										ATree;
-			typedef typename Tree::template TreeNode< SpecializedContainer::value_type > TreeNode;
-			typedef typename ConditionnalFunctor1< SpecializedContainer >		ConditionnalFunctor1;
+			typedef typename Tree::template TreeNode< Specialized > TreeNode;
+			typedef ConditionnalFunctor1< SpecializedContainer >		ConditionnalFunctorSpe;
 			typedef typename Gain< Specialized, Result >::AttribueMap			AttribueMap;
 
 			const SpecializedContainer& attr_;
@@ -120,34 +120,34 @@ Hold Class that construct Tree
 			ATree* constructin(const ContX& val1, const ContY& val2, const ContZ& val3, const ContW& val4, const SpecializedContainer& spe) {
 				TreeNode* root = new TreeNode();
 
-				typename const AttribueMap& map = gain_.getAttribueMap();
+				const AttribueMap& map = gain_.getAttribueMap();
 				typename AttribueMap::const_iterator it = map.begin();
 				typename AttribueMap::const_iterator ite = map.end();
 
 				while (it != ite) {
 					Builder< Tree >	 build(getMainValue());
 
-					ConditionnalFunctor1 func(spe, it->first, func_);
+					ConditionnalFunctorSpe func(spe, it->first, func_);
 
 					func.reset();
 					BuilderNode<Tree, ContX, ResultContainer> build_1(val1, res_, func);
 					build(build_1, 
-						boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::constructin<ContX, ContY, ContZ, ContW>, &build_1, boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val1)));
+						boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContX, ContY, ContZ, ContW>, &build_1, boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val1)));
 
 					func.reset();
 					BuilderNode<Tree, ContY, ResultContainer> build_2(val2, res_, func);
 					build(build_2, 
-						boost::bind(&BuilderNode<Tree, ContY, ResultContainer>::constructin<ContX, ContY, ContZ, ContW>, &build_2, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val2)));
+						boost::bind(&BuilderNode<Tree, ContY, ResultContainer>::template constructin<ContX, ContY, ContZ, ContW>, &build_2, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val2)));
 
 					func.reset();
 					BuilderNode<Tree, ContZ, ResultContainer> build_3(val3, res_, func);
 					build(build_3, 
-						boost::bind(&BuilderNode<Tree, ContZ, ResultContainer>::constructin<ContX, ContY, ContZ, ContW>, &build_3, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val3)));
+						boost::bind(&BuilderNode<Tree, ContZ, ResultContainer>::template constructin<ContX, ContY, ContZ, ContW>, &build_3, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val3)));
 
 					func.reset();
 					BuilderNode<Tree, ContW, ResultContainer> build_4(val4, res_, func);
 					build(build_4, 
-						boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::constructin<ContX, ContY, ContZ, ContW>, &build_4, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4)));
+						boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContY, ContZ, ContW>, &build_4, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4)));
 
 					root->AddSubNode(it->first, build());
 					++it;
@@ -160,25 +160,25 @@ Hold Class that construct Tree
 			ATree* constructin(const ContX& val1, const ContY& val2, const ContZ& val3, const SpecializedContainer& spe) {
 				TreeNode* root = new TreeNode();
 
-				typename const AttribueMap& map = gain_.getAttribueMap();
+				const AttribueMap& map = gain_.getAttribueMap();
 				typename AttribueMap::const_iterator it = map.begin();
 				typename AttribueMap::const_iterator ite = map.end();
 
 				while (it != ite) {
 					Builder< Tree >	 build(getMainValue());
-					ConditionnalFunctor1 func(spe, it->first, func_);
+					ConditionnalFunctorSpe func(spe, it->first, func_);
 
 					func.reset();
 					BuilderNode<Tree, ContX, ResultContainer> build_f(val1, res_, func);
-					build(build_f, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::constructin<ContY, ContZ>, &build_f, boost::ref(val2), boost::ref(val3), boost::ref(val1)));
+					build(build_f, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContY, ContZ>, &build_f, boost::ref(val2), boost::ref(val3), boost::ref(val1)));
 
 					func.reset();
 					BuilderNode<Tree, ContY, ResultContainer> build_s(val2, res_, func);
-					build(build_s, boost::bind(&BuilderNode<Tree, ContY, ResultContainer>::constructin<ContX, ContZ>, &build_s, boost::ref(val1), boost::ref(val3), boost::ref(val2)));
+					build(build_s, boost::bind(&BuilderNode<Tree, ContY, ResultContainer>::template constructin<ContX, ContZ>, &build_s, boost::ref(val1), boost::ref(val3), boost::ref(val2)));
 
 					func.reset();
 					BuilderNode<Tree, ContZ, ResultContainer> build_t(val3, res_, func);
-					build(build_t, boost::bind(&BuilderNode<Tree, ContZ, ResultContainer>::constructin<ContX, ContY>, &build_t, boost::ref(val1), boost::ref(val2), boost::ref(val3)));
+					build(build_t, boost::bind(&BuilderNode<Tree, ContZ, ResultContainer>::template constructin<ContX, ContY>, &build_t, boost::ref(val1), boost::ref(val2), boost::ref(val3)));
 
 					root->AddSubNode(it->first, build());
 					++it;
@@ -191,7 +191,7 @@ Hold Class that construct Tree
 			ATree* constructin(const ContX& val1, const ContY& val2, const SpecializedContainer& spe) {
 				TreeNode* root = new TreeNode();
 
-				typename const AttribueMap& map = gain_.getAttribueMap();
+				const AttribueMap& map = gain_.getAttribueMap();
 				typename AttribueMap::const_iterator it = map.begin();
 				typename AttribueMap::const_iterator ite = map.end();
 
@@ -199,15 +199,15 @@ Hold Class that construct Tree
 				while (it != ite) {
 					Builder< Tree >	 build(getMainValue());
 
-					ConditionnalFunctor1 func(spe, it->first, func_);
+					ConditionnalFunctorSpe func(spe, it->first, func_);
 
 					func.reset();
 					BuilderNode<Tree, ContX, ResultContainer> build_f(val1, res_, func);
-					build(build_f, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::constructin<ContY>, &build_f, boost::ref(val2), boost::ref(val1)));
+					build(build_f, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContY>, &build_f, boost::ref(val2), boost::ref(val1)));
 
 					func.reset();
 					BuilderNode<Tree, ContY, ResultContainer> build_s(val2, res_, func);
-					build(build_s, boost::bind(&BuilderNode<Tree, ContY, ResultContainer>::constructin<ContX>, &build_s, boost::ref(val1), boost::ref(val2)));
+					build(build_s, boost::bind(&BuilderNode<Tree, ContY, ResultContainer>::template constructin<ContX>, &build_s, boost::ref(val1), boost::ref(val2)));
 
 					root->AddSubNode(it->first, build());
 					++it;
@@ -220,14 +220,14 @@ Hold Class that construct Tree
 			ATree* constructin(const ContX& val1, const SpecializedContainer& spe) {
 				TreeNode* root = new TreeNode();
 
-				typename const AttribueMap& map = gain_.getAttribueMap();
+				const AttribueMap& map = gain_.getAttribueMap();
 				typename AttribueMap::const_iterator it = map.begin();
 				typename AttribueMap::const_iterator ite = map.end();
 
 				while (it != ite) {
 					Builder< Tree > build(getMainValue());
 
-					ConditionnalFunctor1 func(spe, it->first, func_);
+					ConditionnalFunctorSpe func(spe, it->first, func_);
 
 					func.reset();
 					BuilderNode<Tree, ContX, ResultContainer> build_f(val1, res_, func);
@@ -244,12 +244,12 @@ Hold Class that construct Tree
 			ATree* constructin(const SpecializedContainer& spe) {
 				TreeNode* root = new TreeNode();
 
-				typename const AttribueMap& map = gain_.getAttribueMap();
+				const AttribueMap& map = gain_.getAttribueMap();
 				typename AttribueMap::const_iterator it = map.begin();
 				typename AttribueMap::const_iterator ite = map.end();
 
 				while (it != ite) {
-					ConditionnalFunctor1 func(spe, it->first, func_);
+					ConditionnalFunctorSpe func(spe, it->first, func_);
 
 					func.reset();
 					Gain< Specialized, Result > gain;
@@ -257,9 +257,9 @@ Hold Class that construct Tree
 
 					ATree* leaf;
 					if (!gain.getSize()) {
-						leaf = new Tree::Leaf(getMainValue());
+						leaf = new typename Tree::Leaf(getMainValue());
 					} else {
-						leaf = new Tree::Leaf(gain.getMainResult());
+						leaf = new typename Tree::Leaf(gain.getMainResult());
 					}
 
 					root->AddSubNode(it->first, leaf);
@@ -281,27 +281,27 @@ Hold Class that construct Tree
 
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
 				build(build_w, 
-					boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::constructin<ContX, ContC, ContV, ContB, ContN>, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val1)));
+					boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV, ContB, ContN>, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
 				build(build_x, 
-					boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::constructin<ContW, ContC, ContV, ContB, ContN>, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val2)));
+					boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV, ContB, ContN>, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val2)));
 
 				BuilderNode<Tree, ContC, ResultContainer> build_c(val3, result);
 				build(build_c, 
-					boost::bind(&BuilderNode<Tree, ContC, ResultContainer>::constructin<ContW, ContX, ContV, ContB, ContN>, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val3)));
+					boost::bind(&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV, ContB, ContN>, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val3)));
 
 				BuilderNode<Tree, ContV, ResultContainer> build_v(val4, result);
 				build(build_v, 
-					boost::bind(&BuilderNode<Tree, ContV, ResultContainer>::constructin<ContW, ContX, ContC, ContB, ContN>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val5), boost::ref(val6), boost::ref(val4)));
+					boost::bind(&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC, ContB, ContN>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val5), boost::ref(val6), boost::ref(val4)));
 			
 				BuilderNode<Tree, ContB, ResultContainer> build_b(val5, result);
 				build(build_b, 
-					boost::bind(&BuilderNode<Tree, ContB, ResultContainer>::constructin<ContW, ContX, ContC, ContV, ContN>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val6), boost::ref(val5)));
+					boost::bind(&BuilderNode<Tree, ContB, ResultContainer>::template constructin<ContW, ContX, ContC, ContV, ContN>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val6), boost::ref(val5)));
 
 				BuilderNode<Tree, ContN, ResultContainer> build_n(val5, result);
 				build(build_n, 
-					boost::bind(&BuilderNode<Tree, ContN, ResultContainer>::constructin<ContW, ContX, ContC, ContV, ContB>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6)));
+					boost::bind(&BuilderNode<Tree, ContN, ResultContainer>::template constructin<ContW, ContX, ContC, ContV, ContB>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6)));
 
 				return build();
 			}
@@ -311,19 +311,19 @@ Hold Class that construct Tree
 				Builder<Tree> build(getRandomResult(result));
 
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
-				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::constructin<ContX, ContC, ContV, ContB>, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val1)));
+				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV, ContB>, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
-				build(build_x, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::constructin<ContW, ContC, ContV, ContB>, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val2)));
+				build(build_x, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV, ContB>, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val2)));
 
 				BuilderNode<Tree, ContC, ResultContainer> build_c(val3, result);
-				build(build_c, boost::bind(&BuilderNode<Tree, ContC, ResultContainer>::constructin<ContW, ContX, ContV, ContB>, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val5), boost::ref(val3)));
+				build(build_c, boost::bind(&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV, ContB>, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val5), boost::ref(val3)));
 
 				BuilderNode<Tree, ContV, ResultContainer> build_v(val4, result);
-				build(build_v, boost::bind(&BuilderNode<Tree, ContV, ResultContainer>::constructin<ContW, ContX, ContC, ContB>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val5), boost::ref(val4)));
+				build(build_v, boost::bind(&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC, ContB>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val5), boost::ref(val4)));
 			
 				BuilderNode<Tree, ContB, ResultContainer> build_b(val5, result);
-				build(build_b, boost::bind(&BuilderNode<Tree, ContB, ResultContainer>::constructin<ContW, ContX, ContC, ContV>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5)));
+				build(build_b, boost::bind(&BuilderNode<Tree, ContB, ResultContainer>::template constructin<ContW, ContX, ContC, ContV>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5)));
 
 				return build();
 			}
@@ -333,16 +333,16 @@ Hold Class that construct Tree
 				Builder<Tree> build(getRandomResult(result));
 
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
-				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::constructin<ContX, ContC, ContV>, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val1)));
+				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV>, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
-				build(build_x, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::constructin<ContW, ContC, ContV>, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val2)));
+				build(build_x, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV>, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val2)));
 
 				BuilderNode<Tree, ContC, ResultContainer> build_c(val3, result);
-				build(build_c, boost::bind(&BuilderNode<Tree, ContC, ResultContainer>::constructin<ContW, ContX, ContV>, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val3)));
+				build(build_c, boost::bind(&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV>, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val3)));
 
 				BuilderNode<Tree, ContV, ResultContainer> build_v(val4, result);
-				build(build_v, boost::bind(&BuilderNode<Tree, ContV, ResultContainer>::constructin<ContW, ContX, ContC>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4)));
+				build(build_v, boost::bind(&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC>, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4)));
 
 				return build();
 			}
@@ -352,13 +352,13 @@ Hold Class that construct Tree
 				Builder<Tree> build(getRandomResult(result));
 
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
-				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::constructin<ContX, ContC>, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val1)));
+				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC>, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
-				build(build_x, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::constructin<ContW, ContC>, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val2)));
+				build(build_x, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC>, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val2)));
 
 				BuilderNode<Tree, ContC, ResultContainer> build_c(val3, result);
-				build(build_c, boost::bind(&BuilderNode<Tree, ContC, ResultContainer>::constructin<ContW, ContX>, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val3)));
+				build(build_c, boost::bind(&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX>, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val3)));
 
 				return build();
 			}
@@ -368,28 +368,19 @@ Hold Class that construct Tree
 				Builder<Tree> build(getRandomResult(result));
 
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
-				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::constructin<ContX>, &build_w,  boost::ref(val2), boost::ref(val1)));
+				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX>, &build_w,  boost::ref(val2), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
-				build(build_x, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::constructin<ContW>, &build_x, boost::ref(val1), boost::ref(val2)));
+				build(build_x, boost::bind(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW>, &build_x, boost::ref(val1), boost::ref(val2)));
 
 				return build();
 			}
-
-			template <typename ResultContainer, typename ContW>
-			static ATree* construct(const ResultContainer& result, const ContW& val1) {
-				Builder<Tree> build(getRandomResult(result));
-
-				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
-				build(build_w, boost::bind(&BuilderNode<Tree, ContW, ResultContainer>::constructin, &build_w, boost::ref(val1)));
-
-				return build();
-			}
-
+                        
 			template <typename ResultContainer>
 			static typename ResultContainer::value_type getRandomResult(const ResultContainer& container) {
 				boost::random::uniform_int_distribution<int> distribution(0, container.size());
-				int value = distribution(boost::random::mt19937());
+				boost::random::mt19937 engine;
+                                int value = distribution(engine);
 
 				typename ResultContainer::const_iterator it = container.begin();
 				typename ResultContainer::const_iterator ite = container.end();
