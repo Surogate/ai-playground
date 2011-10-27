@@ -70,7 +70,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef typename std::auto_ptr< const ATree > AutoTreePtr;
+				typedef typename std::auto_ptr< ATree > AutoTreePtr;
 				typedef typename std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6) const 
@@ -144,7 +144,7 @@ namespace ID3 {
 						return Answer();
 				}
 
-				void AddSubNode(const Specialized& value, const ATree* sub) 
+				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
 					child_[value] = AutoTreePtr(sub);
 				}
@@ -192,7 +192,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< const ATree > AutoTreePtr;
+				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const 
@@ -255,7 +255,7 @@ namespace ID3 {
 						return Answer();
 				}
 
-				void AddSubNode(const Specialized& value, const ATree* sub) 
+				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
 					child_[value] = AutoTreePtr(sub);
 				}
@@ -303,7 +303,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< const ATree > AutoTreePtr;
+				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) const {
@@ -354,7 +354,7 @@ namespace ID3 {
 						return Answer();
 				}
 
-				void AddSubNode(const Specialized& value, const ATree* sub) 
+				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
 					child_[value] = AutoTreePtr(sub);
 				}
@@ -402,7 +402,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< const ATree > AutoTreePtr;
+				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3) const {
@@ -442,7 +442,7 @@ namespace ID3 {
 						return Answer();
 				}
 	
-				void AddSubNode(const Specialized& value, const ATree* sub) {
+				void AddSubNode(const Specialized& value, ATree* sub) {
 					child_[value] = AutoTreePtr(sub);
 				}
 
@@ -489,7 +489,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< const ATree > AutoTreePtr;
+				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2) const {
@@ -518,7 +518,7 @@ namespace ID3 {
 						return Answer();
 				}
 	 
-				void AddSubNode(const Specialized& value, const ATree* sub) {
+				void AddSubNode(const Specialized& value, ATree* sub) {
 					child_[value] = AutoTreePtr(sub);
 				}
 
@@ -565,7 +565,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< const ATree > AutoTreePtr;
+				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1) const {
@@ -582,7 +582,7 @@ namespace ID3 {
 						return Answer();
 				}
 
-				void AddSubNode(const Specialized& value, const ATree* sub)  {
+				void AddSubNode(const Specialized& value, ATree* sub)  {
 					child_[value] = AutoTreePtr(sub);
 				}
 
