@@ -46,7 +46,7 @@ Hold Class that construct Tree
 			typedef typename Tree::Result Result;
 			typedef typename Tree::ATree ATree;
 
-			Builder(Result defaultValue) : higher_(-1), construct_(), defaultValue_(defaultValue), node_(0) {}
+			Builder(Result defaultValue) : higher_(-1), defaultValue_(defaultValue), construct_(), node_(0) {}
 
 			void operator() (const ABuilderNode< Tree >& node, const boost::function< ATree*() >& constructor) {
 				if (higher_ < node.getResult()) {

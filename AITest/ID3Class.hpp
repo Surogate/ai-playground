@@ -90,7 +90,7 @@ namespace ID3 {
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
 		ID3Class6() 
-			: first_(), second_(), third_(), fourth_(), fifth_(), result_(), actualize_(false), tree_(0)
+			: first_(), second_(), third_(), fourth_(), fifth_(), result_(), tree_(0), actualize_(false)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Result& res) {
@@ -153,7 +153,7 @@ namespace ID3 {
 		typedef typename Tree::Answer Answer;
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
-		ID3Class5() : first_(), second_(), third_(), fourth_(), result_(), actualize_(false), tree_(0)
+		ID3Class5() : first_(), second_(), third_(), fourth_(), result_(), tree_(0), actualize_(false)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Result& res) {
@@ -214,7 +214,7 @@ namespace ID3 {
 		typedef typename Tree::Answer Answer;
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
-		ID3Class4() : first_(), second_(), third_(), result_(), actualize_(false), tree_(0)
+		ID3Class4() : first_(), second_(), third_(), result_(), tree_(0), actualize_(false)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Third& val3, const Result& res) {
@@ -273,7 +273,7 @@ namespace ID3 {
 		typedef typename Tree::Answer Answer;
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
-		ID3Class3() : first_(), second_(), result_(), actualize_(false), tree_(0)
+		ID3Class3() : first_(), second_(), result_(), tree_(0), actualize_(false)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Result& res) {
