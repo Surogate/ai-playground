@@ -125,8 +125,8 @@ namespace ID3 {
 			Result answer = Result();
 			float higher = 0;
 
-			ResultMap::const_iterator it = result_value_yes_.begin();
-			ResultMap::const_iterator ite = result_value_yes_.end();
+			typename ResultMap::const_iterator it = result_value_yes_.begin();
+			typename ResultMap::const_iterator ite = result_value_yes_.end();
 
 			while (it != ite) {
 				if (it->second > higher)
