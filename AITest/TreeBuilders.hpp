@@ -67,8 +67,8 @@ Hold Class that construct Tree
 
 		private:
 			float higher_;
-			boost::function< ATree*() > construct_;
 			Result defaultValue_;
+			boost::function< ATree*() > construct_;
 			const ABuilderNode< Tree >* node_;
 		};
 

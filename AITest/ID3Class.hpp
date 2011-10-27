@@ -77,9 +77,9 @@ namespace ID3 {
 		std::deque<Sixth> sixth_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Result>
@@ -141,9 +141,9 @@ namespace ID3 {
 		std::deque<Fifth> fifth_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Fourth, typename Result>
@@ -202,9 +202,9 @@ namespace ID3 {
 		std::deque<Fourth> fourth_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Result>
@@ -261,9 +261,9 @@ namespace ID3 {
 		std::deque<Third> third_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 	template <typename First, typename Second, typename Result>
@@ -318,9 +318,9 @@ namespace ID3 {
 		std::deque<Second> second_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 }
