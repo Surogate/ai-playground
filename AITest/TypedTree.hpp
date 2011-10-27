@@ -51,7 +51,7 @@ namespace ID3 {
 			class ATree {
 			public:
 				virtual ~ATree() {}
-				virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6) const = 0;
+				virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6) = 0;
 			};
 
 			class Leaf : public ATree {
@@ -61,7 +61,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi&, const Se&, const Th&, const Fo&, const Fifth&, const Sixth&) const {
+				Answer evaluate(const Fi&, const Se&, const Th&, const Fo&, const Fifth&, const Sixth&) {
 					return value_;
 				}
 			};
@@ -73,13 +73,13 @@ namespace ID3 {
 				typedef typename std::auto_ptr< ATree > AutoTreePtr;
 				typedef typename std::map< Specialized, AutoTreePtr > ChildMap;
 
-				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6) const 
+				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6)  
 				{
 					return test(val1, val2, val3, val4, val5, val6);
 				}
 
 				template <typename N, typename B, typename V, typename C, typename X>
-				inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3, const Fifth& val4, const Sixth& val5) const {
+				inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3, const Fifth& val4, const Sixth& val5)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -90,7 +90,7 @@ namespace ID3 {
 				}
 
 				template <typename N, typename B, typename V, typename C, typename X>
-				inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4, const X& val5) const {
+				inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4, const X& val5)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -101,7 +101,7 @@ namespace ID3 {
 				}
 	 
 				template <typename N, typename B, typename V, typename C, typename X>
-				inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4, const X& val5) const {
+				inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4, const X& val5)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -112,7 +112,7 @@ namespace ID3 {
 				}
 	
 				template <typename N, typename B, typename V, typename C, typename X>
-				inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4, const X& val5) const {
+				inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4, const X& val5)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -123,7 +123,7 @@ namespace ID3 {
 				}
 
 				template <typename N, typename B, typename V, typename C, typename X>
-				inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value, const X& val5) const {
+				inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value, const X& val5)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -134,7 +134,7 @@ namespace ID3 {
 				}
 
 				template <typename N, typename B, typename V, typename C, typename X>
-				inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const X& val5, const Specialized& value) const {
+				inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const X& val5, const Specialized& value)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -173,7 +173,7 @@ namespace ID3 {
 			class ATree {
 			public:
 				virtual ~ATree() {}
-				virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const = 0;
+				virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5)  = 0;
 			};
 
 			class Leaf : public ATree {
@@ -183,7 +183,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& , const Se& , const Th& , const Fo& , const Fifth& ) const {
+				Answer evaluate(const Fi& , const Se& , const Th& , const Fo& , const Fifth& )  {
 					return value_;
 				}
 			};
@@ -195,13 +195,13 @@ namespace ID3 {
 				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
-				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5) const 
+				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5)  
 				{
 					return test(val1, val2, val3, val4, val5);
 				}
 
 				template <typename N, typename B, typename V, typename C>
-				inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3, const C& val4) const {
+				inline Answer test(const Specialized& value, const N& val1, const B& val2, const V& val3, const C& val4)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -212,7 +212,7 @@ namespace ID3 {
 				}
 
 				template <typename N, typename B, typename V, typename C>
-				inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4) const {
+				inline Answer test(const N& val1, const Specialized& value, const B& val2, const V& val3, const C& val4)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -223,7 +223,7 @@ namespace ID3 {
 				}
 	 
 				template <typename N, typename B, typename V, typename C>
-				inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4) const {
+				inline Answer test(const N& val1, const B& val2, const Specialized& value, const V& val3, const C& val4)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -234,7 +234,7 @@ namespace ID3 {
 				}
 	
 				template <typename N, typename B, typename V, typename C>
-				inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4) const {
+				inline Answer test(const N& val1, const V& val2, const B& val3, const Specialized& value, const C& val4)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -245,7 +245,7 @@ namespace ID3 {
 				}
 
 				template <typename N, typename B, typename V, typename C>
-				inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value) const {
+				inline Answer test(const N& val1, const V& val2, const B& val3, const C& val4, const Specialized& value)  {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -383,7 +383,7 @@ namespace ID3 {
 			class ATree {
 			public:
 				virtual ~ATree() {}
-				virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3) const = 0;
+				virtual Answer evaluate(const Fi& val1, const Se& val2, const Th& val3) = 0;
 			};
 
 			class Leaf : public ATree {
@@ -393,7 +393,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& , const Se& , const Th& ) const {
+				Answer evaluate(const Fi& , const Se& , const Th& ) {
 					return value_;
 				}
 			};
@@ -405,12 +405,12 @@ namespace ID3 {
 				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
-				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3) const {
+				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3) {
 					return test(val1, val2, val3);
 				}
 
 				template <typename N, typename B>
-				inline Answer test(const Specialized& value, const N& val1, const B& val2) const {
+				inline Answer test(const Specialized& value, const N& val1, const B& val2) {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -421,7 +421,7 @@ namespace ID3 {
 				}
 
 				template <typename N, typename B>
-				inline Answer test(const N& val1, const Specialized& value, const B& val2) const {
+				inline Answer test(const N& val1, const Specialized& value, const B& val2) {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -432,7 +432,7 @@ namespace ID3 {
 				}
 	 
 				template <typename N, typename B>
-				inline Answer test(const N& val1, const B& val2, const Specialized& value) const {
+				inline Answer test(const N& val1, const B& val2, const Specialized& value) {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -470,7 +470,7 @@ namespace ID3 {
 			class ATree {
 			public:
 				virtual ~ATree() {}
-				virtual Answer evaluate(const Fi& val1, const Se& val2) const = 0;
+				virtual Answer evaluate(const Fi& val1, const Se& val2) = 0;
 			};
 
 			class Leaf : public ATree {
@@ -480,7 +480,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& , const Se& ) const {
+				Answer evaluate(const Fi& , const Se& ) {
 					return value_;
 				}
 			};
@@ -492,12 +492,12 @@ namespace ID3 {
 				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
-				Answer evaluate(const Fi& val1, const Se& val2) const {
+				Answer evaluate(const Fi& val1, const Se& val2) {
 					return test(val1, val2);
 				}
 
 				template <typename N>
-				inline Answer test(const Specialized& value, const N& val1) const {
+				inline Answer test(const Specialized& value, const N& val1) {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -508,7 +508,7 @@ namespace ID3 {
 				}
 
 				template <typename N>
-				inline Answer test(const N& val1, const Specialized& value) const {
+				inline Answer test(const N& val1, const Specialized& value) {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
@@ -546,7 +546,7 @@ namespace ID3 {
 			class ATree {
 			public:
 				virtual ~ATree() {}
-				virtual Answer evaluate(const Fi& val1) const = 0;
+				virtual Answer evaluate(const Fi& val1) = 0;
 			};
 
 			class Leaf : public ATree {
@@ -556,7 +556,7 @@ namespace ID3 {
 			public:
 				Leaf(Resu value) : value_(value) {}
 
-				Answer evaluate(const Fi& ) const {
+				Answer evaluate(const Fi& ) {
 					return value_;
 				}
 			};
@@ -568,11 +568,11 @@ namespace ID3 {
 				typedef std::auto_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
-				Answer evaluate(const Fi& val1) const {
+				Answer evaluate(const Fi& val1) {
 					return test(val1);
 				}
 
-				inline Answer test(const Specialized& value) const {
+				inline Answer test(const Specialized& value) {
 					typename ChildMap::const_iterator it = child_.find(value);
 			
 					if (it != child_.end()) {
