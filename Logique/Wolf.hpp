@@ -26,6 +26,7 @@ namespace Logique {
 
 		EntityAction computeAction();
 		unsigned int evaluate() const;
+		bool hasWolfNext();
 
 		static DecisionTree _tree;
 

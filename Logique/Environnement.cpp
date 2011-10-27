@@ -87,7 +87,7 @@ namespace Logique {
 	void Environnement::addSheep(const Coord& loc) {
 		if (!_board(loc).hasSheep()) {
 			std::cout << "spawn sheep at " << loc << std::endl;
-			std::shared_ptr<Sheep> sheepPtr(new Sheep());
+			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
 			sheepPtr->addFood(Sheep::FOOD_MAX);
 			sheepPtr->initActionArray(_board);
 
@@ -185,7 +185,7 @@ namespace Logique {
 	Action Environnement::createBoardPlay() {
 		Action act;
 
-		act._action = std::bind(&Environnement::boardPlay, this);
+		act._action = boost::bind(&Environnement::boardPlay, this);
 		act._tickBeforeAction = 1;
 		return act;
 	}
@@ -227,9 +227,9 @@ namespace Logique {
 		addAction(createBoardPlay());
 	}
 
-	void Environnement::initEntity(std::shared_ptr<Entity> value, const Coord& loc) {
+	void Environnement::initEntity(boost::shared_ptr<Entity> value, const Coord& loc) {
 		_board.lock();
-		_board(loc).hasEntity(value->getType(), true);
+		_board(loc).hasEntity(value->getType(), value.get());
 		_board.unlock();
 		_attriMtx.lock();
 		_entityList[value.get()] = value;
@@ -238,7 +238,7 @@ namespace Logique {
 		value->setLocation(loc);
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
 		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
-		value->setGetSquare(boost::bind(&Board::getSquare, &_board, _1));
+		value->setGetSquare(boost::bind(&Board::get, &_board, _1));
 		addAction(value->createFoodAction());
 		addAction(value->getNewAction());
 	}

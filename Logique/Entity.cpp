@@ -61,7 +61,7 @@ namespace Logique {
 		Action food;
 
 		food._tickBeforeAction = time;
-		food._action = std::bind(&Entity::decreaseFood, this->shared_from_this(), value);
+		food._action = boost::bind(&Entity::decreaseFood, this->shared_from_this(), value);
 
 		return food;
 	}
@@ -87,12 +87,11 @@ namespace Logique {
 	}
 
 	void Entity::initActionArray(Board& board) {
-		_actionArray[MOVE_UP] = Action(MOVE_TIME, std::bind(&Entity::goUp, shared_from_this(), std::ref(board)));
-		_actionArray[MOVE_DOWN] = Action(MOVE_TIME, std::bind(&Entity::goDown, shared_from_this(), std::ref(board)));
-		_actionArray[MOVE_LEFT] = Action(MOVE_TIME, std::bind(&Entity::goLeft, shared_from_this(), std::ref(board)));
-		_actionArray[MOVE_RIGHT] = Action(MOVE_TIME, std::bind(&Entity::goRight, shared_from_this(), std::ref(board)));
+		_actionArray[MOVE_UP] = Action(MOVE_TIME, boost::bind(&Entity::goUp, shared_from_this(), boost::ref(board)));
+		_actionArray[MOVE_DOWN] = Action(MOVE_TIME, boost::bind(&Entity::goDown, shared_from_this(), boost::ref(board)));
+		_actionArray[MOVE_LEFT] = Action(MOVE_TIME, boost::bind(&Entity::goLeft, shared_from_this(), boost::ref(board)));
+		_actionArray[MOVE_RIGHT] = Action(MOVE_TIME, boost::bind(&Entity::goRight, shared_from_this(), boost::ref(board)));
 	}
-
 
 	void Entity::goUp(Board& board) {
 		if (isAlive() && _loc.x > 0) {
@@ -137,8 +136,8 @@ namespace Logique {
 	bool Entity::moveToThisLocation(Board& board, const Coord& newLoc) {
 		if (!board(newLoc).hasEntity(_type)) {
 			board.lock();
-			board(_loc).hasEntity(_type, false);
-			board(newLoc).hasEntity(_type, true);
+			board(_loc).hasEntity(_type, 0);
+			board(newLoc).hasEntity(_type, this);
 			board.unlock();
 			_loc = newLoc;
 			Callback_Environnement::getInstance().cb_onEntityMove(*this);
@@ -154,6 +153,14 @@ namespace Logique {
 
 	Entity::EntityAction Entity::getLastAction() const {
 		return _lastAction;
+	}
+
+	int Entity::getIntFromSup(Coord loc, const Coord& dir) {
+		return _getSquare(loc + dir).getInt();
+	}
+
+	int Entity::getIntFromLess(Coord loc, const Coord& dir) {
+		return _getSquare(loc - dir).getInt();
 	}
 
 	void Entity::reInitPerf() {
