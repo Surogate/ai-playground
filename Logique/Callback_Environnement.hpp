@@ -29,7 +29,7 @@ namespace Logique {
 		void cb_onSheepSpawn(const Entity& value) const;
 		void cb_onWolfSpawn(const Entity& value) const;
 		void cb_onEntityMove(const Entity& value) const;
-		void cb_onEntityReproduce(const Entity& value) const;// Il semblerais qu'elle n'appelle pas la methode du serveur.
+		void cb_onEntityReproduce(const Entity& value) const;
 		void cb_onEntityEat(const Entity& value) const;
 
 	private:

@@ -14,6 +14,8 @@ namespace Logique {
 
 	class Board : public std::array< std::array<Square, BOARD_SIZE >, BOARD_SIZE > {
 	public:
+		Board();
+
 		void lock();
 		void unlock();
 
@@ -31,8 +33,9 @@ namespace Logique {
 		static bool coordValid(unsigned int x, unsigned int y);
 	private:
 		boost::mutex _mtx;
+		Square _default;
 	};
 
 }
 
-#endif
+#endif /* !BOARD_HPP */

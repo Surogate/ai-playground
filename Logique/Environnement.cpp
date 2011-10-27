@@ -229,7 +229,7 @@ namespace Logique {
 
 	void Environnement::initEntity(std::shared_ptr<Entity> value, const Coord& loc) {
 		_board.lock();
-		_board(loc).hasEntity(value->getType(), true);
+		_board(loc).hasEntity(value->getType(), value.get());
 		_board.unlock();
 		_attriMtx.lock();
 		_entityList[value.get()] = value;
@@ -238,7 +238,7 @@ namespace Logique {
 		value->setLocation(loc);
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
 		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
-		value->setGetSquare(boost::bind(&Board::getSquare, &_board, _1));
+		value->setGetSquare(boost::bind(&Board::get, &_board, _1));
 		addAction(value->createFoodAction());
 		addAction(value->getNewAction());
 	}

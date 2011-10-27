@@ -6,6 +6,8 @@
 
 namespace Logique {
 
+	class Entity;
+
 	struct Square {
 		enum { ODOUR_MAX = 10 };
 
@@ -26,14 +28,14 @@ namespace Logique {
 		Square() : _odour(0), _useable(true), _hasGrass(false)
 		{
 			for (unsigned int i = 0; i < ENTITY_CONTAINER_SIZE; ++i) {
-				_entityIn[i] = false;
+				_entityIn[i] = 0;
 			}
 		}
 
 		Square(bool useable) : _odour(0), _useable(useable), _hasGrass(false)
 		{
 			for (unsigned int i = 0; i < ENTITY_CONTAINER_SIZE; ++i) {
-				_entityIn[i] = false;
+				_entityIn[i] = 0;
 			}
 		}
 
@@ -42,11 +44,16 @@ namespace Logique {
 		}
 
 		inline bool hasEntity(const EntityContain& value) {
-			return _entityIn[value];
+			return _entityIn[value] != 0;
 		}
 
-		inline bool hasEntity(const EntityContain& value, bool set) {
-			_entityIn[value] = _useable && set;
+		inline bool hasEntity(const EntityContain& value, Entity* set) {
+			if (_useable)
+				_entityIn[value] = set;
+			return _entityIn[value] != 0;
+		}
+
+		inline Entity* getEntity(const EntityContain& value) {
 			return _entityIn[value];
 		}
 
@@ -60,21 +67,23 @@ namespace Logique {
 		}
 
 		inline bool hasSheep() const  {
-			return _entityIn[SHEEP];
+			return _entityIn[SHEEP] != 0;
 		}
 
-		inline bool hasSheep(bool set) {
-			_entityIn[SHEEP] = _useable && set; 
-			return _entityIn[SHEEP];
+		inline bool hasSheep(Entity* set) {
+			if (_useable)
+				_entityIn[SHEEP] = set; 
+			return _entityIn[SHEEP] != 0;
 		}
 
 		inline bool hasWolf() const {
-			return _entityIn[WOLF];
+			return _entityIn[WOLF] != 0;
 		}
 
-		inline bool hasWolf(bool set) {
-			_entityIn[WOLF] = _useable && set;
-			return _entityIn[WOLF];
+		inline bool hasWolf(Entity* set) {
+			if (_useable)
+				_entityIn[WOLF] = set;
+			return _entityIn[WOLF] != 0;
 		}
 
 		inline int getInt() const {
@@ -125,7 +134,7 @@ namespace Logique {
 	private:
 		const bool _useable;
 		bool _hasGrass;
-		std::array<bool, ENTITY_CONTAINER_SIZE> _entityIn;
+		std::array<Entity*, ENTITY_CONTAINER_SIZE> _entityIn;
 		unsigned int _odour;
 	};
 

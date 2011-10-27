@@ -137,8 +137,8 @@ namespace Logique {
 	bool Entity::moveToThisLocation(Board& board, const Coord& newLoc) {
 		if (!board(newLoc).hasEntity(_type)) {
 			board.lock();
-			board(_loc).hasEntity(_type, false);
-			board(newLoc).hasEntity(_type, true);
+			board(_loc).hasEntity(_type, 0);
+			board(newLoc).hasEntity(_type, this);
 			board.unlock();
 			_loc = newLoc;
 			Callback_Environnement::getInstance().cb_onEntityMove(*this);

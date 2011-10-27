@@ -50,7 +50,7 @@ namespace ID3 {
 			}
 		
 			if (result_.size()) {
-				tree_ = Builder::construct(result_, first_, second_, third_, fourth_, fifth_, sixth_);
+				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_, fifth_, sixth_);
 			}
 			actualize_ = true;
 		}
@@ -115,7 +115,7 @@ namespace ID3 {
 			}
 		
 			if (result_.size()) {
-				tree_ = Builder::construct(result_, first_, second_, third_, fourth_, fifth_);
+				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_, fifth_);
 			}
 			actualize_ = true;
 		}
@@ -177,7 +177,7 @@ namespace ID3 {
 			}
 		
 			if (result_.size()) {
-				tree_ = Builder::construct(result_, first_, second_, third_, fourth_);
+				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_);
 			}
 			actualize_ = true;
 		}
@@ -237,7 +237,7 @@ namespace ID3 {
 			}
 		
 			if (result_.size()) {
-				tree_ = Builder::construct(result_, first_, second_, third_);
+				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_);
 			}
 			actualize_ = true;
 		}
@@ -295,7 +295,7 @@ namespace ID3 {
 			}
 		
 			if (result_.size()) {
-				tree_ = Builder::construct(result_, first_, second_);
+				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_);
 			}
 			actualize_ = true;
 		}
@@ -351,7 +351,7 @@ namespace ID3 {
 			}
 		
 			if (result_.size()) {
-				tree_ = Builder::construct(result_, first_);
+				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_);
 			}
 			actualize_ = true;
 		}

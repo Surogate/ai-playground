@@ -37,7 +37,7 @@ namespace Logique  {
 		typedef std::shared_ptr<Entity> Ptr;
 		typedef std::function< void (const Action&) > ActionFunctor;
 		typedef std::function< void (Entity&) > EntityFunctor;
-		typedef std::function< int (const Coord&) > GetSquareFunctor;
+		typedef std::function< Square& (const Coord&) > GetSquareFunctor;
 		typedef std::function< int () > GetNumberSpeciesFunctor;
 		typedef std::function< bool (const Coord&) > PopEntityFunctor;
 

@@ -18,11 +18,15 @@ namespace Logique {
 	}
 
 	Entity::EntityAction Wolf::computeAction() {
-		int present = _getSquare(_loc);
-		int up = _getSquare(_loc - Coord::DOWN);
-		int left = _getSquare(_loc - Coord::RIGHT);
-		int down = _getSquare(_loc + Coord::DOWN);
-		int right = _getSquare(_loc + Coord::RIGHT);
+		Coord loc = _loc;
+		int present = _getSquare(loc).getInt();
+		int up = _getSquare(loc - Coord::DOWN).getInt();
+		loc = _loc;
+		int left = _getSquare(loc - Coord::RIGHT).getInt();
+		loc = _loc;
+		int down = _getSquare(loc + Coord::DOWN).getInt();
+		loc = _loc;
+		int right = _getSquare(loc + Coord::RIGHT).getInt();
 		EntityAction act = _tree.computeAction(present, up, left, down, right); 
 		_actionStack.push(ActionStore(present, up, left, down, right, act));
 		

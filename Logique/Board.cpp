@@ -3,6 +3,10 @@
 
 namespace Logique {
 
+	Board::Board() 
+		: std::array< std::array<Square, BOARD_SIZE >, BOARD_SIZE >(), _mtx(), _default()
+	{}
+
 	void Board::lock() { 
 		_mtx.lock(); 
 	}
@@ -12,19 +16,23 @@ namespace Logique {
 	}
 
 	const Square& Board::get(const Coord& pos) const {
-		return at(pos.x)[pos.y]; 
+		if (coordValid(pos))
+			return at(pos.x)[pos.y];
+		return _default;
 	}
 
 	Square& Board::get(const Coord& pos) { 
-		return at(pos.x)[pos.y]; 
+		if (coordValid(pos))
+			return at(pos.x)[pos.y];
+		return _default;
 	}
 
 	const Square& Board::operator()(const Coord& pos) const { 
-		return at(pos.x)[pos.y]; 
+		return get(pos); 
 	}
 
 	Square& Board::operator()(const Coord& pos) { 
-		return at(pos.x)[pos.y]; 
+		return get(pos); 
 	}
 
 	void Board::dump() const {
