@@ -229,14 +229,16 @@ Hold Class that construct Tree
 					BuilderNode<Tree, ContX, ResultContainer> build_f(val1, res_, func);
 					build(build_f, 
 						boost::bind(
-						&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContY>
+						static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContY&, const ContX&) >
+						(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContY>)
 						, &build_f, boost::ref(val2), boost::ref(val1)));
 
 					func.reset();
 					BuilderNode<Tree, ContY, ResultContainer> build_s(val2, res_, func);
 					build(build_s, 
 						boost::bind(
-						&BuilderNode<Tree, ContY, ResultContainer>::template constructin<ContX>
+						static_cast<ATree* (BuilderNode<Tree, ContY, ResultContainer>::*)(const ContX&, const ContY&) >
+						(&BuilderNode<Tree, ContY, ResultContainer>::template constructin<ContX>)
 						, &build_s, boost::ref(val1), boost::ref(val2)));
 
 					root->AddSubNode(it->first, build());
@@ -263,7 +265,8 @@ Hold Class that construct Tree
 					BuilderNode<Tree, ContX, ResultContainer> build_f(val1, res_, func);
 					build(build_f, 
 						boost::bind(
-						&BuilderNode<Tree, ContX, ResultContainer>::constructin
+						static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContX&) >
+						(&BuilderNode<Tree, ContX, ResultContainer>::constructin)
 						, &build_f, boost::ref(val1)));
 
 					root->AddSubNode(it->first, build());
@@ -315,37 +318,43 @@ Hold Class that construct Tree
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
 				build(build_w, 
 					boost::bind(
-					&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV, ContB, ContN>
+					static_cast<ATree* (BuilderNode<Tree, ContW, ResultContainer>::*)(const ContX&, const ContC&, const ContV&, const ContB&, const ContN&, const ContW&) >
+					(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV, ContB, ContN>)
 					, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
 				build(build_x, 
 					boost::bind(
-					&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV, ContB, ContN>
+					static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContW&, const ContC&, const ContV&, const ContB&, const ContN&, const ContX&) >
+					(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV, ContB, ContN>)
 					, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val2)));
 
 				BuilderNode<Tree, ContC, ResultContainer> build_c(val3, result);
 				build(build_c, 
 					boost::bind(
-					&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV, ContB, ContN>
+					static_cast<ATree* (BuilderNode<Tree, ContC, ResultContainer>::*)(const ContW&, const ContX&, const ContV&, const ContB&, const ContN&, const ContC&) >
+					(&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV, ContB, ContN>)
 					, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val5), boost::ref(val6), boost::ref(val3)));
 
 				BuilderNode<Tree, ContV, ResultContainer> build_v(val4, result);
 				build(build_v, 
 					boost::bind(
-					&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC, ContB, ContN>
+					static_cast<ATree* (BuilderNode<Tree, ContV, ResultContainer>::*)(const ContW&, const ContX&, const ContC&, const ContB&, const ContN&, const ContV&) >
+					(&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC, ContB, ContN>)
 					, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val5), boost::ref(val6), boost::ref(val4)));
 			
 				BuilderNode<Tree, ContB, ResultContainer> build_b(val5, result);
 				build(build_b, 
 					boost::bind(
-					&BuilderNode<Tree, ContB, ResultContainer>::template constructin<ContW, ContX, ContC, ContV, ContN>
+					static_cast<ATree* (BuilderNode<Tree, ContB, ResultContainer>::*)(const ContW&, const ContX&, const ContC&, const ContV&, const ContN&, const ContB&) >
+					(&BuilderNode<Tree, ContB, ResultContainer>::template constructin<ContW, ContX, ContC, ContV, ContN>)
 					, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val6), boost::ref(val5)));
 
 				BuilderNode<Tree, ContN, ResultContainer> build_n(val5, result);
 				build(build_n, 
 					boost::bind(
-					&BuilderNode<Tree, ContN, ResultContainer>::template constructin<ContW, ContX, ContC, ContV, ContB>
+					static_cast<ATree* (BuilderNode<Tree, ContN, ResultContainer>::*)(const ContW&, const ContX&, const ContC&, const ContV&, const ContB&, const ContN&) >
+					(&BuilderNode<Tree, ContN, ResultContainer>::template constructin<ContW, ContX, ContC, ContV, ContB>)
 					, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val6)));
 
 				return build();
@@ -358,31 +367,36 @@ Hold Class that construct Tree
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
 				build(build_w, 
 					boost::bind(
-					&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV, ContB>
+					static_cast<ATree* (BuilderNode<Tree, ContW, ResultContainer>::*)(const ContX&, const ContC&, const ContV&, const ContB&, const ContW&) >
+					(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV, ContB>)
 					, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
 				build(build_x, 
 					boost::bind(
-					&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV, ContB>
+					static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContW&, const ContC&, const ContV&, const ContB&, const ContX&) >
+					(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV, ContB>)
 					, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val5), boost::ref(val2)));
 
 				BuilderNode<Tree, ContC, ResultContainer> build_c(val3, result);
 				build(build_c, 
 					boost::bind(
-					&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV, ContB>
+					static_cast<ATree* (BuilderNode<Tree, ContC, ResultContainer>::*)(const ContW&, const ContX&, const ContV&, const ContB&, const ContC&) >
+					(&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV, ContB>)
 					, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val5), boost::ref(val3)));
 
 				BuilderNode<Tree, ContV, ResultContainer> build_v(val4, result);
 				build(build_v, 
 					boost::bind(
-					&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC, ContB>
+					static_cast<ATree* (BuilderNode<Tree, ContV, ResultContainer>::*)(const ContW&, const ContX&, const ContC&, const ContB&, const ContV&) >
+					(&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC, ContB>)
 					, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val5), boost::ref(val4)));
 			
 				BuilderNode<Tree, ContB, ResultContainer> build_b(val5, result);
 				build(build_b, 
 					boost::bind(
-					&BuilderNode<Tree, ContB, ResultContainer>::template constructin<ContW, ContX, ContC, ContV>
+					static_cast<ATree* (BuilderNode<Tree, ContB, ResultContainer>::*)(const ContW&, const ContX&, const ContC&, const ContV&, const ContB&) >
+					(&BuilderNode<Tree, ContB, ResultContainer>::template constructin<ContW, ContX, ContC, ContV>)
 					, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5)));
 
 				return build();
@@ -395,25 +409,29 @@ Hold Class that construct Tree
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
 				build(build_w, 
 					boost::bind(
-					&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV>
+					static_cast<ATree* (BuilderNode<Tree, ContW, ResultContainer>::*)(const ContX&, const ContC&, const ContV&, const ContW&) >
+					(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC, ContV>)
 					, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
 				build(build_x, 
 					boost::bind(
-					&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV>
+					static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContW&, const ContC&, const ContV&, const ContX&) >
+					(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC, ContV>)
 					, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val4), boost::ref(val2)));
 
 				BuilderNode<Tree, ContC, ResultContainer> build_c(val3, result);
 				build(build_c, 
 					boost::bind(
-					&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV>
+					static_cast<ATree* (BuilderNode<Tree, ContC, ResultContainer>::*)(const ContW&, const ContX&, const ContV&, const ContC&) >
+					(&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX, ContV>)
 					, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val4), boost::ref(val3)));
 
 				BuilderNode<Tree, ContV, ResultContainer> build_v(val4, result);
 				build(build_v, 
 					boost::bind(
-					&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC>
+					static_cast<ATree* (BuilderNode<Tree, ContV, ResultContainer>::*)(const ContW&, const ContX&, const ContC&, const ContV&) >
+					(&BuilderNode<Tree, ContV, ResultContainer>::template constructin<ContW, ContX, ContC>)
 					, &build_v, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4)));
 
 				return build();
@@ -426,19 +444,22 @@ Hold Class that construct Tree
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
 				build(build_w, 
 					boost::bind(
-					&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC>
+					static_cast<ATree* (BuilderNode<Tree, ContW, ResultContainer>::*)(const ContX&, const ContC&, const ContW&) >
+					(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX, ContC>)
 					, &build_w,  boost::ref(val2), boost::ref(val3), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
 				build(build_x, 
 					boost::bind(
-					&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC>
+					static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContW&, const ContC&, const ContX&) >
+					(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW, ContC>)
 					, &build_x, boost::ref(val1), boost::ref(val3), boost::ref(val2)));
 
 				BuilderNode<Tree, ContC, ResultContainer> build_c(val3, result);
 				build(build_c, 
 					boost::bind(
-					&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX>
+					static_cast<ATree* (BuilderNode<Tree, ContC, ResultContainer>::*)(const ContW&, const ContX&, const ContC&) >
+					(&BuilderNode<Tree, ContC, ResultContainer>::template constructin<ContW, ContX>)
 					, &build_c, boost::ref(val1), boost::ref(val2), boost::ref(val3)));
 
 				return build();
@@ -451,13 +472,15 @@ Hold Class that construct Tree
 				BuilderNode<Tree, ContW, ResultContainer> build_w(val1, result);
 				build(build_w, 
 					boost::bind(
-					&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX>
+					static_cast<ATree* (BuilderNode<Tree, ContW, ResultContainer>::*)(const ContX&, const ContW&) >
+					(&BuilderNode<Tree, ContW, ResultContainer>::template constructin<ContX>)
 					, &build_w,  boost::ref(val2), boost::ref(val1)));
 
 				BuilderNode<Tree, ContX, ResultContainer> build_x(val2, result);
 				build(build_x, 
 					boost::bind(
-					&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW>
+					static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContW&, const ContX&) >
+					(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContW>)
 					, &build_x, boost::ref(val1), boost::ref(val2)));
 
 				return build();
