@@ -47,7 +47,6 @@ namespace ID3 {
 		template < typename AttribueContainer, typename ResultContainer>
 		float getGain(const AttribueContainer& value, const ResultContainer& result) {
 			typename AttribueContainer::const_iterator ita = value.begin();
-			typename AttribueContainer::const_iterator itae = value.end();
 
 			typename ResultContainer::const_iterator itr = result.begin();
 			typename ResultContainer::const_iterator itre = result.end();
@@ -78,7 +77,6 @@ namespace ID3 {
 		template < typename AttribueContainer, typename ResultContainer, typename ConditionnalFunctor>
 		float getGain(const AttribueContainer& value, const ResultContainer& result, ConditionnalFunctor& func) {
 			typename AttribueContainer::const_iterator ita = value.begin();
-			typename AttribueContainer::const_iterator itae = value.end();
 
 			typename ResultContainer::const_iterator itr = result.begin();
 			typename ResultContainer::const_iterator itre = result.end();
