@@ -104,6 +104,14 @@ Hold Class that construct Tree
 				: attr_(attr), res_(res), func_(0), gain_(attr, res) 
 			{}
 
+			BuilderNode(const BuilderNode& orig) 
+				: attr_(orig.attr_), res_(orig.res_), func_(orig.func_), gain_(orig.gain_)
+			{}
+
+			BuilderNode& operator=(const BuilderNode& orig) {
+				// not permited
+			}
+
 			const float& getResult() const {
 				return gain_.getResult();
 			}
