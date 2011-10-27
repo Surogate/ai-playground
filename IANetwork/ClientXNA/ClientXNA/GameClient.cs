@@ -109,13 +109,13 @@ namespace ClientXNA
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= 120)
-                    camera_.X++;
+                    camera_.X+=2;
                 else if (Mouse.GetState().X >= (this.graphics.PreferredBackBufferWidth - 120) && Mouse.GetState().X <= this.graphics.PreferredBackBufferWidth)
-                    camera_.X--;
+                    camera_.X-=2;
                 if (Mouse.GetState().Y >= 0 && Mouse.GetState().Y <= 80)
-                    camera_.Y++;
+                    camera_.Y+=2;
                 else if (Mouse.GetState().Y >= (this.graphics.PreferredBackBufferHeight - 80) && Mouse.GetState().Y <= this.graphics.PreferredBackBufferHeight)
-                    camera_.Y--;
+                    camera_.Y-=2;
             }
             // TODO: Add your update logic here
             lock (incoming_packages_)
