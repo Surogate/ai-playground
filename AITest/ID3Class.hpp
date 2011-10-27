@@ -9,7 +9,7 @@
 #define ID3CLASS
 
 #include <deque>
-#include <functional>
+#include <boost/function.hpp>
 
 #include "Gain.hpp"
 #include "TypedTree.hpp"
@@ -39,7 +39,7 @@ namespace ID3 {
 			actualize_ = false;
 		}
 
-		void setRandomResult(const std::function< Result() >& functor) {
+		void setRandomResult(const boost::function< Result() >& functor) {
 			getRandomResult_ = functor;
 		}
 
@@ -79,7 +79,7 @@ namespace ID3 {
 
 		bool actualize_;
 		typename Builder::ATree* tree_;
-		std::function< Result() > getRandomResult_;
+		boost::function< Result() > getRandomResult_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Result>
@@ -104,7 +104,7 @@ namespace ID3 {
 			actualize_ = false;
 		}
 
-		void setRandomResult(const std::function< Result() >& functor) {
+		void setRandomResult(const boost::function< Result() >& functor) {
 			getRandomResult_ = functor;
 		}
 
@@ -143,7 +143,7 @@ namespace ID3 {
 
 		bool actualize_;
 		typename Builder::ATree* tree_;
-		std::function< Result() > getRandomResult_;
+		boost::function< Result() > getRandomResult_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Fourth, typename Result>
@@ -166,7 +166,7 @@ namespace ID3 {
 			actualize_ = false;
 		}
 
-		void setRandomResult(const std::function< Result() >& functor) {
+		void setRandomResult(const boost::function< Result() >& functor) {
 			getRandomResult_ = functor;
 		}
 
@@ -204,7 +204,7 @@ namespace ID3 {
 
 		bool actualize_;
 		typename Builder::ATree* tree_;
-		std::function< Result() > getRandomResult_;
+		boost::function< Result() > getRandomResult_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Result>
@@ -226,7 +226,7 @@ namespace ID3 {
 			actualize_ = false;
 		}
 
-		void setRandomResult(const std::function< Result() >& functor) {
+		void setRandomResult(const boost::function< Result() >& functor) {
 			getRandomResult_ = functor;
 		}
 
@@ -263,7 +263,7 @@ namespace ID3 {
 
 		bool actualize_;
 		typename Builder::ATree* tree_;
-		std::function< Result() > getRandomResult_;
+		boost::function< Result() > getRandomResult_;
 	};
 
 	template <typename First, typename Second, typename Result>
@@ -284,7 +284,7 @@ namespace ID3 {
 			actualize_ = false;
 		}
 
-		void setRandomResult(const std::function< Result() >& functor) {
+		void setRandomResult(const boost::function< Result() >& functor) {
 			getRandomResult_ = functor;
 		}
 
@@ -320,7 +320,7 @@ namespace ID3 {
 
 		bool actualize_;
 		typename Builder::ATree* tree_;
-		std::function< Result() > getRandomResult_;
+		boost::function< Result() > getRandomResult_;
 	};
 
 	template <typename First, typename Result>
@@ -340,7 +340,7 @@ namespace ID3 {
 			actualize_ = false;
 		}
 
-		void setRandomResult(const std::function< Result() >& functor) {
+		void setRandomResult(const boost::function< Result() >& functor) {
 			getRandomResult_ = functor;
 		}
 
@@ -375,7 +375,7 @@ namespace ID3 {
 
 		bool actualize_;
 		typename Builder::ATree* tree_;
-		std::function< Result() > getRandomResult_;
+		boost::function< Result() > getRandomResult_;
 	};
 }
 

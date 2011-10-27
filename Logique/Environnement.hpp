@@ -14,6 +14,9 @@
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
 #include <boost/date_time.hpp>
+#include <boost/random.hpp>
+#include <boost/array.hpp>
+#include <boost/random/random_device.hpp>
 
 #include "Callback_Environnement.hpp"
 #include "Square.hpp"
@@ -92,13 +95,13 @@ namespace Logique {
 		void preRun();
 		Action createBoardPlay();
 		void boardPlay();
-		void initEntity(std::shared_ptr<Entity> value, const Coord& loc);
+		void initEntity(boost::shared_ptr<Entity> value, const Coord& loc);
 		void spawnSheep();
 		void onEntityDeath(Entity& value);
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
 
-		std::array<unsigned int, Square::ENTITY_CONTAINER_SIZE> _entityNum;
+		boost::array<unsigned int, Square::ENTITY_CONTAINER_SIZE> _entityNum;
 
 		Board _board;
 		boost::posix_time::time_duration _baseTime;
@@ -108,9 +111,9 @@ namespace Logique {
 		ActionList _actionList;
 		ActionTmpStack _actionTmpStack;
 
-		std::random_device _randomD;
-		std::mt19937 _gen;
-		std::uniform_int_distribution<unsigned int> _distri;
+		boost::random::random_device _randomD;
+		boost::random::mt19937 _gen;
+		boost::random::uniform_int_distribution<unsigned int> _distri;
 	};
 
 }

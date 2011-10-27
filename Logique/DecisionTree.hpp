@@ -2,6 +2,8 @@
 #ifndef DECISIONTREE_HPP
 #define DECISIONTREE_HPP
 
+#include <boost/random/random_device.hpp>
+#include <boost/random.hpp>
 #include "ID3Class.hpp"
 #include "Entity.hpp"
 
@@ -23,9 +25,9 @@ namespace Logique {
 		ID3Algo _id3;
 
 		float _moyenne;
-		std::random_device _randomD;
-		std::mt19937 _gen;
-		std::uniform_int_distribution<unsigned int> _distri;
+		boost::random::random_device _randomD;
+		boost::random::mt19937 _gen;
+		boost::random::uniform_int_distribution<unsigned int> _distri;
 	};
 
 }

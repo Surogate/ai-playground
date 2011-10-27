@@ -2,7 +2,7 @@
 #ifndef SQUARE_HPP
 #define SQUARE_HPP
 
-#include <array>
+#include <boost/array.hpp>
 
 namespace Logique {
 
@@ -134,7 +134,7 @@ namespace Logique {
 	private:
 		const bool _useable;
 		bool _hasGrass;
-		std::array<Entity*, ENTITY_CONTAINER_SIZE> _entityIn;
+		boost::array<Entity*, ENTITY_CONTAINER_SIZE> _entityIn;
 		unsigned int _odour;
 	};
 

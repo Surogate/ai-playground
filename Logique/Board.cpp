@@ -3,8 +3,10 @@
 
 namespace Logique {
 
+	
+
 	Board::Board() 
-		: std::array< std::array<Square, BOARD_SIZE >, BOARD_SIZE >(), _mtx(), _default()
+		: boost::array< boost::array<Square, BOARD_SIZE >, BOARD_SIZE >(), _mtx(), _default()
 	{}
 
 	void Board::lock() { 

@@ -13,20 +13,16 @@ namespace Logique {
 
 	void Wolf::initActionArray(Board& board) {
 		Entity::initActionArray(board);
-		_actionArray[EAT] = Action(EAT_TIME, std::bind(&Entity::eat, shared_from_this(), std::ref(board)));
-		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, std::bind(&Entity::reproduce, shared_from_this(), std::ref(board)));
+		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Entity::eat, shared_from_this(), boost::ref(board)));
+		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, shared_from_this(), boost::ref(board)));
 	}
 
 	Entity::EntityAction Wolf::computeAction() {
-		Coord loc = _loc;
-		int present = _getSquare(loc).getInt();
-		int up = _getSquare(loc - Coord::DOWN).getInt();
-		loc = _loc;
-		int left = _getSquare(loc - Coord::RIGHT).getInt();
-		loc = _loc;
-		int down = _getSquare(loc + Coord::DOWN).getInt();
-		loc = _loc;
-		int right = _getSquare(loc + Coord::RIGHT).getInt();
+		int present = _getSquare(_loc).getInt();
+		int up = getIntFromLess(_loc, Coord::DOWN);
+		int left = getIntFromLess(_loc, Coord::RIGHT);
+		int down = getIntFromSup(_loc, Coord::DOWN);
+		int right = getIntFromSup(_loc, Coord::RIGHT);
 		EntityAction act = _tree.computeAction(present, up, left, down, right); 
 		_actionStack.push(ActionStore(present, up, left, down, right, act));
 		
@@ -49,11 +45,14 @@ namespace Logique {
 	}
 
 	void Wolf::eat(Board& board) {
-		if (isAlive() && board(_loc).hasSheep()) {
+		if (isAlive() && _getSquare(_loc).hasSheep()) {
 			_lastAction = EAT;
 			_numberEat++;
 			std::cout << "eat" << std::endl;
-			board(_loc).hasSheep(false);
+			Entity* sheep =_getSquare(_loc).getEntity(Square::SHEEP);
+			if (sheep) {
+				sheep->decreaseFood(Entity::FOOD_MAX);
+			}
 			addFood(FOOD_GAIN);
 			Callback_Environnement::getInstance().cb_onEntityEat(*this);
 		}
@@ -61,11 +60,23 @@ namespace Logique {
 	}
 
 	void Wolf::reproduce(Board& board) {
-		if (isAlive()) {
+		if (isAlive() && hasWolfNext() && _popEntity(_loc)) {
 			_numberRep++;
 			std::cout << "reproduce" << std::endl;
 			_lastAction = REPRODUCE;
+			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
 		}
 		generateNewAction();
+	}
+
+	bool Wolf::hasWolfNext() {
+		int up = getIntFromLess(_loc, Coord::DOWN);
+		int left = getIntFromLess(_loc, Coord::RIGHT);
+		int down = getIntFromSup(_loc, Coord::DOWN);
+		int right = getIntFromSup(_loc, Coord::RIGHT);
+		return (up & Square::WOLF_MASK) 
+			|| (left & Square::WOLF_MASK)
+			|| (down & Square::WOLF_MASK)
+			|| (right & Square::WOLF_MASK);
 	}
 }
