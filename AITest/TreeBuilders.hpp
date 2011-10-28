@@ -11,6 +11,8 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
+#include <random>
+
 #include "TypedTree.hpp"
 #include "ConditionnalFunctor.hpp"
 
@@ -496,11 +498,10 @@ Hold Class that construct Tree
 						
 			template <typename ResultContainer>
 			static typename ResultContainer::value_type getRandomResult(const ResultContainer& container) {
-				boost::random::random_device ranD;
-				boost::random::mt19937 engine(ranD);
-				boost::random::uniform_int_distribution<int> distribution(0, container.size() - 1);
+				std::random_device ranD;
+				std::uniform_int_distribution<int> distribution(0, container.size() - 1);
 				
-				int value = distribution(engine);
+				int value = distribution(ranD);
 
 				typename ResultContainer::const_iterator it = container.begin();
 				typename ResultContainer::const_iterator ite = container.end();
