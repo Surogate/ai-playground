@@ -6,6 +6,7 @@
 
 #include "Environnement.hpp"
 #include "Sheep.hpp"
+#include "Wolf.hpp"
 
 namespace Logique {
 
@@ -84,7 +85,8 @@ namespace Logique {
 		_baseTime = time;
 	}
 
-	void Environnement::addSheep(const Coord& loc) {
+	//spawn Entity function
+	bool Environnement::addSheep(const Coord& loc) {
 		if (!_board(loc).hasSheep()) {
 			std::cout << "spawn sheep at " << loc << std::endl;
 			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
@@ -96,7 +98,26 @@ namespace Logique {
 			initEntity(sheepPtr, loc);
 			Callback_Environnement::getInstance().cb_onSheepSpawn(*sheepPtr);
 			Callback_Environnement::getInstance().cb_onBoardChange(_board);
+			return true;
 		}
+		return false;
+	}
+
+	bool Environnement::addWolf(const Coord& loc) {
+		if (!_board(loc).hasWolf()) {
+			std::cout << "spawn wolf at " << loc << std::endl;
+			boost::shared_ptr<Wolf> wolfPtr(new Wolf());
+			wolfPtr->addFood(Wolf::FOOD_MAX);
+			wolfPtr->initActionArray(_board);
+
+			wolfPtr->setGetNumberSpecies(boost::bind(&Environnement::getWolfNum, this));
+			wolfPtr->setPopEntityFunctor(boost::bind(&Environnement::popWolfNear, this, _1));
+			initEntity(wolfPtr, loc);
+			Callback_Environnement::getInstance().cb_onWolfSpawn(*wolfPtr);
+			Callback_Environnement::getInstance().cb_onBoardChange(_board);
+			return true;
+		}
+		return false;
 	}
 
 	void Environnement::addSheep(unsigned int num) {
@@ -116,6 +137,23 @@ namespace Logique {
 		}
 	}
 
+	void Environnement::addWolf(unsigned int num) {
+		Coord loc;
+		unsigned int i = 0;
+
+		while (i < num) {
+			unsigned int limit = 0;
+
+			do {
+				loc = Coord(_distri(_gen), _distri(_gen));
+			} while (_board(loc).hasWolf() && limit < 10);
+
+			if (limit < 10)
+				addWolf(loc);
+			++i;
+		}
+	}
+
 	bool Environnement::popSheepNear(const Coord& loc) {
 		bool found = false;
 		Coord locFound;
@@ -130,11 +168,24 @@ namespace Logique {
 			}
 		}
 
-		if (found) {
-			addSheep(locFound);
-			return true;
+		return found && addSheep(locFound);
+	}
+
+	bool Environnement::popWolfNear(const Coord& loc) {
+		bool found = false;
+		Coord locFound;
+
+		for (unsigned int x = loc.x - 1; x <= loc.x + 1 && !found; ++x) {
+			for (unsigned int y = loc.x - 1; y <= loc.y + 1 && !found; ++y) {
+				found = Board::coordValid(x, y) && !_board[x][y].hasWolf();
+				if (found) {
+					locFound.x = x;
+					locFound.y = y;
+				}
+			}
 		}
-		return false;
+
+		return found && addWolf(locFound);
 	}
 
 	unsigned int Environnement::getSheepNum() const {
