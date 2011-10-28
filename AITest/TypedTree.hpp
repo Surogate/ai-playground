@@ -8,6 +8,7 @@
 #ifndef TYPEDTREE_HPP
 #define TYPEDTREE_HPP
 
+#include <boost/shared_ptr.hpp>
 #include <memory>
 #include <iostream>
 
@@ -70,7 +71,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef typename std::auto_ptr< ATree > AutoTreePtr;
+				typedef typename boost::shared_ptr< ATree > AutoTreePtr;
 				typedef typename std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5, const Sixth& val6)  
@@ -192,7 +193,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< ATree > AutoTreePtr;
+				typedef boost::shared_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4, const Fifth& val5)  
@@ -303,7 +304,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< ATree > AutoTreePtr;
+				typedef boost::shared_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3, const Fo& val4) {
@@ -356,7 +357,9 @@ namespace ID3 {
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
-					child_[value] = AutoTreePtr(sub);
+                                    child_.insert(std::pair<Specialized, AutoTreePtr>(value, AutoTreePtr(sub)));
+                                    
+					//child_[value] = AutoTreePtr(sub);
 				}
 
 			private:
@@ -402,7 +405,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< ATree > AutoTreePtr;
+				typedef boost::shared_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2, const Th& val3) {
@@ -489,7 +492,7 @@ namespace ID3 {
 			class TreeNode : public ATree
 			{
 			public:
-				typedef std::auto_ptr< ATree > AutoTreePtr;
+				typedef boost::shared_ptr< ATree > AutoTreePtr;
 				typedef std::map< Specialized, AutoTreePtr > ChildMap;
 
 				Answer evaluate(const Fi& val1, const Se& val2) {
