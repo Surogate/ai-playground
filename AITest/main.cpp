@@ -115,8 +115,6 @@ typedef ID3Test4::Answer Answer4;
 typedef ID3::ID3Class3<Outlook, Temperature, PlayBall> ID3Test3;
 typedef ID3Test3::Answer Answer3;
 
-typedef ID3::ID3Class2<Outlook, PlayBall> ID3Test2;
-typedef ID3Test2::Answer Answer2;
 
 void initID3(ID3Test5& id3) {
 	id3.addData(Sunny	, Hot	, High	, Weak	, No	);
@@ -146,14 +144,12 @@ int main(void) {
 	ID3Test5 id3;
 	ID3Test4 id34;
 	ID3Test3 id33;
-	ID3Test2 id32;
 
 	initID3(id3);
 
 	id3.generateTree();
 	id34.generateTree();
 	id33.generateTree();
-	id32.generateTree();
 
 	Answer value = id3.decide(Sunny, Hot, Normal, Weak);
 	ID3::TypedTree::Debugger<PlayBall> answerDebug(*value);

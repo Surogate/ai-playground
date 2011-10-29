@@ -65,7 +65,7 @@ namespace ID3 {
 		}
 
 		std::size_t size() const {
-			return result.size();
+			return result_.size();
 		}
 
 	private:
@@ -77,9 +77,9 @@ namespace ID3 {
 		std::deque<Sixth> sixth_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Result>
@@ -90,7 +90,7 @@ namespace ID3 {
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
 		ID3Class6() 
-			: first_(), second_(), third_(), fourth_(), fifth_(), result_(), actualize_(false), tree_(0)
+			: first_(), second_(), third_(), fourth_(), fifth_(), result_(), tree_(0), actualize_(false)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Result& res) {
@@ -130,7 +130,7 @@ namespace ID3 {
 		}
 
 		std::size_t size() const {
-			return result.size();
+			return result_.size();
 		}
 
 	private:
@@ -141,9 +141,9 @@ namespace ID3 {
 		std::deque<Fifth> fifth_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Fourth, typename Result>
@@ -153,7 +153,7 @@ namespace ID3 {
 		typedef typename Tree::Answer Answer;
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
-		ID3Class5() : first_(), second_(), third_(), fourth_(), result_(), actualize_(false), tree_(0)
+		ID3Class5() : first_(), second_(), third_(), fourth_(), result_(), tree_(0), actualize_(false)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Result& res) {
@@ -192,7 +192,7 @@ namespace ID3 {
 		}
 
 		std::size_t size() const {
-			return result.size();
+			return result_.size();
 		}
 
 	private:
@@ -202,9 +202,9 @@ namespace ID3 {
 		std::deque<Fourth> fourth_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 	template <typename First, typename Second, typename Third, typename Result>
@@ -214,7 +214,7 @@ namespace ID3 {
 		typedef typename Tree::Answer Answer;
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
-		ID3Class4() : first_(), second_(), third_(), result_(), actualize_(false), tree_(0)
+		ID3Class4() : first_(), second_(), third_(), result_(), tree_(0), actualize_(false)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Third& val3, const Result& res) {
@@ -252,7 +252,7 @@ namespace ID3 {
 		}
 
 		std::size_t size() const {
-			return result.size();
+			return result_.size();
 		}
 
 	private:
@@ -261,9 +261,9 @@ namespace ID3 {
 		std::deque<Third> third_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
+		bool actualize_;
 	};
 
 	template <typename First, typename Second, typename Result>
@@ -273,7 +273,7 @@ namespace ID3 {
 		typedef typename Tree::Answer Answer;
 		typedef typename TreeBuilder::Builder< Tree > Builder;
 
-		ID3Class3() : first_(), second_(), result_(), actualize_(false), tree_(0)
+		ID3Class3() : first_(), second_(), result_(), tree_(0), actualize_(false)
 		{}
 
 		void addData(const First& val1, const Second& val2, const Result& res) {
@@ -310,7 +310,7 @@ namespace ID3 {
 		}
 
 		std::size_t size() const {
-			return result.size();
+			return result_.size();
 		}
 
 	private:
@@ -318,65 +318,11 @@ namespace ID3 {
 		std::deque<Second> second_;
 		std::deque<Result> result_;
 
-		bool actualize_;
 		typename Builder::ATree* tree_;
 		boost::function< Result() > getRandomResult_;
-	};
-
-	template <typename First, typename Result>
-	class ID3Class2 {
-	public:
-		typedef typename TypedTree::Tree2<Result, First> Tree;
-		typedef typename Tree::Answer Answer;
-		typedef typename TreeBuilder::Builder< Tree > Builder;
-
-		ID3Class2() : first_(), result_(), actualize_(false), tree_(0)
-		{}
-
-		void addData(const First& val1, const Result& res) {
-			first_.push_back(val1);
-			result_.push_back(res);
-
-			actualize_ = false;
-		}
-
-		void setRandomResult(const boost::function< Result() >& functor) {
-			getRandomResult_ = functor;
-		}
-
-		void generateTree() {
-			if (tree_ != 0) {
-				delete tree_;
-				tree_ = 0;
-			}
-		
-			if (result_.size()) {
-				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_);
-			}
-			actualize_ = true;
-		}
-
-		Answer decide(const First& val1) {
-			if (tree_) {
-				return tree_->evaluate(val1);
-			} else if (getRandomResult_){
-				return getRandomResult_();
-			}
-			return Answer();
-		}
-
-		std::size_t size() const {
-			return result.size();
-		}
-
-	private:
-		std::deque<First> first_;
-		std::deque<Result> result_;
-
 		bool actualize_;
-		typename Builder::ATree* tree_;
-		boost::function< Result() > getRandomResult_;
 	};
+
 }
 
 #endif
