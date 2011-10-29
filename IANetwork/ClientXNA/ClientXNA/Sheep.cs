@@ -74,10 +74,14 @@ namespace ClientXNA
                           frames_[y_frame_][x_frame_], Color.White);
             if (Action == EntityAction.REPRODUCE)
             {
-                Texture2D tex = new Texture2D(graphics.GraphicsDevice, width_, height_ / 2);
-                graphics.Draw(tex, new Rectangle(((int)(Position.X * 32)) + (int)camera.X
-                                                , ((int)(Position.Y * 32)) + (int)camera.Y,
-                                                width_, height_), Color.Black);
+                Texture2D tex = new Texture2D(graphics.GraphicsDevice, width_, height_);
+                Color[] data = new Color[width_ * (height_)];
+                for (int i = 0; i < data.Length; i++)
+                    data[i] = Color.Black;
+                tex.SetData(data);
+                    graphics.Draw(tex, new Rectangle(((int)(Position.X * 32)) + (int)camera.X
+                                                    , ((int)(Position.Y * 32)) + (int)camera.Y,
+                                                    width_, height_), Color.White);
             }
         }
     }
