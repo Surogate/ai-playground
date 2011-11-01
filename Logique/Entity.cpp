@@ -165,7 +165,7 @@ namespace Logique {
 		_numberEat = 0;
 		_numberRep = 0;
 		_actual = 0;
-		_numberTot = static_cast<float>(_getSpecieNumber()) / 2.f;
+		_numberTot = static_cast<float>(_getSpecieNumber());
 	}
 
 	float Entity::computeMoy() const {
