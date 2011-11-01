@@ -96,7 +96,7 @@ namespace Logique {
 		if (!_board(loc).hasSheep()) {
 			std::cout << "spawn sheep at " << loc << std::endl;
 			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
-			sheepPtr->addFood(Sheep::FOOD_MAX);
+			sheepPtr->addFood(Sheep::FOOD_REP_LIMIT);
 			sheepPtr->initActionArray(_board);
 
 			sheepPtr->setGetNumberSpecies(boost::bind(&Environnement::getSheepNum, this));
@@ -113,7 +113,7 @@ namespace Logique {
 		if (!_board(loc).hasWolf()) {
 			std::cout << "spawn wolf at " << loc << std::endl;
 			boost::shared_ptr<Wolf> wolfPtr(new Wolf());
-			wolfPtr->addFood(Wolf::FOOD_MAX);
+			wolfPtr->addFood(Wolf::FOOD_REP_LIMIT);
 			wolfPtr->initActionArray(_board);
 
 			wolfPtr->setGetNumberSpecies(boost::bind(&Environnement::getWolfNum, this));
@@ -296,6 +296,7 @@ namespace Logique {
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
 		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
 		value->setGetSquare(boost::bind(&Board::get, &_board, _1));
+		value->reInitPerf();
 		addAction(value->createFoodAction());
 		addAction(value->getNewAction());
 	}

@@ -20,9 +20,10 @@ namespace Logique  {
 	class Entity : public boost::enable_shared_from_this<Entity> {
 	public:
 		enum Constant{
-			BASEFOODTIME = 10,
+			BASEFOODTIME = 8,
 			BASEFOODDECREASE = 1,
-			FOOD_MAX = 10,
+			FOOD_MAX = 15,
+			FOOD_REP_LIMIT = 5,
 			MOVE_TIME = 3
 		};
 
@@ -77,6 +78,7 @@ namespace Logique  {
 		EntityAction getLastAction() const;
 		int getIntFromSup(Coord loc, const Coord& dir); 
 		int getIntFromLess(Coord loc, const Coord& dir);
+		void reInitPerf();
 
 	protected:
 		inline bool addAction(const Action& value) {
@@ -85,7 +87,6 @@ namespace Logique  {
 			return _foodCount != 0;
 		}
 
-		void reInitPerf();
 		float computeMoy() const;
 		
 		struct ActionStore {
