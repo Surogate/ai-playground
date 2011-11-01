@@ -66,7 +66,7 @@ namespace Logique {
 	}
 
 	void Sheep::reproduce(Board& board) {
-		if (isAlive() && hasSheepNext() && _popEntity(_loc)) {
+		if (isAlive() && _foodCount >= FOOD_REP_LIMIT && hasSheepNext() && _popEntity(_loc)) {
 			_numberRep++;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
