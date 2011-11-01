@@ -25,14 +25,14 @@ namespace Logique {
 		};
 
 
-		Square() : _odour(0), _useable(true), _hasGrass(false)
+		Square() : _odour(0), _useable(true), _hasGrass(true)
 		{
 			for (unsigned int i = 0; i < ENTITY_CONTAINER_SIZE; ++i) {
 				_entityIn[i] = 0;
 			}
 		}
 
-		Square(bool useable) : _odour(0), _useable(useable), _hasGrass(false)
+		Square(bool useable) : _odour(0), _useable(useable), _hasGrass(true)
 		{
 			for (unsigned int i = 0; i < ENTITY_CONTAINER_SIZE; ++i) {
 				_entityIn[i] = 0;

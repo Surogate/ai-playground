@@ -23,7 +23,8 @@ namespace Logique {
 	Environnement::~Environnement() {}
 
 	void Environnement::preRun() {
-		addSheep(10);
+		addSheep(20);
+		addWolf(10);
 		insertActionStack();
 
 		if (_actionList.empty()) {
@@ -72,6 +73,11 @@ namespace Logique {
 
 			//on insere les nouvelle actions
 			insertActionStack();
+
+			if (!getSheepNum())
+				addSheep(20);
+			if (!getWolfNum())
+				addWolf(10);
 
 			//on calcule le temps qu'on a mis pour accomplir les operation, pour le soustraire plus tard
 			timer_end = boost::chrono::system_clock::now();
