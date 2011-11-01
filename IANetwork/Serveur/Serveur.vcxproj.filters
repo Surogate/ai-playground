@@ -69,6 +69,9 @@
     <ClCompile Include="..\..\Logique\DecisionTree.cpp">
       <Filter>Source Files\Logique</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Logique\Logger.cpp">
+      <Filter>Source Files\Logique</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Logique\Action.hpp">
@@ -111,6 +114,9 @@
       <Filter>Header Files\Logique</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Logique\DecisionTree.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\Logger.hpp">
       <Filter>Header Files\Logique</Filter>
     </ClInclude>
   </ItemGroup>

@@ -100,7 +100,6 @@ namespace Wrapper
 	{
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
-		std::cout << "[SERVER] REPRODUCE" << std::endl;
 		std::stringstream sstream;
 		sstream << CLONE << ";" <<  (uint32_t)&entity;
 		package->init(sstream.str());
