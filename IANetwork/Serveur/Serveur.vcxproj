@@ -71,15 +71,16 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\calimeraw\Documents\dev\boost_1_47_0\boost_1_47_0\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Document\ai-playground\AITest;C:\Program Files\boost\boost_1_47;E:\Document\ai-playground\Logique;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\calimeraw\Documents\dev\boost_1_47_0\boost_1_47_0\bin.v2\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libboost_system-vc100-mt-gd-1_47.lib;libboost_date_time-vc100-mt-gd-1_47.lib;libboost_thread-vc100-mt-gd-1_47.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_47\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
