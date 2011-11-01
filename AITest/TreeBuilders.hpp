@@ -126,6 +126,78 @@ Hold Class that construct Tree
 				return gain_.getMainResult();
 			}
 
+			template <typename BaseType, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+			boost::function< ATree*() > bindFunction(BaseType& base, const Arg1& val1, const Arg2& val2, const Arg3& val3, const Arg4& val4, const Arg5& val5) {
+				return boost::bind(
+							static_cast<ATree* (BaseType::*)(const Arg1&, const Arg2&, const Arg3&, const Arg4&, const Arg5&) >
+							(&BaseType::template constructin<Arg1, Arg2, Arg3, Arg4>)
+							, &base, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val5));
+			}
+
+			template <typename BaseType, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+			boost::function< ATree*() > bindFunction(BaseType& base, const Arg1& val1, const Arg2& val2, const Arg3& val3, const Arg4& val4) {
+				return boost::bind(
+							static_cast<ATree* (BaseType::*)(const Arg1&, const Arg2&, const Arg3&, const Arg4&) >
+							(&BaseType::template constructin<Arg1, Arg2, Arg3>)
+							, &base, boost::ref(val1), boost::ref(val2), boost::ref(val3), boost::ref(val4));
+			}
+
+			template <typename BaseType, typename Arg1, typename Arg2, typename Arg3>
+			boost::function< ATree*() > bindFunction(BaseType& base, const Arg1& val1, const Arg2& val2, const Arg3& val3) {
+				return boost::bind(
+							static_cast<ATree* (BaseType::*)(const Arg1&, const Arg2&, const Arg3&) >
+							(&BaseType::template constructin<Arg1, Arg2>)
+							, &base, boost::ref(val1), boost::ref(val2), boost::ref(val3));
+			}
+
+			template <typename BaseType, typename Arg1, typename Arg2>
+			boost::function< ATree*() > bindFunction(BaseType& base, const Arg1& val1, const Arg2& val2) {
+				return boost::bind(
+							static_cast<ATree* (BaseType::*)(const Arg1&, const Arg2&) >
+							(&BaseType::template constructin<Arg1>)
+							, &base, boost::ref(val1), boost::ref(val2));
+			}
+
+			template <typename ContW, typename ContX, typename ContC, typename ContV, typename ContB>
+			ATree* constructin(const ContW& val1, const ContX& val2, const ContC& val3, const ContV& val4, const ContB& val5,const SpecializedContainer& spe) {
+				TreeNode* root = new TreeNode();
+
+				const AttribueMap& map = gain_.getAttribueMap();
+				typename AttribueMap::const_iterator it = map.begin();
+				typename AttribueMap::const_iterator ite = map.end();
+
+				while (it != ite) {
+					Builder< Tree >	 build(getMainValue());
+
+					ConditionnalFunctorSpe func(spe, it->first, func_);
+
+					func.reset();
+					BuilderNode<Tree, ContW, ResultContainer> build_1(val1, res_, func);
+					build(build_1, bindFunction(build_1, val2, val3, val4, val5, val1));
+
+					func.reset();
+					BuilderNode<Tree, ContX, ResultContainer> build_2(val1, res_, func);
+					build(build_2, bindFunction(build_2, val1, val3, val4, val5, val2));
+
+					func.reset();
+					BuilderNode<Tree, ContC, ResultContainer> build_3(val1, res_, func);
+					build(build_3, bindFunction(build_2, val1, val2, val4, val5, val3));
+
+					func.reset();
+					BuilderNode<Tree, ContW, ResultContainer> build_4(val1, res_, func);
+					build(build_4, bindFunction(build_2, val1, val2, val3, val5, val4));
+
+					func.reset();
+					BuilderNode<Tree, ContW, ResultContainer> build_5(val1, res_, func);
+					build(build_5, bindFunction(build_2, val1, val2, val3, val4, val5));
+
+					root->AddSubNode(it->first, build());
+					++it;
+				}
+
+				return root;
+			}
+
 			template <typename ContX, typename ContY, typename ContZ, typename ContW>
 			ATree* constructin(const ContX& val1, const ContY& val2, const ContZ& val3, const ContW& val4, const SpecializedContainer& spe) {
 				TreeNode* root = new TreeNode();
@@ -141,11 +213,7 @@ Hold Class that construct Tree
 
 					func.reset();
 					BuilderNode<Tree, ContX, ResultContainer> build_1(val1, res_, func);
-					build(build_1, 
-						boost::bind(
-						static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContY&, const ContZ&, const ContW&, const ContX&) >
-						(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContY, ContZ, ContW>)
-						, &build_1, boost::ref(val2), boost::ref(val3), boost::ref(val4), boost::ref(val1)));
+					build(build_1, bindFunction(build_1, val2, val3, val4, val1));
 
 					func.reset();
 					BuilderNode<Tree, ContY, ResultContainer> build_2(val2, res_, func);
@@ -192,11 +260,7 @@ Hold Class that construct Tree
 
 					func.reset();
 					BuilderNode<Tree, ContX, ResultContainer> build_f(val1, res_, func);
-					build(build_f, 
-						boost::bind(
-						static_cast<ATree* (BuilderNode<Tree, ContX, ResultContainer>::*)(const ContY&, const ContZ&, const ContX&) >
-						(&BuilderNode<Tree, ContX, ResultContainer>::template constructin<ContY, ContZ>)
-						, &build_f, boost::ref(val2), boost::ref(val3), boost::ref(val1)));
+					build(build_f, bindFunction(build_f, val2, val3, val1));
 
 					func.reset();
 					BuilderNode<Tree, ContY, ResultContainer> build_s(val2, res_, func);
