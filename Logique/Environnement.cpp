@@ -74,7 +74,7 @@ namespace Logique {
 			//on insere les nouvelle actions
 			insertActionStack();
 
-			if (!getSheepNum() <= 1)
+			if (getSheepNum() <= 1)
 				addSheep(20);
 			if (getWolfNum() <= 1)
 				addWolf(10);
