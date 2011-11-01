@@ -76,6 +76,10 @@ namespace Logique {
 			_onDeath(*this);
 	}
 
+	void Entity::setFood(unsigned int value) {
+		_foodCount = value;
+	}
+
 	const Coord& Entity::getLocation() const {
 		return _loc;
 	}

@@ -57,7 +57,7 @@ namespace Logique {
 			std::cout << "Wolf eat" << std::endl;
 			Entity* sheep =_getSquare(_loc).getEntity(Square::SHEEP);
 			if (sheep) {
-				sheep->decreaseFood(Entity::FOOD_MAX);
+				sheep->setFood(0);
 			}
 			addFood(FOOD_GAIN);
 			Callback_Environnement::getInstance().cb_onEntityEat(*this);
