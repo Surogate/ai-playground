@@ -35,7 +35,10 @@ namespace Wrapper
 			Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 			std::stringstream sstream;
-			sstream << SPAWN << ";s;" << (uint32_t)(it->first) << ";" << it->first->getLocation().x << ";" << it->first->getLocation().y;
+			if (it->first->getType() == Logique::Square::SHEEP)
+				sstream << SPAWN << ";s;" << (uint32_t)(it->first) << ";" << it->first->getLocation().x << ";" << it->first->getLocation().y;
+			else
+				sstream << SPAWN << ";w;" << (uint32_t)(it->first) << ";" << it->first->getLocation().x << ";" << it->first->getLocation().y;
 			package->init(sstream.str());
 			if (!server_->send_message(socket, package)) break;
 		}
@@ -96,7 +99,6 @@ namespace Wrapper
 	void NetworkEnvironnement::onReproduce(Logique::Entity const & entity)
 	{
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
-
 
 		std::cout << "[SERVER] REPRODUCE" << std::endl;
 		std::stringstream sstream;
