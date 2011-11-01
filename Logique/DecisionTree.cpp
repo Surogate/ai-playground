@@ -29,11 +29,13 @@ namespace Logique {
 	}
 
 	void DecisionTree::sendMoy(float value) {
-		std::cout << "action commited - old perf " << _moyenne << std::endl;
 		_moyenne = (_moyenne + value) / 2.f;
-		std::cout << "new perf " << _moyenne << std::endl;
-		std::cout << "experience size " << _id3.size() << std::endl;
 	}
+
+	std::size_t DecisionTree::getSize() const {
+		return _id3.size();
+	}
+
 }
 
 

@@ -10,9 +10,9 @@ namespace Logique {
 	class Wolf : public Entity {
 	public:
 		enum Constant {
-			FOOD_GAIN = 2,
+			FOOD_GAIN = 3,
 			EAT_TIME = 3,
-			REPRODUCE_TIME = 5
+			REPRODUCE_TIME = 6
 		};
 
 		Wolf();
