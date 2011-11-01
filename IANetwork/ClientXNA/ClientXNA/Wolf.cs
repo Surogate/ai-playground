@@ -59,6 +59,8 @@ namespace ClientXNA
             {
                 elapsedTime_ = 0;
                 x_frame_ = (x_frame_ < 3) ? (x_frame_ + 1) : (0);
+                if (Action == EntityAction.REPRODUCE)
+                    Action == EntityAction.NONE;
                 if (Action == EntityAction.MOVE_UP)
                     if (Position.Y > NextPosition.Y)
                         position_.Y -= 0.1f;
