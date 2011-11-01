@@ -12,7 +12,7 @@ namespace Logique {
 		enum Constant {
 			FOOD_GAIN = 3,
 			EAT_TIME = 3,
-			REPRODUCE_TIME = 6
+			REPRODUCE_TIME = 18
 		};
 
 		Wolf();

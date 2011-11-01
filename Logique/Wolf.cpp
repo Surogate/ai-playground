@@ -26,7 +26,7 @@ namespace Logique {
 		int right = getIntFromSup(_loc, Coord::RIGHT);
 		EntityAction act = _tree.computeAction(present, up, left, down, right); 
 		_actionStack.push(ActionStore(present, up, left, down, right, act));
-		
+		_actual++;
 		return act;
 	}
 
@@ -66,7 +66,7 @@ namespace Logique {
 	}
 
 	void Wolf::reproduce(Board& board) {
-		if (isAlive() && hasWolfNext() && _popEntity(_loc)) {
+		if (isAlive() && _foodCount >= FOOD_REP_LIMIT && hasWolfNext() && _popEntity(_loc)) {
 			_numberRep++;
 			std::cout << "Wolf reproduce" << std::endl;
 			_lastAction = REPRODUCE;
