@@ -169,9 +169,12 @@ namespace Logique {
 	}
 
 	float Entity::computeMoy() const {
-		float moy = std::pow(_numberEat, _numberRep + 1.f);
-		moy /= _actual;
-		return moy;
+		if (_actual) {
+			float moy = std::pow(_numberEat, _numberRep + 1.f);
+			moy /= _actual;
+			return moy;
+		}
+		return 0;
 	}
 }
 
