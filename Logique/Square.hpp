@@ -4,6 +4,8 @@
 
 #include <boost/array.hpp>
 
+#include <iostream>
+
 namespace Logique {
 
 	class Entity;
