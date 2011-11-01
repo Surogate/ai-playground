@@ -12,7 +12,7 @@ namespace Logique {
 		enum Constant {
 			FOOD_GAIN = 2,
 			EAT_TIME = 3,
-			REPRODUCE_TIME = 8
+			REPRODUCE_TIME = 16
 		};
 
 		Sheep();

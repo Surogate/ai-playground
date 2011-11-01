@@ -20,6 +20,7 @@ namespace Logique {
 		Entity::EntityAction randomAction();
 		const float& getMoy() const;
 		void sendMoy(float value);
+		std::size_t getSize() const;
 
 	private:
 		ID3Algo _id3;

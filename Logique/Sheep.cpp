@@ -5,6 +5,7 @@
 #include "Sheep.hpp"
 #include "Board.hpp"
 #include "Callback_Environnement.hpp"
+#include "Logger.hpp"
 
 namespace Logique {
 
@@ -40,6 +41,11 @@ namespace Logique {
 				_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
 				_actionStack.pop();
 			}
+			Logger log("Mouton.log");
+			log.dump(moy);
+			std::cout << "action commited - old perf " << _tree.getMoy() << std::endl;
+			std::cout << "new perf " << moy << std::endl;
+			std::cout << "experience size " << _tree.getSize() << std::endl;
 			_tree.sendMoy(moy);
 			reInitPerf();
 		}
@@ -50,7 +56,7 @@ namespace Logique {
 		if (isAlive() && board(_loc).hasGrass()) {
 			_lastAction = EAT;
 			_numberEat++;
-			std::cout << "eat" << std::endl;
+			std::cout << "Sheep eat" << std::endl;
 			board.lock();
 			board(_loc).hasGrass(false);
 			board.unlock();
@@ -63,7 +69,7 @@ namespace Logique {
 	void Sheep::reproduce(Board& board) {
 		if (isAlive() && hasSheepNext() && _popEntity(_loc)) {
 			_numberRep++;
-			std::cout << "reproduce" << std::endl;
+			std::cout << "Sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
 		}

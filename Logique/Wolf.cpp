@@ -2,6 +2,7 @@
 #include "Wolf.hpp"
 #include "Board.hpp"
 #include "Callback_Environnement.hpp"
+#include "Logger.hpp"
 
 namespace Logique {
 
@@ -39,6 +40,11 @@ namespace Logique {
 				_actionStack.pop();
 			}
 			reInitPerf();
+			Logger log("Loup.log");
+			log.dump(moy);
+			std::cout << "action commited - old perf " << _tree.getMoy() << std::endl;
+			std::cout << "new perf " << moy << std::endl;
+			std::cout << "experience size " << _tree.getSize() << std::endl;
 			_tree.sendMoy(moy);
 		}
 		return _actionArray[act];
@@ -48,7 +54,7 @@ namespace Logique {
 		if (isAlive() && _getSquare(_loc).hasSheep()) {
 			_lastAction = EAT;
 			_numberEat++;
-			std::cout << "eat" << std::endl;
+			std::cout << "Wolf eat" << std::endl;
 			Entity* sheep =_getSquare(_loc).getEntity(Square::SHEEP);
 			if (sheep) {
 				sheep->decreaseFood(Entity::FOOD_MAX);
@@ -62,7 +68,7 @@ namespace Logique {
 	void Wolf::reproduce(Board& board) {
 		if (isAlive() && hasWolfNext() && _popEntity(_loc)) {
 			_numberRep++;
-			std::cout << "reproduce" << std::endl;
+			std::cout << "Wolf reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
 		}
