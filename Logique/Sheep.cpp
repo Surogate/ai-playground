@@ -34,19 +34,23 @@ namespace Logique {
 
 	Action Sheep::getNewAction() {
 		EntityAction act = computeAction();
-		float moy = computeMoy();
-		if (_actual && _actual >= _numberTot && moy && moy >= _tree.getMoy()) {
-			while (_actionStack.size()) {
-				ActionStore& top = _actionStack.top();
-				_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
-				_actionStack.pop();
+
+		if (_actual && _actual >= _numberTot) {
+			float moy = computeMoy();
+			
+			if (moy && moy >= _tree.getMoy()) {
+				while (_actionStack.size()) {
+					ActionStore& top = _actionStack.top();
+					_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
+					_actionStack.pop();
+				}
+				Logger log("Mouton.log");
+				log.dump(moy);
+				std::cout << "#Sheep action commited - old perf " << _tree.getMoy() << std::endl;
+				std::cout << "#Sheep new perf " << moy << std::endl;
+				std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
+				_tree.sendMoy(moy);
 			}
-			Logger log("Mouton.log");
-			log.dump(moy);
-			std::cout << "#Sheep action commited - old perf " << _tree.getMoy() << std::endl;
-			std::cout << "#Sheep new perf " << moy << std::endl;
-			std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
-			_tree.sendMoy(moy);
 			reInitPerf();
 		}
 		return _actionArray[act];
