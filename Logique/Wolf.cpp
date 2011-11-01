@@ -9,8 +9,13 @@ namespace Logique {
 	DecisionTree Wolf::_tree;
 
 	Wolf::Wolf() 
-		: Entity(Square::WOLF), _numberEat(0)
+		: Entity(Square::WOLF)
 	{}
+
+	Wolf::~Wolf() {
+		if (computeMoy())
+			std::cout << "wolf dead, actual " << _actual << " numbertot " << _numberTot << " moy " << computeMoy() << " tree moy " << _tree.getMoy() << std::endl;
+	}
 
 	void Wolf::initActionArray(Board& board) {
 		Entity::initActionArray(board);
@@ -32,20 +37,24 @@ namespace Logique {
 
 	Action Wolf::getNewAction() {
 		EntityAction act = computeAction();
-		float moy = computeMoy();
-		if (_actual && _actual >= _numberTot && moy && computeMoy() >= _tree.getMoy()) {
-			while (_actionStack.size()) {
-				ActionStore& top = _actionStack.top();
-				_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
-				_actionStack.pop();
+		if (_actual && _actual >= _numberTot) {
+			float moy = computeMoy();
+			if (moy)
+				std::cout << "wolf new action, actual " << _actual << " numbertot " << _numberTot << " moy " << moy << " tree moy " << _tree.getMoy() << std::endl;
+			if (moy && moy >= _tree.getMoy()) {
+				while (_actionStack.size()) {
+					ActionStore& top = _actionStack.top();
+					_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
+					_actionStack.pop();
+				}
+				Logger log("Loup.log");
+				log.dump(moy);
+				std::cout << "#Wolf action commited - old perf " << _tree.getMoy() << std::endl;
+				std::cout << "#Wolf new perf " << moy << std::endl;
+				std::cout << "#Wolf experience size " << _tree.getSize() << std::endl;
+				_tree.sendMoy(moy);
 			}
 			reInitPerf();
-			Logger log("Loup.log");
-			log.dump(moy);
-			std::cout << "#Wolf action commited - old perf " << _tree.getMoy() << std::endl;
-			std::cout << "#Wolf new perf " << moy << std::endl;
-			std::cout << "#Wolf experience size " << _tree.getSize() << std::endl;
-			_tree.sendMoy(moy);
 		}
 		return _actionArray[act];
 	}

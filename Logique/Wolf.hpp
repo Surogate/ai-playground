@@ -16,6 +16,7 @@ namespace Logique {
 		};
 
 		Wolf();
+		~Wolf();
 
 		Action getNewAction();
 
@@ -29,9 +30,6 @@ namespace Logique {
 		bool hasWolfNext();
 
 		static DecisionTree _tree;
-
-	private:
-		unsigned int _numberEat;
 	};
 
 }
