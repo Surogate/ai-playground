@@ -74,9 +74,9 @@ namespace Logique {
 			//on insere les nouvelle actions
 			insertActionStack();
 
-			if (!getSheepNum() == 1)
+			if (!getSheepNum() <= 1)
 				addSheep(20);
-			if (getWolfNum() == 1)
+			if (getWolfNum() <= 1)
 				addWolf(10);
 
 			//on calcule le temps qu'on a mis pour accomplir les operation, pour le soustraire plus tard

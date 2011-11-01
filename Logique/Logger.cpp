@@ -12,7 +12,7 @@ namespace Logique {
 	{}
 
 	void Logger::dump(const std::string& value) {
-		std::ofstream descriptor(_file);
+		std::ofstream descriptor(_file, std::ios::app | std::ios::out);
 
 		if (descriptor.good()) {
 			descriptor << value << std::endl;

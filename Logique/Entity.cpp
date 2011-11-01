@@ -12,9 +12,7 @@ namespace Logique {
 	{}
 
 	Entity::~Entity() 
-	{
-		std::cout << "entity delete" << std::endl;
-	}
+	{}
 
 	void Entity::cleanVtable() {
 		for (unsigned int i = 0; i < _actionArray.size(); i++) {
