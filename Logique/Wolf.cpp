@@ -33,7 +33,7 @@ namespace Logique {
 	Action Wolf::getNewAction() {
 		EntityAction act = computeAction();
 		float moy = computeMoy();
-		if (_actual && _actual >= _numberTot && computeMoy() >= _tree.getMoy()) {
+		if (_actual && _actual >= _numberTot && moy && computeMoy() >= _tree.getMoy()) {
 			while (_actionStack.size()) {
 				ActionStore& top = _actionStack.top();
 				_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
