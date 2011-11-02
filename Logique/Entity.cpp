@@ -8,7 +8,7 @@
 namespace Logique {
 
 	Entity::Entity(const Square::EntityContain& type)
-		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _foodCount(0), _lastAction()
+		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _foodCount(0), _lastMoy(0), _lastAction()
 	{}
 
 	Entity::~Entity() 
@@ -49,6 +49,10 @@ namespace Logique {
 
 	void Entity::setPopEntityFunctor(const PopEntityFunctor& func) {
 		_popEntity = func;
+	}
+
+	void Entity::setValidScore(const ValidScoreFunctor& func) {
+		_validScore = func;
 	}
 
 	void Entity::setLocation(Coord loc) {
@@ -175,6 +179,10 @@ namespace Logique {
 			return moy;
 		}
 		return 0;
+	}
+
+	const float& Entity::getLastMoy() const {
+		return _lastMoy;
 	}
 }
 

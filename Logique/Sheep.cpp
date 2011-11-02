@@ -38,7 +38,7 @@ namespace Logique {
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 			
-			if (moy && moy >= _tree.getMoy()) {
+			if (_validScore(moy)) {
 				while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
 					_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
@@ -49,6 +49,7 @@ namespace Logique {
 				std::cout << "#Sheep action commited - old perf " << _tree.getMoy() << std::endl;
 				std::cout << "#Sheep new perf " << moy << std::endl;
 				std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
+				_lastMoy = moy;
 				_tree.sendMoy(moy);
 			}
 			reInitPerf();

@@ -13,8 +13,6 @@ namespace Logique {
 	{}
 
 	Wolf::~Wolf() {
-		if (computeMoy())
-			std::cout << "wolf dead, actual " << _actual << " numbertot " << _numberTot << " moy " << computeMoy() << " tree moy " << _tree.getMoy() << std::endl;
 	}
 
 	void Wolf::initActionArray(Board& board) {
@@ -39,9 +37,8 @@ namespace Logique {
 		EntityAction act = computeAction();
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
-			if (moy)
-				std::cout << "wolf new action, actual " << _actual << " numbertot " << _numberTot << " moy " << moy << " tree moy " << _tree.getMoy() << std::endl;
-			if (moy && moy >= _tree.getMoy()) {
+
+			if (_validScore(moy)) {
 				while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
 					_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
@@ -52,6 +49,7 @@ namespace Logique {
 				std::cout << "#Wolf action commited - old perf " << _tree.getMoy() << std::endl;
 				std::cout << "#Wolf new perf " << moy << std::endl;
 				std::cout << "#Wolf experience size " << _tree.getSize() << std::endl;
+				_lastMoy = moy;
 				_tree.sendMoy(moy);
 			}
 			reInitPerf();
