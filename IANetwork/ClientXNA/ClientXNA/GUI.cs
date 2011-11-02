@@ -98,13 +98,12 @@ namespace ClientXNA
                     {
                         string[] tokens = command_.ToString().Split(' ');
                         command_.Clear();
-                        if (tokens.Count() >= 3)
+                        if (tokens.Count() >= 1)
                         {
-                            Debug.WriteLine(tokens[0]);
-                            Debug.WriteLine(tokens[1]);
-                            Debug.WriteLine(tokens[2]);
-                            if (tokens[0].Equals("CONNECT"))
+                            if (tokens[0].Equals("CONNECT") && tokens.Count() >= 3)
                                 ConnectTo(tokens[1], tokens[2]);
+                            else if (tokens[0].Equals("CONNECT"))
+                                ConnectTo("localhost", "16000");
                         }
                     }
                     if (keys.Count() == 1)
@@ -114,7 +113,6 @@ namespace ClientXNA
                             int pos = command_.Length - 1;
                             if (command_.Length > 0)
                                 command_.Remove(pos, 1);
-                            return;
                         }
                         int keynum = (int)keys[0];
                         if ((keynum >= 65 && keynum <= 90) || (keynum >= 48 && keynum <= 57))
