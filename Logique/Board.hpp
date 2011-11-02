@@ -10,7 +10,7 @@
 #include "Entity.hpp"
 
 namespace Logique {
-	enum { BOARD_SIZE = 30 };
+	enum { BOARD_SIZE = 10 };
 
 	class Board : public boost::array< boost::array<Square, BOARD_SIZE >, BOARD_SIZE > {
 	public:
@@ -28,6 +28,7 @@ namespace Logique {
 		int getSquare(const Coord& pos) const;
 
 		void dump() const;
+		void dumpSheep() const;
 
 		static bool coordValid(const Coord& pos);
 		static bool coordValid(unsigned int x, unsigned int y);

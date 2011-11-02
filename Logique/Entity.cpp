@@ -152,6 +152,7 @@ namespace Logique {
 			_loc = newLoc;
 			Callback_Environnement::getInstance().cb_onEntityMove(*this);
 			Callback_Environnement::getInstance().cb_onBoardChange(board);
+			board.dumpSheep();
 			return true;
 		}
 		return false;
@@ -177,7 +178,7 @@ namespace Logique {
 		_numberEat = 0;
 		_numberRep = 0;
 		_actual = 0;
-		_numberTot = 3 + _lastMoy * 5;
+		_numberTot = 5 + _lastMoy * 5;
 	}
 
 	float Entity::computeMoy() const {

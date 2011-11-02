@@ -17,15 +17,15 @@ namespace Logique {
 	{
 		_entityNum[Square::SHEEP] = 0;
 		_entityNum[Square::WOLF] = 0;
-		_baseTime = boost::posix_time::seconds(1);
+		_baseTime = boost::posix_time::milliseconds(500);
 		addAction(createBoardPlay());
 	}
 
 	Environnement::~Environnement() {}
 
 	void Environnement::preRun() {
-		addSheep(40);
-		addWolf(20);
+		addSheep(5);
+		addWolf(5);
 
 		Logger log("Loup.log");
 		log.wipeFile();
@@ -48,12 +48,8 @@ namespace Logique {
 		ActionList::iterator executor;
 		ActionList::iterator toDeleteEnd;
 		ActionList::iterator end;
-		boost::chrono::system_clock::time_point timer_start;
-		boost::chrono::system_clock::time_point timer_end = boost::chrono::system_clock::now();
-		boost::chrono::duration<double> sec;
 		while (!_actionList.empty()) {
-			timer_start = boost::chrono::system_clock::now();
-			tickwait = _actionList.begin()->_tickBeforeAction - static_cast<unsigned int>(sec.count());
+			tickwait = _actionList.begin()->_tickBeforeAction;
 			sleep_time =  _baseTime * tickwait;
 			if (sleep_time != zero) {
 				boost::this_thread::sleep(sleep_time);
@@ -82,15 +78,11 @@ namespace Logique {
 			insertActionStack();
 
 			if (getSheepNum() <= 3) {
-				addSheep(30);
+				addSheep(5);
 			}
 			if (getWolfNum() <= 3) {
-				addWolf(15);
+				addWolf(5);
 			}
-
-			//on calcule le temps qu'on a mis pour accomplir les operation, pour le soustraire plus tard
-			timer_end = boost::chrono::system_clock::now();
-			sec = (timer_end - timer_start) / (_baseTime.total_milliseconds() / 1000);
 		}
 
 		std::cout << "Simulation end" << std::endl;

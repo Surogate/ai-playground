@@ -26,8 +26,8 @@ namespace Logique {
 		int left = getIntFromLess(_loc, Coord::RIGHT);
 		int down = getIntFromSup(_loc, Coord::DOWN);
 		int right = getIntFromSup(_loc, Coord::RIGHT);
-		EntityAction act = _tree.computeAction(_getSquare(_loc), up, left, down, right); 
-		_actionStack.push(ActionStore(_getSquare(_loc), up, left, down, right, act));
+		EntityAction act = _tree.computeAction(_foodCount, _getSquare(_loc), up, left, down, right); 
+		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc), up, left, down, right, act));
 		_actual++;
 		return act;
 	}
@@ -40,7 +40,7 @@ namespace Logique {
 			if (_validScore(moy)) {
 				while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
-					_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
+					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
 					_actionStack.pop();
 				}
 				Logger log("Loup.log");

@@ -118,6 +118,15 @@ namespace Logique {
 			std::cout << _odour;
 		}
 
+		inline void dumpSheep() const {
+			if (hasSheep()) {
+				std::cout << "M";
+			} else {
+				std::cout << "O";
+			}
+
+		}
+
 		inline void decreaseOdour(unsigned int odour) {
 			if (odour < _odour)
 				_odour -= odour;

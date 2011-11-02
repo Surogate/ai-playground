@@ -25,8 +25,8 @@ namespace Logique {
 		int left = getIntFromLess(_loc, Coord::RIGHT);
 		int down = getIntFromSup(_loc, Coord::DOWN);
 		int right = getIntFromSup(_loc, Coord::RIGHT);
-		EntityAction act = _tree.computeAction(_getSquare(_loc), up, left, down, right); 
-		_actionStack.push(ActionStore(_getSquare(_loc), up, left, down, right, act));
+		EntityAction act = _tree.computeAction(_foodCount, _getSquare(_loc), up, left, down, right); 
+		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc), up, left, down, right, act));
 		_actual++;
 		return act;
 	}
@@ -40,7 +40,7 @@ namespace Logique {
 			if (_validScore(moy)) {
 				while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
-					_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
+					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
 					_actionStack.pop();
 				}
 				Logger log("Mouton.log");
@@ -71,6 +71,9 @@ namespace Logique {
 			addFood(FOOD_GAIN);
 			Callback_Environnement::getInstance().cb_onEntityEat(*this);
 		}
+		else if (board(_loc).hasGrass()){
+			std::cout << "sheep eat fail on " << _loc << std::endl;
+		}
 		generateNewAction();
 	}
 
@@ -80,6 +83,8 @@ namespace Logique {
 			std::cout << "sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
+		} else {
+			std::cout << "sheep reproduce fail on " << _loc << std::endl;
 		}
 		generateNewAction();
 	}
