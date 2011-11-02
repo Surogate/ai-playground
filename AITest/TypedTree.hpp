@@ -968,7 +968,7 @@ namespace ID3 {
 					test(val1, ptr);
 
 					if (ptr) {
-						return ptr->evaluate(value, val1, val2, val3, val4, val5);
+						return ptr->evaluate(val1);
 					} else {
 						return Answer();
 					}

@@ -52,7 +52,7 @@ namespace ID3 {
 				_tree = 0;
 			}
 		
-			if (result_.size()) {
+			if (_result.size()) {
 				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth, _ninth);
 			}
 			_actualize = true;
@@ -122,7 +122,7 @@ namespace ID3 {
 				_tree = 0;
 			}
 		
-			if (result_.size()) {
+			if (_result.size()) {
 				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth);
 			}
 			_actualize = true;
@@ -190,7 +190,7 @@ namespace ID3 {
 				_tree = 0;
 			}
 		
-			if (result_.size()) {
+			if (_result.size()) {
 				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh);
 			}
 			_actualize = true;
