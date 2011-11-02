@@ -102,6 +102,8 @@ namespace ClientXNA
                         {
                             if (tokens[0].Equals("CONNECT") && tokens.Count() >= 3)
                                 ConnectTo(tokens[1], tokens[2]);
+                            else if (tokens[0].Equals("CONNECT") && tokens.Count() == 2)
+                                ConnectTo(tokens[1], "16000");
                             else if (tokens[0].Equals("CONNECT"))
                                 ConnectTo("localhost", "16000");
                         }
