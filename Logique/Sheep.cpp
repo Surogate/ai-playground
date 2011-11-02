@@ -21,13 +21,12 @@ namespace Logique {
 	}
 
 	Entity::EntityAction Sheep::computeAction() {
-		int present = _getSquare(_loc).getInt();
 		int up = getIntFromLess(_loc, Coord::DOWN);
 		int left = getIntFromLess(_loc, Coord::RIGHT);
 		int down = getIntFromSup(_loc, Coord::DOWN);
 		int right = getIntFromSup(_loc, Coord::RIGHT);
-		EntityAction act = _tree.computeAction(present, up, left, down, right); 
-		_actionStack.push(ActionStore(present, up, left, down, right, act));
+		EntityAction act = _tree.computeAction(_getSquare(_loc), up, left, down, right); 
+		_actionStack.push(ActionStore(_getSquare(_loc), up, left, down, right, act));
 		_actual++;
 		return act;
 	}
@@ -38,7 +37,7 @@ namespace Logique {
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 			
-			if (moy && moy >= _tree.getMoy()) {
+			if (_validScore(moy)) {
 				while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
 					_tree.addAction(top.present, top.up, top.left, top.down, top.right, top.result);
@@ -46,9 +45,11 @@ namespace Logique {
 				}
 				Logger log("Mouton.log");
 				log.dump(moy);
-				std::cout << "#Sheep action commited - old perf " << _tree.getMoy() << std::endl;
+				std::cout << "#Sheep action commited - old perf " << _lastMoy << std::endl;
 				std::cout << "#Sheep new perf " << moy << std::endl;
+				std::cout << "tree moy" << _tree.getMoy() << std::endl;
 				std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
+				_lastMoy = moy;
 				_tree.sendMoy(moy);
 			}
 			reInitPerf();

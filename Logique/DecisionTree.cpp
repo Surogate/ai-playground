@@ -12,8 +12,8 @@ namespace Logique {
 		return static_cast<Entity::EntityAction>(_distri(_gen));
 	}
 
-	Entity::EntityAction DecisionTree::computeAction(int present, int haut, int gauche, int bas, int droite) {
-		Answer ans = _id3.decide(present, haut, gauche, bas, droite);
+	Entity::EntityAction DecisionTree::computeAction(const Square& present, int haut, int gauche, int bas, int droite) {
+		Answer ans = _id3.decide(present.useable(), present.hasGrass(), present.hasSheep(), present.hasWolf(), present.odour(), haut, gauche, bas, droite);
 		if (ans) {
 			return *ans;
 		}
@@ -24,8 +24,8 @@ namespace Logique {
 		return _moyenne;
 	}
 
-	void DecisionTree::addAction(int present, int haut, int gauche, int bas, int droite, Entity::EntityAction result) {
-		_id3.addData(present, haut, gauche, bas, droite, result);
+	void DecisionTree::addAction(const Square& present, int haut, int gauche, int bas, int droite, Entity::EntityAction result) {
+		_id3.addData(present.useable(), present.hasGrass(), present.hasSheep(), present.hasWolf(), present.odour(), haut, gauche, bas, droite, result);
 	}
 
 	void DecisionTree::sendMoy(float value) {
