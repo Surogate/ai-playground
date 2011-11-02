@@ -48,7 +48,7 @@ namespace Logique  {
 		Entity(const Square::EntityContain& type);
 		virtual ~Entity();
 
-		void Entity::cleanVtable();
+		void cleanVtable();
 
 		void addFood(unsigned int value);
 		bool isAlive() const;
@@ -90,6 +90,8 @@ namespace Logique  {
 				_add_action(value);
 			return _foodCount != 0;
 		}
+
+		void dumpType();
 
 		float computeMoy() const;
 		

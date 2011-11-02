@@ -54,7 +54,6 @@ namespace ID3 {
 				}
 		
 				if (_result.size()) {
-					std::cout << "build tree" << std::endl;
 					_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth, _ninth);
 				}
 				_actualize = true;

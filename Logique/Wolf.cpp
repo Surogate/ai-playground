@@ -50,6 +50,7 @@ namespace Logique {
 				std::cout << "#Wolf experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
+				_tree.generateTree();
 			}
 			reInitPerf();
 		}

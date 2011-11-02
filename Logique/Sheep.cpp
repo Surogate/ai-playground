@@ -51,6 +51,9 @@ namespace Logique {
 				std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
+				std::cout << "generate tree" << std::endl;
+				_tree.generateTree();
+				std::cout << "tree generated" << std::endl;
 			}
 			reInitPerf();
 		}
@@ -61,6 +64,7 @@ namespace Logique {
 		if (isAlive() && board(_loc).hasGrass()) {
 			_lastAction = EAT;
 			_numberEat++;
+			std::cout << "sheep eat" << std::endl;
 			board.lock();
 			board(_loc).hasGrass(false);
 			board.unlock();
@@ -73,6 +77,7 @@ namespace Logique {
 	void Sheep::reproduce(Board& board) {
 		if (isAlive() && _foodCount >= FOOD_REP_LIMIT && hasSheepNext() && _popEntity(_loc)) {
 			_numberRep++;
+			std::cout << "sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
 		}

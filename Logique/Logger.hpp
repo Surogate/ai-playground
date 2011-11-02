@@ -12,6 +12,8 @@ namespace Logique {
 		Logger();
 		Logger(const std::string& file);
 
+		void wipeFile();
+
 		void dump(const std::string& value);
 
 		template <typename T>
