@@ -201,6 +201,10 @@ namespace ClientXNA
             try
             {
                 client_ = new TcpClient(host, Int32.Parse(port));
+                console_.SheepNumberALive = 0;
+                console_.SheepNumberDeath = 0;
+                console_.WolfNumberALive = 0;
+                console_.WolfNumberDeath = 0;
                 incoming_packages_.Clear();
                 entities_.Clear();
                 StartRecv();
