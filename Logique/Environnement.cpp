@@ -209,13 +209,20 @@ namespace Logique {
 		EntityPtrSet::const_iterator it = _entityList.begin();
 		EntityPtrSet::const_iterator ite = _entityList.end();
 
-		while (it != ite && it->first->getType() == type) {
-			moy += it->first->getLastMoy();
-			++size;
+		while (it != ite) {
+			if (it->first->getType() == type) {
+				moy += it->first->getLastMoy();
+				++size;
+			}
 			++it;
 		}
 
-		return  value && (value >= (moy / size));
+		if (size)
+			moy /= size;
+
+		std::cout << "value " << value << " moy " << moy << std::endl;
+
+		return  value && (value >= moy);
 	}
 
 	const Environnement::EntityPtrSet& Environnement::getEntityList() const {
