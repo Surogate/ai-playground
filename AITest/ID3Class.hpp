@@ -47,15 +47,18 @@ namespace ID3 {
 		}
 
 		void generateTree() {
-			if (_tree != 0) {
-				delete _tree;
-				_tree = 0;
-			}
+			if (!_actualize) {
+				if (_tree != 0) {
+					delete _tree;
+					_tree = 0;
+				}
 		
-			if (_result.size()) {
-				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth, _ninth);
+				if (_result.size()) {
+					std::cout << "build tree" << std::endl;
+					_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth, _ninth);
+				}
+				_actualize = true;
 			}
-			_actualize = true;
 		}
 
 		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7, const Eighth& val8, const Ninth& val9) {
@@ -117,15 +120,17 @@ namespace ID3 {
 		}
 
 		void generateTree() {
-			if (_tree != 0) {
-				delete _tree;
-				_tree = 0;
-			}
+			if (!_actualize) {
+				if (_tree != 0) {
+					delete _tree;
+					_tree = 0;
+				}
 		
 			if (_result.size()) {
-				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth);
+					_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth);
+				}
+				_actualize = true;
 			}
-			_actualize = true;
 		}
 
 		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7, const Eighth& val8) {
@@ -185,15 +190,17 @@ namespace ID3 {
 		}
 
 		void generateTree() {
-			if (_tree != 0) {
-				delete _tree;
-				_tree = 0;
-			}
+			if (!_actualize) {
+				if (_tree != 0) {
+					delete _tree;
+					_tree = 0;
+				}
 		
 			if (_result.size()) {
-				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh);
+					_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh);
+				}
+				_actualize = true;
 			}
-			_actualize = true;
 		}
 
 		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7) {
@@ -251,15 +258,17 @@ namespace ID3 {
 		}
 
 		void generateTree() {
-			if (tree_ != 0) {
-				delete tree_;
-				tree_ = 0;
-			}
+			if (!actualize_) {
+				if (tree_ != 0) {
+					delete tree_;
+					tree_ = 0;
+				}
 		
-			if (result_.size()) {
-				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_, fifth_, sixth_);
+				if (result_.size()) {
+					tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_, fifth_, sixth_);
+				}
+				actualize_ = true;
 			}
-			actualize_ = true;
 		}
 
 		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6) {
@@ -316,15 +325,17 @@ namespace ID3 {
 		}
 
 		void generateTree() {
-			if (tree_ != 0) {
-				delete tree_;
-				tree_ = 0;
-			}
+			if (!actualize_) {
+				if (tree_ != 0) {
+					delete tree_;
+					tree_ = 0;
+				}
 		
-			if (result_.size()) {
-				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_, fifth_);
+				if (result_.size()) {
+					tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_, fifth_);
+				}
+				actualize_ = true;
 			}
-			actualize_ = true;
 		}
 
 		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5) {
@@ -378,15 +389,17 @@ namespace ID3 {
 		}
 
 		void generateTree() {
-			if (tree_ != 0) {
-				delete tree_;
-				tree_ = 0;
-			}
+			if (!actualize_) {
+				if (tree_ != 0) {
+					delete tree_;
+					tree_ = 0;
+				}
 		
-			if (result_.size()) {
-				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_);
+				if (result_.size()) {
+					tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_, fourth_);
+				}
+				actualize_ = true;
 			}
-			actualize_ = true;
 		}
 
 		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4) {
@@ -438,15 +451,17 @@ namespace ID3 {
 		}
 
 		void generateTree() {
-			if (tree_ != 0) {
-				delete tree_;
-				tree_ = 0;
-			}
+			if (!actualize_) {
+				if (tree_ != 0) {
+					delete tree_;
+					tree_ = 0;
+				}
 		
-			if (result_.size()) {
-				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_);
+				if (result_.size()) {
+					tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_, third_);
+				}
+				actualize_ = true;
 			}
-			actualize_ = true;
 		}
 
 		Answer decide(const First& val1, const Second& val2, const Third& val3) {
@@ -496,15 +511,17 @@ namespace ID3 {
 		}
 
 		void generateTree() {
-			if (tree_ != 0) {
-				delete tree_;
-				tree_ = 0;
-			}
+			if (!actualize_) {
+				if (tree_ != 0) {
+					delete tree_;
+					tree_ = 0;
+				}
 		
-			if (result_.size()) {
-				tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_);
+				if (result_.size()) {
+					tree_ = TreeBuilder::Starter<Tree>::construct(result_, first_, second_);
+				}
+				actualize_ = true;
 			}
-			actualize_ = true;
 		}
 
 		Answer decide(const First& val1, const Second& val2) {
