@@ -17,6 +17,7 @@ namespace ClientXNA
         private int width_;
         private int height_;
         private int elapsedTime_;
+        private int elapsedTimeR_;
         #endregion
 
         public Wolf(Vector2 position, Texture2D image) : base(position)
@@ -47,6 +48,8 @@ namespace ClientXNA
             y_frame_ = 0;
             width_ = width;
             height_ = height;
+            elapsedTime_ = 0;
+            elapsedTimeR_ = 0;
         }
 
         public override void Update(GameTime gameTime)
@@ -59,8 +62,6 @@ namespace ClientXNA
             {
                 elapsedTime_ = 0;
                 x_frame_ = (x_frame_ < 3) ? (x_frame_ + 1) : (0);
-                if (Action == EntityAction.REPRODUCE)
-                    Action = EntityAction.NONE;
                 if (Action == EntityAction.MOVE_UP)
                     if (Position.Y > NextPosition.Y)
                         position_.Y -= 0.1f;
@@ -74,14 +75,20 @@ namespace ClientXNA
                     if (Position.X < NextPosition.X)
                         position_.X += 0.1f;
             }
+            if (elapsedTimeR_ - gameTime.ElapsedGameTime.Milliseconds > 1000)
+            {
+                if (Action == EntityAction.REPRODUCE)
+                    Action = EntityAction.NONE;
+            }
+            elapsedTimeR_ += gameTime.ElapsedGameTime.Milliseconds;
             elapsedTime_ += gameTime.ElapsedGameTime.Milliseconds;
         }
 
         public override void Draw(SpriteBatch graphics, Vector2 camera)
         {
 
-            graphics.Draw(image_, new Rectangle(((int)(Position.X * 32)) + (int)camera.X
-                                                , ((int)(Position.Y * 32)) + (int)camera.Y,
+            graphics.Draw(image_, new Rectangle(((int)(Position.X * 32) - (width_ / 4)) + (int)camera.X
+                                                , ((int)(Position.Y * 32) - (height_ / 2)) + (int)camera.Y,
                                                 width_, height_),
                           frames_[y_frame_][x_frame_], Color.White);
             if (Action == EntityAction.REPRODUCE)
