@@ -22,13 +22,12 @@ namespace Logique {
 	}
 
 	Entity::EntityAction Wolf::computeAction() {
-		int present = _getSquare(_loc).getInt();
 		int up = getIntFromLess(_loc, Coord::DOWN);
 		int left = getIntFromLess(_loc, Coord::RIGHT);
 		int down = getIntFromSup(_loc, Coord::DOWN);
 		int right = getIntFromSup(_loc, Coord::RIGHT);
-		EntityAction act = _tree.computeAction(present, up, left, down, right); 
-		_actionStack.push(ActionStore(present, up, left, down, right, act));
+		EntityAction act = _tree.computeAction(_getSquare(_loc), up, left, down, right); 
+		_actionStack.push(ActionStore(_getSquare(_loc), up, left, down, right, act));
 		_actual++;
 		return act;
 	}
