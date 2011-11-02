@@ -5,6 +5,8 @@
 #include <string>
 #include <sstream>
 
+#include <boost/chrono.hpp>
+
 namespace Logique {
 
 	class Logger {
@@ -22,6 +24,8 @@ namespace Logique {
 			convertor << value;
 			dump(convertor.str());
 		}
+
+		static boost::chrono::system_clock::time_point start;
 
 	private:
 		std::string _file;
