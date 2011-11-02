@@ -149,18 +149,12 @@ Hold Class that construct Tree
 
 			template <typename BaseType, typename Arg1>
 			static boost::function< ATree*() > bindFunction(BaseType& base, const Arg1& val1) {
-				return boost::bind(
-							static_cast<ATree* (BaseType::*)(const Arg1&) >
-							(&BaseType::constructin<Arg1>)
-							, &base, boost::ref(val1));
+				return boost::bind(static_cast< ATree* (BaseType::*)(const Arg1&) >(&BaseType::template constructin<Arg1>), &base, boost::ref(val1));
 			}
 
 			template <typename BaseType>
 			static boost::function< ATree*() > bindFunction(BaseType& base) {
-				return boost::bind(
-							static_cast<ATree* (BaseType::*)() >
-							(&BaseType::constructin)
-							, &base);
+				return boost::bind(static_cast<ATree* (BaseType::*)() >(&BaseType::constructin), &base);
 			}
 
 		private:
