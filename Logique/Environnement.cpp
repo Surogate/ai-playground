@@ -81,10 +81,12 @@ namespace Logique {
 			//on insere les nouvelle actions
 			insertActionStack();
 
-			if (getSheepNum() <= 3)
+			if (getSheepNum() <= 3) {
 				addSheep(30);
-			if (getWolfNum() <= 3)
+			}
+			if (getWolfNum() <= 3) {
 				addWolf(15);
+			}
 
 			//on calcule le temps qu'on a mis pour accomplir les operation, pour le soustraire plus tard
 			timer_end = boost::chrono::system_clock::now();
