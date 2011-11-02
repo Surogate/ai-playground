@@ -44,6 +44,7 @@ namespace ClientXNA
                                     , new Command(board_beg) , new Command(board) , new Command(board_end)};
         private Board board_ = null;
         private Hashtable entities_ = null;
+        private GUI console_;
         #endregion
 
         public GameClient()
@@ -53,7 +54,6 @@ namespace ClientXNA
             this.graphics.PreferredBackBufferHeight = 720;
             this.IsMouseVisible = true;
             Content.RootDirectory = "Content";
-            client_ = new TcpClient("127.0.0.1", 16000);
             incoming_packages_ = new List<string>();
             camera_ = new Vector2();
             entities_ = new Hashtable();
@@ -69,7 +69,10 @@ namespace ClientXNA
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            StartRecv();
+            //StartRecv();
+            console_ = new GUI() { Visible = true, Width = 1024, Height = 720, Font = Content.Load<SpriteFont>("Verdana") };
+            console_.Init(GraphicsDevice);
+            console_.ConnectTo = new GUI.Connect(ConnectTo);
             base.Initialize();
         }
 
@@ -106,6 +109,10 @@ namespace ClientXNA
                 this.Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.F1))
+                console_.Visible = true;
+            if (Keyboard.GetState().IsKeyDown(Keys.F2))
+                console_.Visible = false;
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= 120)
@@ -148,6 +155,8 @@ namespace ClientXNA
                     ((Entity)it.Value).Update(gameTime);
                 }
             }
+            if (console_.Visible)
+                console_.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -179,12 +188,29 @@ namespace ClientXNA
                     ((Entity)it.Value).Draw(spriteBatch, camera_);
                 }
             }
+            if (console_.Visible)
+                console_.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }
         #endregion
 
         #region Methods
+        public void ConnectTo(string host, string port)
+        {
+            try
+            {
+                client_ = new TcpClient(host, Int32.Parse(port));
+                incoming_packages_.Clear();
+                entities_.Clear();
+                StartRecv();
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
         private void StartRecv()
         {
             try
@@ -244,10 +270,12 @@ namespace ClientXNA
                     if (type == "s")
                     {
                         gcl.entities_.Add(id, new Sheep(new Vector2(y, x), gcl.Content.Load<Texture2D>("sheep")));
+                        gcl.console_.SheepNumberALive = gcl.console_.SheepNumberALive + 1;
                     }
                     else
                     {
                         gcl.entities_.Add(id, new Wolf(new Vector2(y, x), gcl.Content.Load<Texture2D>("wolf")));
+                        gcl.console_.WolfNumberALive = gcl.console_.WolfNumberALive + 1;
                     }
                 }
             }
@@ -291,6 +319,16 @@ namespace ClientXNA
                 lock (gcl.entities_)
                 {
                     int id = int.Parse(msg);
+                    if (gcl.entities_[id] is Sheep)
+                    {
+                        gcl.console_.SheepNumberDeath = gcl.console_.SheepNumberDeath + 1;
+                        gcl.console_.SheepNumberALive = gcl.console_.SheepNumberALive - 1;
+                    }
+                    if (gcl.entities_[id] is Wolf)
+                    {
+                        gcl.console_.WolfNumberDeath = gcl.console_.WolfNumberDeath + 1;
+                        gcl.console_.WolfNumberALive = gcl.console_.WolfNumberALive - 1;
+                    }
                     gcl.entities_.Remove(id);
                 }
             }
