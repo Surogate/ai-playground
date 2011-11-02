@@ -48,7 +48,7 @@ namespace Logique  {
 		Entity(const Square::EntityContain& type);
 		virtual ~Entity();
 
-		void Entity::cleanVtable();
+		void cleanVtable();
 
 		void addFood(unsigned int value);
 		bool isAlive() const;
