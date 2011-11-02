@@ -102,6 +102,8 @@ namespace Logique {
 	void Entity::goUp(Board& board) {
 		if (isAlive() && _loc.x > 0) {
 			_lastAction = MOVE_UP;
+			dumpType();
+			std::cout << " move up" << std::endl;
 			Coord newLoc(_loc.x - 1, _loc.y);
 			moveToThisLocation(board, newLoc);
 		}
@@ -111,6 +113,8 @@ namespace Logique {
 	void Entity::goLeft(Board& board) {
 		if (isAlive() && _loc.y > 0) {
 			_lastAction = MOVE_LEFT;
+			dumpType();
+			std::cout << " move down" << std::endl;
 			Coord newLoc(_loc.x, _loc.y - 1);
 			moveToThisLocation(board, newLoc);
 		}
@@ -120,6 +124,8 @@ namespace Logique {
 	void Entity::goRight(Board& board) {
 		if (isAlive() && _loc.y < BOARD_SIZE - 1) {
 			_lastAction = MOVE_RIGHT;
+			dumpType();
+			std::cout << " move right" << std::endl;
 			Coord newLoc(_loc.x, _loc.y + 1);
 			moveToThisLocation(board, newLoc);
 		}
@@ -129,6 +135,8 @@ namespace Logique {
 	void Entity::goDown(Board& board) {
 		if (isAlive() && _loc.x < BOARD_SIZE - 1) {
 			_lastAction = MOVE_DOWN;
+			dumpType();
+			std::cout << " move down" << std::endl;
 			Coord newLoc(_loc.x + 1, _loc.y);
 			moveToThisLocation(board, newLoc);
 		}
@@ -183,6 +191,13 @@ namespace Logique {
 
 	const float& Entity::getLastMoy() const {
 		return _lastMoy;
+	}
+
+	void Entity::dumpType() {
+		if (_type == Square::WOLF)
+			std::cout << "wolf";
+		if (_type == Square::SHEEP)
+			std::cout << "sheep";
 	}
 }
 
