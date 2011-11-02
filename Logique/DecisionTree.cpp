@@ -37,6 +37,10 @@ namespace Logique {
 		return _id3.size();
 	}
 
+	void DecisionTree::generateTree() {
+		_id3.generateTree();
+	}
+
 }
 
 

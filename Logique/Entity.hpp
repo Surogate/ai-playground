@@ -91,6 +91,8 @@ namespace Logique  {
 			return _foodCount != 0;
 		}
 
+		void dumpType();
+
 		float computeMoy() const;
 		
 		struct ActionStore {

@@ -11,6 +11,10 @@ namespace Logique {
 	Logger::Logger(const std::string& file) : _file(file) 
 	{}
 
+	void Logger::wipeFile() {
+		std::ofstream descriptor(_file, std::ios::trunc);
+	}
+
 	void Logger::dump(const std::string& value) {
 		std::ofstream descriptor(_file, std::ios::app | std::ios::out);
 

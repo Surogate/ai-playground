@@ -5,6 +5,7 @@
 #include <boost/chrono.hpp>
 
 #include "Environnement.hpp"
+#include "Logger.hpp"
 #include "Sheep.hpp"
 #include "Wolf.hpp"
 
@@ -25,6 +26,12 @@ namespace Logique {
 	void Environnement::preRun() {
 		addSheep(40);
 		addWolf(20);
+
+		Logger log("Loup.log");
+		log.wipeFile();
+		Logger logM("Mouton.log");
+		logM.wipeFile();
+
 		insertActionStack();
 
 		if (_actionList.empty()) {
@@ -94,7 +101,7 @@ namespace Logique {
 	//spawn Entity function
 	bool Environnement::addSheep(const Coord& loc) {
 		if (!_board(loc).hasSheep()) {
-			std::cout << "spawn sheep at " << loc << std::endl;
+			//std::cout << "spawn sheep at " << loc << std::endl;
 			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
 			sheepPtr->addFood(Sheep::FOOD_REP_LIMIT);
 			sheepPtr->initActionArray(_board);
@@ -111,7 +118,7 @@ namespace Logique {
 
 	bool Environnement::addWolf(const Coord& loc) {
 		if (!_board(loc).hasWolf()) {
-			std::cout << "spawn wolf at " << loc << std::endl;
+			//std::cout << "spawn wolf at " << loc << std::endl;
 			boost::shared_ptr<Wolf> wolfPtr(new Wolf());
 			wolfPtr->addFood(Wolf::FOOD_REP_LIMIT);
 			wolfPtr->initActionArray(_board);
@@ -219,8 +226,6 @@ namespace Logique {
 
 		if (size)
 			moy /= size;
-
-		std::cout << "value " << value << " moy " << moy << std::endl;
 
 		return  value && (value >= moy);
 	}
