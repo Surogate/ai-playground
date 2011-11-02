@@ -17,6 +17,213 @@
 
 namespace ID3 {
 
+	template <typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth, typename Ninth, typename Result>
+	class ID3Class10 {
+	public:
+		typedef typename TypedTree::Tree10<Result, First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth> Tree;
+		typedef typename Tree::Answer Answer;
+		typedef typename TreeBuilder::Builder< Tree > Builder;
+
+		ID3Class10() : _first(), _second(), _third(), _fourth(), _fifth(), _sixth(), _seventh(), _eighth(), _ninth(), _result(), _actualize(false), _tree(0)
+		{}
+
+		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7, const Eighth& val8, const Ninth& val9, const Result& res) {
+			_first.push_back(val1);
+			_second.push_back(val2);
+			_third.push_back(val3);
+			_fourth.push_back(val4);
+			_fifth.push_back(val5);
+			_sixth.push_back(val6);
+			_seventh.push_back(val7);
+			_eighth.push_back(val8);
+			_ninth.push_back(val9);
+			_result.push_back(res);
+
+			_actualize = false;
+		}
+
+		void setRandomResult(const boost::function< Result() >& functor) {
+			_getRandomResult = functor;
+		}
+
+		void generateTree() {
+			if (_tree != 0) {
+				delete _tree;
+				_tree = 0;
+			}
+		
+			if (result_.size()) {
+				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth, _ninth);
+			}
+			_actualize = true;
+		}
+
+		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7, const Eighth& val8, const Ninth& val9) {
+			if (_tree) {
+				return _tree->evaluate(val1, val2, val3, val4, val5, val6, val7, val8, val9);
+			} else if (_getRandomResult){
+				return _getRandomResult();
+			}
+			return Answer();
+		}
+
+		std::size_t size() const {
+			return _result.size();
+		}
+
+	private:
+		std::deque<First> _first;
+		std::deque<Second> _second;
+		std::deque<Third> _third;
+		std::deque<Fourth> _fourth;
+		std::deque<Fifth> _fifth;
+		std::deque<Sixth> _sixth;
+		std::deque<Seventh> _seventh;
+		std::deque<Eighth> _eighth;
+		std::deque<Ninth> _ninth;
+		std::deque<Result> _result;
+
+		typename Builder::ATree* _tree;
+		boost::function< Result() > _getRandomResult;
+		bool _actualize;
+	};
+
+	template <typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth, typename Result>
+	class ID3Class9 {
+	public:
+		typedef typename TypedTree::Tree9<Result, First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth> Tree;
+		typedef typename Tree::Answer Answer;
+		typedef typename TreeBuilder::Builder< Tree > Builder;
+
+		ID3Class9() : _first(), _second(), _third(), _fourth(), _fifth(), _sixth(), _seventh(), _eighth(), _result(), _actualize(false), _tree(0)
+		{}
+
+		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7, const Eighth& val8, const Result& res) {
+			_first.push_back(val1);
+			_second.push_back(val2);
+			_third.push_back(val3);
+			_fourth.push_back(val4);
+			_fifth.push_back(val5);
+			_sixth.push_back(val6);
+			_seventh.push_back(val7);
+			_eighth.push_back(val8);
+			_result.push_back(res);
+
+			_actualize = false;
+		}
+
+		void setRandomResult(const boost::function< Result() >& functor) {
+			_getRandomResult = functor;
+		}
+
+		void generateTree() {
+			if (_tree != 0) {
+				delete _tree;
+				_tree = 0;
+			}
+		
+			if (result_.size()) {
+				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh, _eighth);
+			}
+			_actualize = true;
+		}
+
+		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7, const Eighth& val8) {
+			if (_tree) {
+				return _tree->evaluate(val1, val2, val3, val4, val5, val6, val7, val8);
+			} else if (_getRandomResult){
+				return _getRandomResult();
+			}
+			return Answer();
+		}
+
+		std::size_t size() const {
+			return _result.size();
+		}
+
+	private:
+		std::deque<First> _first;
+		std::deque<Second> _second;
+		std::deque<Third> _third;
+		std::deque<Fourth> _fourth;
+		std::deque<Fifth> _fifth;
+		std::deque<Sixth> _sixth;
+		std::deque<Seventh> _seventh;
+		std::deque<Eighth> _eighth;
+		std::deque<Result> _result;
+
+		typename Builder::ATree* _tree;
+		boost::function< Result() > _getRandomResult;
+		bool _actualize;
+	};
+	
+	template <typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Result>
+	class ID3Class8 {
+	public:
+		typedef typename TypedTree::Tree8<Result, First, Second, Third, Fourth, Fifth, Sixth, Seventh> Tree;
+		typedef typename Tree::Answer Answer;
+		typedef typename TreeBuilder::Builder< Tree > Builder;
+
+		ID3Class8() : _first(), _second(), _third(), _fourth(), _fifth(), _sixth(), _seventh(), _result(), _actualize(false), _tree(0)
+		{}
+
+		void addData(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7, const Result& res) {
+			_first.push_back(val1);
+			_second.push_back(val2);
+			_third.push_back(val3);
+			_fourth.push_back(val4);
+			_fifth.push_back(val5);
+			_sixth.push_back(val6);
+			_seventh.push_back(val7);
+			_result.push_back(res);
+
+			_actualize = false;
+		}
+
+		void setRandomResult(const boost::function< Result() >& functor) {
+			_getRandomResult = functor;
+		}
+
+		void generateTree() {
+			if (_tree != 0) {
+				delete _tree;
+				_tree = 0;
+			}
+		
+			if (result_.size()) {
+				_tree = TreeBuilder::Starter<Tree>::construct(_result, _first, _second, _third, _fourth, _fifth, _sixth, _seventh);
+			}
+			_actualize = true;
+		}
+
+		Answer decide(const First& val1, const Second& val2, const Third& val3, const Fourth& val4, const Fifth& val5, const Sixth& val6, const Seventh& val7) {
+			if (_tree) {
+				return _tree->evaluate(val1, val2, val3, val4, val5, val6, val7);
+			} else if (_getRandomResult){
+				return _getRandomResult();
+			}
+			return Answer();
+		}
+
+		std::size_t size() const {
+			return _result.size();
+		}
+
+	private:
+		std::deque<First> _first;
+		std::deque<Second> _second;
+		std::deque<Third> _third;
+		std::deque<Fourth> _fourth;
+		std::deque<Fifth> _fifth;
+		std::deque<Sixth> _sixth;
+		std::deque<Seventh> _seventh;
+		std::deque<Result> _result;
+
+		typename Builder::ATree* _tree;
+		boost::function< Result() > _getRandomResult;
+		bool _actualize;
+	};
+
 	template <typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Result>
 	class ID3Class7 {
 	public:

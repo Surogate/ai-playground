@@ -43,6 +43,7 @@ namespace Logique  {
 		typedef boost::function< Square& (const Coord&) > GetSquareFunctor;
 		typedef boost::function< int () > GetNumberSpeciesFunctor;
 		typedef boost::function< bool (const Coord&) > PopEntityFunctor;
+		typedef boost::function< bool (const float&) > ValidScoreFunctor;
 
 		Entity(const Square::EntityContain& type);
 		virtual ~Entity();
@@ -57,6 +58,7 @@ namespace Logique  {
 		void setGetSquare(const GetSquareFunctor& func);
 		void setGetNumberSpecies(const GetNumberSpeciesFunctor& func);
 		void setPopEntityFunctor(const PopEntityFunctor& func);
+		void setValidScore(const ValidScoreFunctor& func);
 
 		void setLocation(Coord loc);
 		const Coord& getLocation() const;
@@ -80,6 +82,7 @@ namespace Logique  {
 		int getIntFromLess(Coord loc, const Coord& dir);
 		void reInitPerf();
 		void setFood(unsigned int value);
+		const float& getLastMoy() const;
 
 	protected:
 		inline bool addAction(const Action& value) {
@@ -91,7 +94,7 @@ namespace Logique  {
 		float computeMoy() const;
 		
 		struct ActionStore {
-			int present;
+			Square present;
 			int up;
 			int left;
 			int down;
@@ -99,7 +102,7 @@ namespace Logique  {
 
 			EntityAction result;
 
-			ActionStore(int _present_, int _up_, int _left_, int _down_, int _right_, EntityAction _result_)
+			ActionStore(Square _present_, int _up_, int _left_, int _down_, int _right_, EntityAction _result_)
 				: present (_present_), up(_up_), left(_left_), down(_down_), right(_right_), result(_result_)
 			{}
 		};
@@ -115,6 +118,7 @@ namespace Logique  {
 		GetSquareFunctor _getSquare;
 		GetNumberSpeciesFunctor _getSpecieNumber;
 		PopEntityFunctor _popEntity;
+		ValidScoreFunctor _validScore;
 
 		ActionStoreStack _actionStack;
 
@@ -123,6 +127,7 @@ namespace Logique  {
 		float _actual;
 		float _numberTot;
 		unsigned int _foodCount;
+		float _lastMoy;
 		EntityAction _lastAction;
 
 	private:

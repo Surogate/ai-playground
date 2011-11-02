@@ -87,6 +87,8 @@ namespace Logique {
 		unsigned int getSheepNum() const;
 		unsigned int getWolfNum() const;
 
+		bool validPerf(const float& value, Square::EntityContain type);
+
 		const EntityPtrSet& getEntityList() const;
 		void lock();
 		void unlock();

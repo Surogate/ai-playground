@@ -202,6 +202,22 @@ namespace Logique {
 		return _entityNum[Square::WOLF];
 	}
 
+	bool Environnement::validPerf(const float& value, Square::EntityContain type)
+	{
+		float moy = 0;
+		float size = 0;
+		EntityPtrSet::const_iterator it = _entityList.begin();
+		EntityPtrSet::const_iterator ite = _entityList.end();
+
+		while (it != ite && it->first->getType() == type) {
+			moy += it->first->getLastMoy();
+			++size;
+			++it;
+		}
+
+		return  value && (value >= (moy / size));
+	}
+
 	const Environnement::EntityPtrSet& Environnement::getEntityList() const {
 		return _entityList;
 	}
@@ -293,6 +309,7 @@ namespace Logique {
 		_entityNum[value->getType()]++;
 		_attriMtx.unlock();
 		value->setLocation(loc);
+		value->setValidScore(boost::bind(&Environnement::validPerf, this, _1, value->getType()));
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
 		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
 		value->setGetSquare(boost::bind(&Board::get, &_board, _1));
