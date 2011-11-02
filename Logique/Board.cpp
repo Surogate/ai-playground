@@ -47,6 +47,16 @@ namespace Logique {
 		}
 	}
 
+	void Board::dumpSheep() const {
+		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
+			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
+				at(x)[y].dumpSheep();
+				std::cout << " ";
+			}
+			std::cout << std::endl;
+		}
+	}
+
 	int Board::getSquare(const Coord& pos) const {
 		if (Board::coordValid(pos)) {
 			return get(pos).getInt();

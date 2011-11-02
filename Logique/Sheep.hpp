@@ -10,8 +10,8 @@ namespace Logique {
 	class Sheep : public Entity {
 	public:
 		enum Constant {
-			FOOD_GAIN = 2,
-			EAT_TIME = 3,
+			FOOD_GAIN = 4,
+			EAT_TIME = 2,
 			REPRODUCE_TIME = 16
 		};
 

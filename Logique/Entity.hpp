@@ -24,7 +24,7 @@ namespace Logique  {
 			BASEFOODDECREASE = 1,
 			FOOD_MAX = 15,
 			FOOD_REP_LIMIT = 5,
-			MOVE_TIME = 3
+			MOVE_TIME = 2
 		};
 
 		enum EntityAction {
@@ -96,6 +96,7 @@ namespace Logique  {
 		float computeMoy() const;
 		
 		struct ActionStore {
+			unsigned int foodcount;
 			Square present;
 			int up;
 			int left;
@@ -104,7 +105,7 @@ namespace Logique  {
 
 			EntityAction result;
 
-			ActionStore(Square _present_, int _up_, int _left_, int _down_, int _right_, EntityAction _result_)
+			ActionStore(unsigned int foodcount, Square _present_, int _up_, int _left_, int _down_, int _right_, EntityAction _result_)
 				: present (_present_), up(_up_), left(_left_), down(_down_), right(_right_), result(_result_)
 			{}
 		};
