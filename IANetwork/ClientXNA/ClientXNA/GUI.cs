@@ -98,13 +98,12 @@ namespace ClientXNA
                     {
                         string[] tokens = command_.ToString().Split(' ');
                         command_.Clear();
-                        if (tokens.Count() >= 3)
+                        if (tokens.Count() >= 1)
                         {
-                            Debug.WriteLine(tokens[0]);
-                            Debug.WriteLine(tokens[1]);
-                            Debug.WriteLine(tokens[2]);
-                            if (tokens[0].Equals("CONNECT"))
+                            if (tokens[0].Equals("CONNECT") && tokens.Count() >= 3)
                                 ConnectTo(tokens[1], tokens[2]);
+                            else if (tokens[0].Equals("CONNECT"))
+                                ConnectTo("localhost", "16000");
                         }
                     }
                     if (keys.Count() == 1)
