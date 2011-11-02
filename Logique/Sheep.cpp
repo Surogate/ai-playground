@@ -47,7 +47,7 @@ namespace Logique {
 				log.dump(moy);
 				std::cout << "#Sheep action commited - old perf " << _lastMoy << std::endl;
 				std::cout << "#Sheep new perf " << moy << std::endl;
-				std::cout << "tree moy" << _tree.getMoy() << std::endl;
+				std::cout << "tree moy " << _tree.getMoy() << std::endl;
 				std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);

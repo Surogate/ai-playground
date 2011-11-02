@@ -119,5 +119,20 @@
     <ClInclude Include="..\..\Logique\Logger.hpp">
       <Filter>Header Files\Logique</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\AITest\ConditionnalFunctor.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\AITest\Gain.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\AITest\ID3Class.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\AITest\TreeBuilders.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\AITest\TypedTree.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

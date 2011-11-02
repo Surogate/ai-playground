@@ -99,6 +99,11 @@
     <ClCompile Include="Package.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\AITest\ConditionnalFunctor.hpp" />
+    <ClInclude Include="..\..\AITest\Gain.hpp" />
+    <ClInclude Include="..\..\AITest\ID3Class.hpp" />
+    <ClInclude Include="..\..\AITest\TreeBuilders.hpp" />
+    <ClInclude Include="..\..\AITest\TypedTree.hpp" />
     <ClInclude Include="..\..\Logique\Action.hpp" />
     <ClInclude Include="..\..\Logique\Board.hpp" />
     <ClInclude Include="..\..\Logique\Callback_Environnement.hpp" />

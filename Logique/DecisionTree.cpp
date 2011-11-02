@@ -13,6 +13,7 @@ namespace Logique {
 	}
 
 	Entity::EntityAction DecisionTree::computeAction(const Square& present, int haut, int gauche, int bas, int droite) {
+		_id3.generateTree();
 		Answer ans = _id3.decide(present.useable(), present.hasGrass(), present.hasSheep(), present.hasWolf(), present.odour(), haut, gauche, bas, droite);
 		if (ans) {
 			return *ans;
