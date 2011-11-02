@@ -194,9 +194,9 @@ namespace Logique {
 	}
 
 	void Entity::dumpType() {
-		if (_type == Square::EntityContain::WOLF)
+		if (_type == Square::WOLF)
 			std::cout << "wolf";
-		if (_type == Square::EntityContain::SHEEP)
+		if (_type == Square::SHEEP)
 			std::cout << "sheep";
 	}
 }
