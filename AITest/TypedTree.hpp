@@ -108,7 +108,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T&, AutoTreePtr&) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
@@ -193,7 +193,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
@@ -277,7 +277,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
@@ -360,7 +360,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
@@ -442,7 +442,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
@@ -523,7 +523,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
@@ -603,7 +603,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{
@@ -682,7 +682,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
@@ -760,7 +760,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub) 
 				{									
@@ -836,7 +836,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 	
 				void AddSubNode(const Specialized& value, ATree* sub) {
 					child_[value] = AutoTreePtr(sub);
@@ -910,7 +910,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 	 
 				void AddSubNode(const Specialized& value, ATree* sub) {
 					child_[value] = AutoTreePtr(sub);
@@ -983,7 +983,7 @@ namespace ID3 {
 				}
 
 				template <typename T>
-				void test(const T& value, AutoTreePtr& ptr) {}
+				void test(const T& , AutoTreePtr& ) {}
 
 				void AddSubNode(const Specialized& value, ATree* sub)  {
 					child_[value] = AutoTreePtr(sub);
