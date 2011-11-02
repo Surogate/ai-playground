@@ -6,17 +6,18 @@
 #include <boost/random.hpp>
 #include "ID3Class.hpp"
 #include "Entity.hpp"
+#include "Square.hpp"
 
 namespace Logique {
 
 	class DecisionTree {
 	public:
-		typedef ID3::ID3Class6<int /*present*/, int /*haut*/, int /*gauche*/, int /*bas*/, int /*droit*/, Entity::EntityAction> ID3Algo;
+		typedef ID3::ID3Class10<bool /* useable */, bool /* hasgrass */, bool /* has sheep */, bool /* has wolf */, int /* odour */, int /*haut*/, int /*gauche*/, int /*bas*/, int /*droit*/, Entity::EntityAction> ID3Algo;
 		typedef ID3Algo::Answer Answer;
 		DecisionTree();
 
-		Entity::EntityAction computeAction(int present, int haut, int gauche, int bas, int droite);
-		void addAction(int present, int haut, int gauche, int bas, int droite, Entity::EntityAction result);
+		Entity::EntityAction computeAction(const Square& present, int haut, int gauche, int bas, int droite);
+		void addAction(const Square& present, int haut, int gauche, int bas, int droite, Entity::EntityAction result);
 		Entity::EntityAction randomAction();
 		const float& getMoy() const;
 		void sendMoy(float value);
