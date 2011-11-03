@@ -27,6 +27,9 @@ namespace Logique {
 		addSheep(5);
 		addWolf(5);
 
+		Wolf::initExp();
+		Sheep::initExp();
+
 		Logger log("Loup.log");
 		log.wipeFile();
 		Logger logM("Mouton.log");

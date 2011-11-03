@@ -152,7 +152,6 @@ namespace Logique {
 			_loc = newLoc;
 			Callback_Environnement::getInstance().cb_onEntityMove(*this);
 			Callback_Environnement::getInstance().cb_onBoardChange(board);
-			board.dumpSheep();
 			return true;
 		}
 		return false;

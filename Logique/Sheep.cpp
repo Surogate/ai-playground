@@ -31,6 +31,21 @@ namespace Logique {
 		return act;
 	}
 
+	void Sheep::sendXp() {
+		while (_actionStack.size()) {
+					ActionStore& top = _actionStack.top();
+					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+					_actionStack.pop();
+		}
+
+		_tree.generateTree();
+	
+	}
+
+	void Sheep::initExp() {
+	
+	}
+
 	Action Sheep::getNewAction() {
 		EntityAction act = computeAction();
 
@@ -38,11 +53,7 @@ namespace Logique {
 			float moy = computeMoy();
 			
 			if (_validScore(moy)) {
-				while (_actionStack.size()) {
-					ActionStore& top = _actionStack.top();
-					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
-					_actionStack.pop();
-				}
+				sendXp();
 				Logger log("Mouton.log");
 				log.dump(moy);
 				std::cout << "#Sheep action commited - old perf " << _lastMoy << std::endl;
@@ -51,9 +62,6 @@ namespace Logique {
 				std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
-				std::cout << "generate tree" << std::endl;
-				_tree.generateTree();
-				std::cout << "tree generated" << std::endl;
 			}
 			reInitPerf();
 		}
