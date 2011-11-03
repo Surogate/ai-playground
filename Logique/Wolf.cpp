@@ -62,9 +62,16 @@ namespace Logique {
 
 		other.hasWolf(reinterpret_cast<Entity*>(1));
 		present.hasSheep(0);
-		_tree.addAction(9, present, other, other, other, other, REPRODUCE);
-		_tree.addAction(10, present, other, other, other, other, REPRODUCE);
-		_tree.addAction(8, present, other, other, other, other, REPRODUCE);
+		_tree.addAction(9, present, other, 0, 0, 0, REPRODUCE);
+		_tree.addAction(10, present, 0, other, 0, 0, REPRODUCE);
+		_tree.addAction(8, present, 0, 0, 0, other, REPRODUCE);
+
+		other.hasWolf(reinterpret_cast<Entity*>(1));
+		present.hasSheep(reinterpret_cast<Entity*>(1));
+		_tree.addAction(10, present, other, 0, 0, 0, REPRODUCE);
+		_tree.addAction(11, present, 0, other, 0, 0, REPRODUCE);
+		_tree.addAction(12, present, 0, 0, 0, other, REPRODUCE);
+		_tree.addAction(12, present, 0, 0, other, 0, REPRODUCE);
 
 		_tree.generateTree();
 	}
