@@ -109,7 +109,7 @@ namespace Logique {
 	}
 
 	void Sheep::reproduce(Board& board) {
-		if (isAlive() && _foodCount >= REPRODUCE_LIMIT && hasSheepNext() && _popEntity(_loc)) {
+		if (isAlive() && _foodCount > _rep_limit && hasSheepNext() && _popEntity(_loc)) {
 			_numberRep++;
 			std::cout << "sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;

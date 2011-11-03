@@ -123,7 +123,7 @@ namespace Logique {
 	}
 
 	void Wolf::reproduce(Board& board) {
-		if (isAlive() && _foodCount >= REPRODUCE_LIMIT && hasWolfNext() && _popEntity(_loc)) {
+		if (isAlive() && _foodCount > _rep_limit && hasWolfNext() && _popEntity(_loc)) {
 			_numberRep++;
 			std::cout << "Wolf reproduce" << std::endl;
 			_lastAction = REPRODUCE;
