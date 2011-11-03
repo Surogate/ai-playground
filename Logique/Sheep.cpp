@@ -80,7 +80,7 @@ namespace Logique {
 			
 			if (_validScore(moy)) {
 				sendXp();
-				Logger log("Mouton.log");
+				Logger log("Mouton.csv");
 				std::cout << "#Sheep action commited - old perf " << _lastMoy << std::endl;
 				std::cout << "#Sheep new perf " << moy << std::endl;
 				std::cout << "tree moy " << _tree.getMoy() << std::endl;
