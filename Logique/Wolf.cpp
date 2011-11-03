@@ -95,12 +95,12 @@ namespace Logique {
 			if (_validScore(moy)) {
 				sendXp();
 				Logger log("Loup.log");
-				log.dump(moy);
 				std::cout << "#Wolf action commited - old perf " << _tree.getMoy() << std::endl;
 				std::cout << "#Wolf new perf " << moy << std::endl;
 				std::cout << "#Wolf experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
+				log.dump(_tree.getMoy());
 			}
 			reInitPerf();
 		}
