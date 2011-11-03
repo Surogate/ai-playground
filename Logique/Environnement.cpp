@@ -81,10 +81,10 @@ namespace Logique {
 			insertActionStack();
 
 			if (getSheepNum() <= 3) {
-				addSheep(5);
+				addSheep(15);
 			}
 			if (getWolfNum() <= 3) {
-				addWolf(5);
+				addWolf(15);
 			}
 		}
 
