@@ -41,6 +41,32 @@ namespace Logique {
 		other.hasGrass(true);
 
 		_tree.addAction(0, present, other, other, other, other, EAT);
+		other.hasGrass(false);
+		_tree.addAction(1, present, other, other, other, other, EAT);
+		other.hasSheep(0);
+		_tree.addAction(2, present, other, other, other, other, EAT);
+		other.hasSheep(reinterpret_cast<Logique::Entity*>(1));
+		_tree.addAction(3, present, other, other, other, other, EAT);
+		other.addOdour(1);
+		_tree.addAction(4, present, other, other, other, other, EAT);
+		other.addOdour(1);
+		_tree.addAction(5, present, other, other, other, other, EAT);
+		other.addOdour(1);
+		_tree.addAction(6, present, other, other, other, other, EAT);
+		other.addOdour(1);
+		_tree.addAction(7, present, other, other, other, other, EAT);
+		other.addOdour(1);
+		_tree.addAction(8, present, other, other, other, other, EAT);
+		other.addOdour(10);
+		_tree.addAction(9, present, other, other, other, other, EAT);
+
+		other.hasWolf(reinterpret_cast<Entity*>(1));
+		present.hasSheep(0);
+		_tree.addAction(9, present, other, other, other, other, REPRODUCE);
+		_tree.addAction(10, present, other, other, other, other, REPRODUCE);
+		_tree.addAction(8, present, other, other, other, other, REPRODUCE);
+
+		_tree.generateTree();
 	}
 
 

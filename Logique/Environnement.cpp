@@ -24,8 +24,8 @@ namespace Logique {
 	Environnement::~Environnement() {}
 
 	void Environnement::preRun() {
-		addSheep(5);
-		addWolf(5);
+		addSheep(20);
+		addWolf(20);
 
 		Wolf::initExp();
 		Sheep::initExp();
@@ -100,7 +100,7 @@ namespace Logique {
 		if (!_board(loc).hasSheep()) {
 			//std::cout << "spawn sheep at " << loc << std::endl;
 			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
-			sheepPtr->addFood(Sheep::FOOD_REP_LIMIT);
+			sheepPtr->addFood(Sheep::FOOD_MAX);
 			sheepPtr->initActionArray(_board);
 
 			sheepPtr->setGetNumberSpecies(boost::bind(&Environnement::getSheepNum, this));
@@ -117,7 +117,7 @@ namespace Logique {
 		if (!_board(loc).hasWolf()) {
 			//std::cout << "spawn wolf at " << loc << std::endl;
 			boost::shared_ptr<Wolf> wolfPtr(new Wolf());
-			wolfPtr->addFood(Wolf::FOOD_REP_LIMIT);
+			wolfPtr->addFood(Wolf::FOOD_MAX);
 			wolfPtr->initActionArray(_board);
 
 			wolfPtr->setGetNumberSpecies(boost::bind(&Environnement::getWolfNum, this));
