@@ -177,7 +177,7 @@ namespace Logique {
 		_numberEat = 0;
 		_numberRep = 0;
 		_actual = 0;
-		_numberTot = 5 + _lastMoy * 5;
+		_numberTot = static_cast<float>(_getSpecieNumber());
 	}
 
 	float Entity::computeMoy() const {
