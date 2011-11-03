@@ -30,9 +30,9 @@ namespace Logique {
 		Wolf::initExp();
 		Sheep::initExp();
 
-		Logger log("Loup.log");
+		Logger log("Loup.csv");
 		log.wipeFile();
-		Logger logM("Mouton.log");
+		Logger logM("Mouton.csv");
 		logM.wipeFile();
 
 		insertActionStack();
