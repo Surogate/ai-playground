@@ -43,7 +43,33 @@ namespace Logique {
 	}
 
 	void Sheep::initExp() {
-	
+		Square present;
+		present.hasGrass(true);
+		Square other;
+		Square other2;
+		other.hasGrass(true);
+
+		_tree.addAction(1, present, other, other, other, other, EAT);
+		_tree.addAction(5, present, other, other, other, other, EAT);
+		_tree.addAction(6, present, other, other, other, other, EAT);
+		other.hasGrass(false);
+		_tree.addAction(2, present, other, other, other, other, EAT);
+		_tree.addAction(3, present, other, other, other, other, EAT);
+		_tree.addAction(4, present, other, other, other, other, EAT);
+
+		other.hasSheep(reinterpret_cast<Entity*>(1));
+
+		_tree.addAction(7, present, other, other, other2, other2, REPRODUCE);
+		_tree.addAction(8, present, other, other, other2, other2, REPRODUCE);
+		_tree.addAction(9, present, other, other, other2, other2, REPRODUCE);
+
+		other2.hasSheep(reinterpret_cast<Entity*>(1));
+
+		_tree.addAction(7, present, other, other, other2, other2, REPRODUCE);
+		_tree.addAction(8, present, other, other, other2, other2, REPRODUCE);
+		_tree.addAction(9, present, other, other, other2, other2, REPRODUCE);
+		
+		_tree.generateTree();
 	}
 
 	Action Sheep::getNewAction() {

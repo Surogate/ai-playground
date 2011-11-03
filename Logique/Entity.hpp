@@ -23,7 +23,7 @@ namespace Logique  {
 			BASEFOODTIME = 12,
 			BASEFOODDECREASE = 1,
 			FOOD_MAX = 15,
-			FOOD_REP_LIMIT = 5,
+			FOOD_REP_LIMIT = 11,
 			MOVE_TIME = 2
 		};
 

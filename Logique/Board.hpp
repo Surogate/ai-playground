@@ -10,7 +10,7 @@
 #include "Entity.hpp"
 
 namespace Logique {
-	enum { BOARD_SIZE = 10 };
+	enum { BOARD_SIZE = 20 };
 
 	class Board : public boost::array< boost::array<Square, BOARD_SIZE >, BOARD_SIZE > {
 	public:
