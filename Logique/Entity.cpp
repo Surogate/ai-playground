@@ -8,7 +8,7 @@
 namespace Logique {
 
 	Entity::Entity(const Square::EntityContain& type)
-		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _foodCount(0), _lastMoy(0), _lastAction()
+		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _rep_limit(FOOD_REP_LIMIT_START), _foodCount(0), _lastMoy(0), _lastAction()
 	{}
 
 	Entity::~Entity() 
@@ -73,6 +73,10 @@ namespace Logique {
 			_foodCount -= value;
 		else
 			_foodCount = 0;
+
+		if (_rep_limit > FOOD_REP_LIMIT_END) {
+			_rep_limit--;
+		}
 
 		if (_foodCount)
 			addAction(createFoodAction());
