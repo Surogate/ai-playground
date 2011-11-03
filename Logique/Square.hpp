@@ -88,6 +88,10 @@ namespace Logique {
 			return _entityIn[WOLF] != 0;
 		}
 
+		inline operator int() const {
+			return getInt();
+		}
+
 		inline int getInt() const {
 			int value = _odour;
 			value = value << 4;

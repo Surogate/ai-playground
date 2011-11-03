@@ -21,6 +21,8 @@ namespace Logique {
 		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, shared_from_this(), boost::ref(board)));
 	}
 
+
+
 	Entity::EntityAction Wolf::computeAction() {
 		int up = getIntFromLess(_loc, Coord::DOWN);
 		int left = getIntFromLess(_loc, Coord::RIGHT);
@@ -32,17 +34,33 @@ namespace Logique {
 		return act;
 	}
 
+	void Wolf::initExp() {
+		Square present;
+		present.hasSheep(reinterpret_cast<Logique::Entity*>(1));
+		Square other;
+		other.hasGrass(true);
+
+		_tree.addAction(0, present, other, other, other, other, EAT);
+	}
+
+
+	void Wolf::sendXp() {
+		while (_actionStack.size()) {
+					ActionStore& top = _actionStack.top();
+					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+					_actionStack.pop();
+		}
+		
+		_tree.generateTree();
+	}
+
 	Action Wolf::getNewAction() {
 		EntityAction act = computeAction();
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 
 			if (_validScore(moy)) {
-				while (_actionStack.size()) {
-					ActionStore& top = _actionStack.top();
-					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
-					_actionStack.pop();
-				}
+				sendXp();
 				Logger log("Loup.log");
 				log.dump(moy);
 				std::cout << "#Wolf action commited - old perf " << _tree.getMoy() << std::endl;
@@ -50,7 +68,6 @@ namespace Logique {
 				std::cout << "#Wolf experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
-				_tree.generateTree();
 			}
 			reInitPerf();
 		}
