@@ -46,32 +46,32 @@ namespace Logique {
 		other.hasSheep(0);
 		_tree.addAction(2, present, other, other, other, other, EAT);
 		other.hasSheep(reinterpret_cast<Logique::Entity*>(1));
-		_tree.addAction(3, present, other, other, other, other, EAT);
+		_tree.addAction(3, present, 0, other, other, other, EAT);
 		other.addOdour(1);
-		_tree.addAction(4, present, other, other, other, other, EAT);
+		_tree.addAction(4, present, other, 0, other, other, EAT);
 		other.addOdour(1);
-		_tree.addAction(5, present, other, other, other, other, EAT);
+		_tree.addAction(5, present, other, other, other, 0, EAT);
 		other.addOdour(1);
-		_tree.addAction(6, present, other, other, other, other, EAT);
+		_tree.addAction(6, present, other, other, 0, other, EAT);
 		other.addOdour(1);
-		_tree.addAction(7, present, other, other, other, other, EAT);
+		other.hasGrass(true);
+		_tree.addAction(7, present, 0, other, other, 0, EAT);
 		other.addOdour(1);
 		_tree.addAction(8, present, other, other, other, other, EAT);
 		other.addOdour(10);
-		_tree.addAction(9, present, other, other, other, other, EAT);
+		_tree.addAction(9, present, other, 0, 0, other, EAT);
 
 		other.hasWolf(reinterpret_cast<Entity*>(1));
 		present.hasSheep(0);
-		_tree.addAction(9, present, other, 0, 0, 0, REPRODUCE);
-		_tree.addAction(10, present, 0, other, 0, 0, REPRODUCE);
-		_tree.addAction(8, present, 0, 0, 0, other, REPRODUCE);
+		_tree.addAction(13, present, other, 0, 0, 0, REPRODUCE);
+		_tree.addAction(14, present, 0, other, 0, 0, REPRODUCE);
+		_tree.addAction(15, present, 0, 0, 0, other, REPRODUCE);
 
 		other.hasWolf(reinterpret_cast<Entity*>(1));
 		present.hasSheep(reinterpret_cast<Entity*>(1));
-		_tree.addAction(10, present, other, 0, 0, 0, REPRODUCE);
-		_tree.addAction(11, present, 0, other, 0, 0, REPRODUCE);
-		_tree.addAction(12, present, 0, 0, 0, other, REPRODUCE);
-		_tree.addAction(12, present, 0, 0, other, 0, REPRODUCE);
+		_tree.addAction(15, present, 0, other, 0, 0, REPRODUCE);
+		_tree.addAction(14, present, 0, 0, 0, other, REPRODUCE);
+		_tree.addAction(13, present, 0, 0, other, 0, REPRODUCE);
 
 		_tree.generateTree();
 	}
@@ -123,7 +123,7 @@ namespace Logique {
 	}
 
 	void Wolf::reproduce(Board& board) {
-		if (isAlive() && _foodCount >= FOOD_REP_LIMIT && hasWolfNext() && _popEntity(_loc)) {
+		if (isAlive() && _foodCount >= REPRODUCE_LIMIT && hasWolfNext() && _popEntity(_loc)) {
 			_numberRep++;
 			std::cout << "Wolf reproduce" << std::endl;
 			_lastAction = REPRODUCE;

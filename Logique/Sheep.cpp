@@ -105,9 +105,6 @@ namespace Logique {
 			addFood(FOOD_GAIN);
 			Callback_Environnement::getInstance().cb_onEntityEat(*this);
 		}
-		else if (board(_loc).hasGrass()){
-			std::cout << "sheep eat fail on " << _loc << std::endl;
-		}
 		generateNewAction();
 	}
 
@@ -117,8 +114,6 @@ namespace Logique {
 			std::cout << "sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
-		} else {
-			std::cout << "sheep reproduce fail on " << _loc << std::endl;
 		}
 		generateNewAction();
 	}
