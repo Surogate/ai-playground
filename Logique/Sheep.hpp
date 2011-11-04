@@ -12,7 +12,8 @@ namespace Logique {
 		enum Constant {
 			FOOD_GAIN = 4,
 			EAT_TIME = 2,
-			REPRODUCE_TIME = 16
+			REPRODUCE_TIME = 16,
+			REPRODUCE_LIMIT = 13
 		};
 
 		Sheep();
@@ -24,6 +25,10 @@ namespace Logique {
 		bool hasSheepNext();
 
 		EntityAction computeAction();
+
+		static void initExp();
+
+		void sendXp();
 
 		Action getNewAction();
 		unsigned int evaluate() const;

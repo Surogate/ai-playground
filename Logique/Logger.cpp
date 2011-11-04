@@ -26,7 +26,7 @@ namespace Logique {
 
 		if (descriptor.good()) {
 			boost::chrono::duration<double> sec = boost::chrono::system_clock::now() - start;
-			descriptor << sec.count() << " " << value << std::endl;
+			descriptor << sec.count() << ";" << value << std::endl;
 		}
 	}
 

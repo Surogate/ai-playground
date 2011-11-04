@@ -23,7 +23,8 @@ namespace Logique  {
 			BASEFOODTIME = 12,
 			BASEFOODDECREASE = 1,
 			FOOD_MAX = 15,
-			FOOD_REP_LIMIT = 5,
+			FOOD_REP_LIMIT_START = 16,
+			FOOD_REP_LIMIT_END = 7,
 			MOVE_TIME = 2
 		};
 
@@ -129,6 +130,7 @@ namespace Logique  {
 		float _numberRep;
 		float _actual;
 		float _numberTot;
+		unsigned int _rep_limit;
 		unsigned int _foodCount;
 		float _lastMoy;
 		EntityAction _lastAction;

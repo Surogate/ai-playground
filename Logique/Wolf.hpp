@@ -12,7 +12,8 @@ namespace Logique {
 		enum Constant {
 			FOOD_GAIN = 8,
 			EAT_TIME = 3,
-			REPRODUCE_TIME = 18
+			REPRODUCE_TIME = 18,
+			REPRODUCE_LIMIT = 13
 		};
 
 		Wolf();
@@ -24,6 +25,9 @@ namespace Logique {
 
 		void eat(Board& board);
 		void reproduce(Board& board);
+
+		static void initExp();
+		void sendXp();
 
 		EntityAction computeAction();
 		unsigned int evaluate() const;

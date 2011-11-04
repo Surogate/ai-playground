@@ -31,6 +31,47 @@ namespace Logique {
 		return act;
 	}
 
+	void Sheep::sendXp() {
+		while (_actionStack.size()) {
+					ActionStore& top = _actionStack.top();
+					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+					_actionStack.pop();
+		}
+
+		_tree.generateTree();
+	
+	}
+
+	void Sheep::initExp() {
+		Square present;
+		present.hasGrass(true);
+		Square other;
+		Square other2;
+		other.hasGrass(true);
+
+		_tree.addAction(1, present, other, other, other, other, EAT);
+		_tree.addAction(5, present, other, other, other, other, EAT);
+		_tree.addAction(6, present, other, other, other, other, EAT);
+		other.hasGrass(false);
+		_tree.addAction(2, present, other, other, other, other, EAT);
+		_tree.addAction(3, present, other, other, other, other, EAT);
+		_tree.addAction(4, present, other, other, other, other, EAT);
+
+		other.hasSheep(reinterpret_cast<Entity*>(1));
+
+		_tree.addAction(7, present, other, other, other2, other2, REPRODUCE);
+		_tree.addAction(8, present, other, other, other2, other2, REPRODUCE);
+		_tree.addAction(9, present, other, other, other2, other2, REPRODUCE);
+
+		other2.hasSheep(reinterpret_cast<Entity*>(1));
+
+		_tree.addAction(7, present, other, other, other2, other2, REPRODUCE);
+		_tree.addAction(8, present, other, other, other2, other2, REPRODUCE);
+		_tree.addAction(9, present, other, other, other2, other2, REPRODUCE);
+		
+		_tree.generateTree();
+	}
+
 	Action Sheep::getNewAction() {
 		EntityAction act = computeAction();
 
@@ -38,22 +79,15 @@ namespace Logique {
 			float moy = computeMoy();
 			
 			if (_validScore(moy)) {
-				while (_actionStack.size()) {
-					ActionStore& top = _actionStack.top();
-					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
-					_actionStack.pop();
-				}
-				Logger log("Mouton.log");
-				log.dump(moy);
+				sendXp();
+				Logger log("Mouton.csv");
 				std::cout << "#Sheep action commited - old perf " << _lastMoy << std::endl;
 				std::cout << "#Sheep new perf " << moy << std::endl;
 				std::cout << "tree moy " << _tree.getMoy() << std::endl;
 				std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
-				std::cout << "generate tree" << std::endl;
-				_tree.generateTree();
-				std::cout << "tree generated" << std::endl;
+				log.dump(_tree.getMoy());
 			}
 			reInitPerf();
 		}
@@ -71,20 +105,15 @@ namespace Logique {
 			addFood(FOOD_GAIN);
 			Callback_Environnement::getInstance().cb_onEntityEat(*this);
 		}
-		else if (board(_loc).hasGrass()){
-			std::cout << "sheep eat fail on " << _loc << std::endl;
-		}
 		generateNewAction();
 	}
 
 	void Sheep::reproduce(Board& board) {
-		if (isAlive() && _foodCount >= FOOD_REP_LIMIT && hasSheepNext() && _popEntity(_loc)) {
+		if (isAlive() && _foodCount > _rep_limit && hasSheepNext() && _popEntity(_loc)) {
 			_numberRep++;
 			std::cout << "sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
-		} else {
-			std::cout << "sheep reproduce fail on " << _loc << std::endl;
 		}
 		generateNewAction();
 	}
