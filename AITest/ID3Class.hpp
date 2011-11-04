@@ -67,7 +67,7 @@ namespace ID3 {
 				return _getRandomResult();
 			}
 			return Answer();
-		}
+		} 
 
 		std::size_t size() const {
 			return _result.size();

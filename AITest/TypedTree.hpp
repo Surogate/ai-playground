@@ -999,3 +999,4 @@ namespace ID3 {
 }
 
 #endif /* !TYPEDTREE_HPP */
+

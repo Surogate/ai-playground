@@ -111,3 +111,4 @@ namespace ID3 {
 }
 
 #endif /* CONDITIONNALFUNCTOR_HPP */
+

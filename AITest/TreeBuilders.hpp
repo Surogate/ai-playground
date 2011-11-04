@@ -28,7 +28,7 @@ Hold Class that construct Tree
 		template <typename Tree >
 		class ABuilderNode {
 		public:
-			~ABuilderNode() {}
+			virtual ~ABuilderNode() {}
 			// return inner gain value
 			virtual const float& getResult() const = 0;
 			// return inner size of dataset used
@@ -972,3 +972,4 @@ Hold Class that construct Tree
 }
 
 #endif /* !TREEBUILDER_HPP */
+
