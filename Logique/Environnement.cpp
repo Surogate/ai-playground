@@ -24,12 +24,15 @@ namespace Logique {
 	Environnement::~Environnement() {}
 
 	void Environnement::preRun() {
-		addSheep(5);
-		addWolf(5);
+		addSheep(20);
+		addWolf(20);
 
-		Logger log("Loup.log");
+		Wolf::initExp();
+		Sheep::initExp();
+
+		Logger log("Loup.csv");
 		log.wipeFile();
-		Logger logM("Mouton.log");
+		Logger logM("Mouton.csv");
 		logM.wipeFile();
 
 		insertActionStack();
@@ -78,10 +81,10 @@ namespace Logique {
 			insertActionStack();
 
 			if (getSheepNum() <= 3) {
-				addSheep(5);
+				addSheep(15);
 			}
 			if (getWolfNum() <= 3) {
-				addWolf(5);
+				addWolf(15);
 			}
 		}
 
@@ -97,7 +100,7 @@ namespace Logique {
 		if (!_board(loc).hasSheep()) {
 			//std::cout << "spawn sheep at " << loc << std::endl;
 			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
-			sheepPtr->addFood(Sheep::FOOD_REP_LIMIT);
+			sheepPtr->addFood(Sheep::FOOD_MAX);
 			sheepPtr->initActionArray(_board);
 
 			sheepPtr->setGetNumberSpecies(boost::bind(&Environnement::getSheepNum, this));
@@ -114,7 +117,7 @@ namespace Logique {
 		if (!_board(loc).hasWolf()) {
 			//std::cout << "spawn wolf at " << loc << std::endl;
 			boost::shared_ptr<Wolf> wolfPtr(new Wolf());
-			wolfPtr->addFood(Wolf::FOOD_REP_LIMIT);
+			wolfPtr->addFood(Wolf::FOOD_MAX);
 			wolfPtr->initActionArray(_board);
 
 			wolfPtr->setGetNumberSpecies(boost::bind(&Environnement::getWolfNum, this));

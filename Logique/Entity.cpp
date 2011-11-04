@@ -8,7 +8,7 @@
 namespace Logique {
 
 	Entity::Entity(const Square::EntityContain& type)
-		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _foodCount(0), _lastMoy(0), _lastAction()
+		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _rep_limit(FOOD_REP_LIMIT_START), _foodCount(0), _lastMoy(0), _lastAction()
 	{}
 
 	Entity::~Entity() 
@@ -74,6 +74,10 @@ namespace Logique {
 		else
 			_foodCount = 0;
 
+		if (_rep_limit > FOOD_REP_LIMIT_END) {
+			_rep_limit--;
+		}
+
 		if (_foodCount)
 			addAction(createFoodAction());
 		else if (_onDeath)
@@ -102,8 +106,8 @@ namespace Logique {
 	void Entity::goUp(Board& board) {
 		if (isAlive() && _loc.x > 0) {
 			_lastAction = MOVE_UP;
-			dumpType();
-			std::cout << " move up" << std::endl;
+			/*dumpType();
+			std::cout << " move up" << std::endl;*/
 			Coord newLoc(_loc.x - 1, _loc.y);
 			moveToThisLocation(board, newLoc);
 		}
@@ -113,8 +117,8 @@ namespace Logique {
 	void Entity::goLeft(Board& board) {
 		if (isAlive() && _loc.y > 0) {
 			_lastAction = MOVE_LEFT;
-			dumpType();
-			std::cout << " move down" << std::endl;
+			/*dumpType();
+			std::cout << " move down" << std::endl;*/
 			Coord newLoc(_loc.x, _loc.y - 1);
 			moveToThisLocation(board, newLoc);
 		}
@@ -124,8 +128,8 @@ namespace Logique {
 	void Entity::goRight(Board& board) {
 		if (isAlive() && _loc.y < BOARD_SIZE - 1) {
 			_lastAction = MOVE_RIGHT;
-			dumpType();
-			std::cout << " move right" << std::endl;
+			/*dumpType();
+			std::cout << " move right" << std::endl;*/
 			Coord newLoc(_loc.x, _loc.y + 1);
 			moveToThisLocation(board, newLoc);
 		}
@@ -135,8 +139,8 @@ namespace Logique {
 	void Entity::goDown(Board& board) {
 		if (isAlive() && _loc.x < BOARD_SIZE - 1) {
 			_lastAction = MOVE_DOWN;
-			dumpType();
-			std::cout << " move down" << std::endl;
+			/*dumpType();
+			std::cout << " move down" << std::endl;*/
 			Coord newLoc(_loc.x + 1, _loc.y);
 			moveToThisLocation(board, newLoc);
 		}
@@ -152,7 +156,6 @@ namespace Logique {
 			_loc = newLoc;
 			Callback_Environnement::getInstance().cb_onEntityMove(*this);
 			Callback_Environnement::getInstance().cb_onBoardChange(board);
-			board.dumpSheep();
 			return true;
 		}
 		return false;
@@ -178,7 +181,7 @@ namespace Logique {
 		_numberEat = 0;
 		_numberRep = 0;
 		_actual = 0;
-		_numberTot = 5 + _lastMoy * 5;
+		_numberTot = static_cast<float>(_getSpecieNumber());
 	}
 
 	float Entity::computeMoy() const {
