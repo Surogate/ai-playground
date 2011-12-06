@@ -17,9 +17,9 @@ namespace Logique {
 		return static_cast<Entity::EntityAction>(_distri(_gen));
 	}
 
-	Entity::EntityAction DecisionTree::computeAction(unsigned int foodcount, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite) 
+	Entity::EntityAction DecisionTree::computeAction(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite) 
 	{
-		initInputArray(foodcount, Entity::WAIT, present, haut, gauche, bas, droite);
+		initInputArray(foodcount, lastAction, present, haut, gauche, bas, droite);
 		float* output = _ann.run(_input.c_array());
 		std::size_t best = 0;
 		float val = output[0];
@@ -46,16 +46,16 @@ namespace Logique {
 		return _moyenne;
 	}
 
-	void DecisionTree::train(unsigned int foodcount, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, Entity::EntityAction result) 
+	void DecisionTree::train(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, Entity::EntityAction result) 
 	{
-		initInputArray(foodcount, Entity::WAIT, present, haut, gauche, bas, droite);
+		initInputArray(foodcount, lastAction, present, haut, gauche, bas, droite);
 		initOutputArray(result, 0, 1);
 		_ann.train(_input.c_array(), _output.c_array());
 	}
 
-	void DecisionTree::trainNot(unsigned int foodcount, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, Entity::EntityAction result) 
+	void DecisionTree::trainNot(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, Entity::EntityAction result) 
 	{
-		initInputArray(foodcount, Entity::WAIT, present, haut, gauche, bas, droite);
+		initInputArray(foodcount, lastAction, present, haut, gauche, bas, droite);
 		initOutputArray(result, 1, 0);
 		_ann.train(_input.c_array(), _output.c_array());
 	}
