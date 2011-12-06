@@ -12,9 +12,9 @@ namespace Logique {
 		return static_cast<Entity::EntityAction>(_distri(_gen));
 	}
 
-	Entity::EntityAction DecisionTree::computeAction(unsigned int foodcount, const Square& present, int haut, int gauche, int bas, int droite) {
+	Entity::EntityAction DecisionTree::computeAction(unsigned int foodcount, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite) {
 		_id3.generateTree();
-		Answer ans = _id3.decide(foodcount, present.hasGrass(), present.hasSheep(), present.hasWolf(), present.odour(), haut, gauche, bas, droite);
+		Answer ans = _id3.decide(foodcount, present.hasGrass(), present.hasSheep(), present.hasWolf(), present.odour(), haut.getInt(), gauche.getInt(), bas.getInt(), droite.getInt());
 		if (ans) {
 			return *ans;
 		}
@@ -25,8 +25,8 @@ namespace Logique {
 		return _moyenne;
 	}
 
-	void DecisionTree::addAction(unsigned int foodcount, const Square& present, int haut, int gauche, int bas, int droite, Entity::EntityAction result) {
-		_id3.addData(foodcount, present.hasGrass(), present.hasSheep(), present.hasWolf(), present.odour(), haut, gauche, bas, droite, result);
+	void DecisionTree::train(unsigned int foodcount, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, Entity::EntityAction result) {
+		_id3.addData(foodcount, present.hasGrass(), present.hasSheep(), present.hasWolf(), present.odour(), haut.getInt(), gauche.getInt(), bas.getInt(), droite.getInt(), result);
 	}
 
 	void DecisionTree::sendMoy(float value) {

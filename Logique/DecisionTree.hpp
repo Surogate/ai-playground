@@ -17,8 +17,8 @@ namespace Logique {
 		typedef ID3Algo::Answer Answer;
 		DecisionTree();
 
-		Entity::EntityAction computeAction(unsigned int foodcount, const Square& present, int haut, int gauche, int bas, int droite);
-		void addAction(unsigned int foodcount, const Square& present, int haut, int gauche, int bas, int droite, Entity::EntityAction result);
+		Entity::EntityAction computeAction(unsigned int foodcount, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
+		void train(unsigned int foodcount, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, Entity::EntityAction result);
 		Entity::EntityAction randomAction();
 		const float& getMoy() const;
 		void sendMoy(float value);

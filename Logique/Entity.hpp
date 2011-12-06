@@ -35,6 +35,7 @@ namespace Logique  {
 			MOVE_RIGHT,
 			EAT,
 			REPRODUCE,
+			WAIT,
 			ACTION_CONTAINER_SIZE
 		};
 
@@ -75,10 +76,13 @@ namespace Logique  {
 		void goLeft(Board& board);
 		void goRight(Board& board);
 		void goDown(Board& board);
+		void wait();
 		virtual void eat(Board& board) = 0;
 		virtual void reproduce(Board& board) = 0;
 		void generateNewAction();
 		EntityAction getLastAction() const;
+		const Square& getSquareSup(Coord loc, const Coord& dir);
+		const Square& getSquareLess(Coord loc, const Coord& dir);
 		int getIntFromSup(Coord loc, const Coord& dir); 
 		int getIntFromLess(Coord loc, const Coord& dir);
 		void reInitPerf();
@@ -99,15 +103,16 @@ namespace Logique  {
 		struct ActionStore {
 			unsigned int foodcount;
 			Square present;
-			int up;
-			int left;
-			int down;
-			int right;
+			Square up;
+			Square left;
+			Square down;
+			Square right;
 
 			EntityAction result;
+			EntityAction last;
 
-			ActionStore(unsigned int foodcount, Square _present_, int _up_, int _left_, int _down_, int _right_, EntityAction _result_)
-				: present (_present_), up(_up_), left(_left_), down(_down_), right(_right_), result(_result_)
+			ActionStore(unsigned int foodcount, const Square& _present_, const Square& _up_, const Square& _left_, const Square& _down_, const Square& _right_, EntityAction _result_, EntityAction _last_)
+				: present (_present_), up(_up_), left(_left_), down(_down_), right(_right_), result(_result_), last(_last_)
 			{}
 		};
 
