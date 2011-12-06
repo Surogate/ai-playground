@@ -17,6 +17,7 @@ namespace Logique {
 		};
 
 		Sheep();
+		~Sheep();
 
 		void initActionArray(Board& board);
 

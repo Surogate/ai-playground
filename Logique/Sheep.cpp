@@ -14,6 +14,15 @@ namespace Logique {
 	Sheep::Sheep() : Entity(Square::SHEEP)
 	{}
 
+	Sheep::~Sheep()
+	{
+		while (_actionStack.size()) {
+			ActionStore& top = _actionStack.top();
+			_tree.trainNot(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+			_actionStack.pop();
+		}
+	}
+
 	void Sheep::initActionArray(Board& board) {
 		Entity::initActionArray(board);
 		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Entity::eat, shared_from_this(), boost::ref(board)));
@@ -28,6 +37,7 @@ namespace Logique {
 	}
 
 	void Sheep::sendXp() {
+		std::cout << "### Sheep start sending" << std::endl;
 		while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
 					_tree.train(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
@@ -35,7 +45,7 @@ namespace Logique {
 		}
 
 		_tree.generateTree();
-	
+		std::cout << "@@@ Sheep start sending" << std::endl;
 	}
 
 	void Sheep::initExp() {
@@ -77,10 +87,6 @@ namespace Logique {
 			if (_validScore(moy)) {
 				sendXp();
 				Logger log("Mouton.csv");
-				std::cout << "#Sheep action commited - old perf " << _lastMoy << std::endl;
-				std::cout << "#Sheep new perf " << moy << std::endl;
-				std::cout << "tree moy " << _tree.getMoy() << std::endl;
-				std::cout << "#Sheep experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
 				log.dump(_tree.getMoy());

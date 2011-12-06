@@ -27,8 +27,8 @@ namespace Logique {
 		addSheep(20);
 		addWolf(20);
 
-		Wolf::initExp();
-		Sheep::initExp();
+		//Wolf::initExp();
+		//Sheep::initExp();
 
 		Logger log("Loup.csv");
 		log.wipeFile();
