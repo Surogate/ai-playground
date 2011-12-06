@@ -24,12 +24,8 @@ namespace Logique {
 
 
 	Entity::EntityAction Wolf::computeAction() {
-		int up = getIntFromLess(_loc, Coord::DOWN);
-		int left = getIntFromLess(_loc, Coord::RIGHT);
-		int down = getIntFromSup(_loc, Coord::DOWN);
-		int right = getIntFromSup(_loc, Coord::RIGHT);
-		EntityAction act = _tree.computeAction(_foodCount, _getSquare(_loc), up, left, down, right); 
-		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc), up, left, down, right, act));
+		EntityAction act = _tree.computeAction(_foodCount, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT));
+		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), act, _lastAction));
 		_actual++;
 		return act;
 	}
@@ -40,38 +36,38 @@ namespace Logique {
 		Square other;
 		other.hasGrass(true);
 
-		_tree.addAction(0, present, other, other, other, other, EAT);
+		_tree.train(0, present, other, other, other, other, EAT);
 		other.hasGrass(false);
-		_tree.addAction(1, present, other, other, other, other, EAT);
+		_tree.train(1, present, other, other, other, other, EAT);
 		other.hasSheep(0);
-		_tree.addAction(2, present, other, other, other, other, EAT);
+		_tree.train(2, present, other, other, other, other, EAT);
 		other.hasSheep(reinterpret_cast<Logique::Entity*>(1));
-		_tree.addAction(3, present, 0, other, other, other, EAT);
+		_tree.train(3, present, 0, other, other, other, EAT);
 		other.addOdour(1);
-		_tree.addAction(4, present, other, 0, other, other, EAT);
+		_tree.train(4, present, other, 0, other, other, EAT);
 		other.addOdour(1);
-		_tree.addAction(5, present, other, other, other, 0, EAT);
+		_tree.train(5, present, other, other, other, 0, EAT);
 		other.addOdour(1);
-		_tree.addAction(6, present, other, other, 0, other, EAT);
+		_tree.train(6, present, other, other, 0, other, EAT);
 		other.addOdour(1);
 		other.hasGrass(true);
-		_tree.addAction(7, present, 0, other, other, 0, EAT);
+		_tree.train(7, present, 0, other, other, 0, EAT);
 		other.addOdour(1);
-		_tree.addAction(8, present, other, other, other, other, EAT);
+		_tree.train(8, present, other, other, other, other, EAT);
 		other.addOdour(10);
-		_tree.addAction(9, present, other, 0, 0, other, EAT);
+		_tree.train(9, present, other, 0, 0, other, EAT);
 
 		other.hasWolf(reinterpret_cast<Entity*>(1));
 		present.hasSheep(0);
-		_tree.addAction(13, present, other, 0, 0, 0, REPRODUCE);
-		_tree.addAction(14, present, 0, other, 0, 0, REPRODUCE);
-		_tree.addAction(15, present, 0, 0, 0, other, REPRODUCE);
+		_tree.train(13, present, other, 0, 0, 0, REPRODUCE);
+		_tree.train(14, present, 0, other, 0, 0, REPRODUCE);
+		_tree.train(15, present, 0, 0, 0, other, REPRODUCE);
 
 		other.hasWolf(reinterpret_cast<Entity*>(1));
 		present.hasSheep(reinterpret_cast<Entity*>(1));
-		_tree.addAction(15, present, 0, other, 0, 0, REPRODUCE);
-		_tree.addAction(14, present, 0, 0, 0, other, REPRODUCE);
-		_tree.addAction(13, present, 0, 0, other, 0, REPRODUCE);
+		_tree.train(15, present, 0, other, 0, 0, REPRODUCE);
+		_tree.train(14, present, 0, 0, 0, other, REPRODUCE);
+		_tree.train(13, present, 0, 0, other, 0, REPRODUCE);
 
 		_tree.generateTree();
 	}
@@ -80,7 +76,7 @@ namespace Logique {
 	void Wolf::sendXp() {
 		while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
-					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+					_tree.train(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
 					_actionStack.pop();
 		}
 		

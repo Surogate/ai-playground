@@ -21,12 +21,8 @@ namespace Logique {
 	}
 
 	Entity::EntityAction Sheep::computeAction() {
-		int up = getIntFromLess(_loc, Coord::DOWN);
-		int left = getIntFromLess(_loc, Coord::RIGHT);
-		int down = getIntFromSup(_loc, Coord::DOWN);
-		int right = getIntFromSup(_loc, Coord::RIGHT);
-		EntityAction act = _tree.computeAction(_foodCount, _getSquare(_loc), up, left, down, right); 
-		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc), up, left, down, right, act));
+		EntityAction act = _tree.computeAction(_foodCount, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT)); 
+		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), act, _lastAction));
 		_actual++;
 		return act;
 	}
@@ -34,7 +30,7 @@ namespace Logique {
 	void Sheep::sendXp() {
 		while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
-					_tree.addAction(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+					_tree.train(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
 					_actionStack.pop();
 		}
 
@@ -49,25 +45,25 @@ namespace Logique {
 		Square other2;
 		other.hasGrass(true);
 
-		_tree.addAction(1, present, other, other, other, other, EAT);
-		_tree.addAction(5, present, other, other, other, other, EAT);
-		_tree.addAction(6, present, other, other, other, other, EAT);
+		_tree.train(1, present, other, other, other, other, EAT);
+		_tree.train(5, present, other, other, other, other, EAT);
+		_tree.train(6, present, other, other, other, other, EAT);
 		other.hasGrass(false);
-		_tree.addAction(2, present, other, other, other, other, EAT);
-		_tree.addAction(3, present, other, other, other, other, EAT);
-		_tree.addAction(4, present, other, other, other, other, EAT);
+		_tree.train(2, present, other, other, other, other, EAT);
+		_tree.train(3, present, other, other, other, other, EAT);
+		_tree.train(4, present, other, other, other, other, EAT);
 
 		other.hasSheep(reinterpret_cast<Entity*>(1));
 
-		_tree.addAction(7, present, other, other, other2, other2, REPRODUCE);
-		_tree.addAction(8, present, other, other, other2, other2, REPRODUCE);
-		_tree.addAction(9, present, other, other, other2, other2, REPRODUCE);
+		_tree.train(7, present, other, other, other2, other2, REPRODUCE);
+		_tree.train(8, present, other, other, other2, other2, REPRODUCE);
+		_tree.train(9, present, other, other, other2, other2, REPRODUCE);
 
 		other2.hasSheep(reinterpret_cast<Entity*>(1));
 
-		_tree.addAction(7, present, other, other, other2, other2, REPRODUCE);
-		_tree.addAction(8, present, other, other, other2, other2, REPRODUCE);
-		_tree.addAction(9, present, other, other, other2, other2, REPRODUCE);
+		_tree.train(7, present, other, other, other2, other2, REPRODUCE);
+		_tree.train(8, present, other, other, other2, other2, REPRODUCE);
+		_tree.train(9, present, other, other, other2, other2, REPRODUCE);
 		
 		_tree.generateTree();
 	}

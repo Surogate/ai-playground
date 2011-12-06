@@ -8,7 +8,7 @@
 namespace Logique {
 
 	Entity::Entity(const Square::EntityContain& type)
-		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _rep_limit(FOOD_REP_LIMIT_START), _foodCount(0), _lastMoy(0), _lastAction()
+		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _rep_limit(FOOD_REP_LIMIT_START), _foodCount(0), _lastMoy(0), _lastAction(WAIT)
 	{}
 
 	Entity::~Entity() 
@@ -97,10 +97,19 @@ namespace Logique {
 	}
 
 	void Entity::initActionArray(Board& board) {
+		_actionArray[WAIT] = Action(1, boost::bind(&Entity::wait, shared_from_this()));
 		_actionArray[MOVE_UP] = Action(MOVE_TIME, boost::bind(&Entity::goUp, shared_from_this(), boost::ref(board)));
 		_actionArray[MOVE_DOWN] = Action(MOVE_TIME, boost::bind(&Entity::goDown, shared_from_this(), boost::ref(board)));
 		_actionArray[MOVE_LEFT] = Action(MOVE_TIME, boost::bind(&Entity::goLeft, shared_from_this(), boost::ref(board)));
 		_actionArray[MOVE_RIGHT] = Action(MOVE_TIME, boost::bind(&Entity::goRight, shared_from_this(), boost::ref(board)));
+	}
+
+	void Entity::wait() {
+		if (isAlive())
+		{
+			_lastAction = WAIT;
+		}
+		generateNewAction();
 	}
 
 	void Entity::goUp(Board& board) {
@@ -167,6 +176,16 @@ namespace Logique {
 
 	Entity::EntityAction Entity::getLastAction() const {
 		return _lastAction;
+	}
+
+	const Square& Entity::getSquareSup(Coord loc, const Coord& dir)
+	{
+		return _getSquare(loc + dir);
+	}
+
+	const Square& Entity::getSquareLess(Coord loc, const Coord& dir)
+	{
+		return _getSquare(loc - dir);
 	}
 
 	int Entity::getIntFromSup(Coord loc, const Coord& dir) {
