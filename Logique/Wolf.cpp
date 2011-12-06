@@ -12,25 +12,32 @@ namespace Logique {
 		: Entity(Square::WOLF)
 	{}
 
-	Wolf::~Wolf() {
+	Wolf::~Wolf() 
+	{
+		while (_actionStack.size()) {
+			ActionStore& top = _actionStack.top();
+			_tree.trainNot(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+			_actionStack.pop();
+		}
 	}
 
-	void Wolf::initActionArray(Board& board) {
+	void Wolf::initActionArray(Board& board) 
+	{
 		Entity::initActionArray(board);
 		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Entity::eat, shared_from_this(), boost::ref(board)));
 		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, shared_from_this(), boost::ref(board)));
 	}
 
-
-
-	Entity::EntityAction Wolf::computeAction() {
+	Entity::EntityAction Wolf::computeAction() 
+	{
 		EntityAction act = _tree.computeAction(_foodCount, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT));
 		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), act, _lastAction));
 		_actual++;
 		return act;
 	}
 
-	void Wolf::initExp() {
+	void Wolf::initExp() 
+	{
 		Square present;
 		present.hasSheep(reinterpret_cast<Logique::Entity*>(1));
 		Square other;
@@ -74,12 +81,13 @@ namespace Logique {
 
 
 	void Wolf::sendXp() {
+		std::cout << "### Wolf start sending" << std::endl;
 		while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
 					_tree.train(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
 					_actionStack.pop();
 		}
-		
+		std::cout << "@@@ Wolf end sending" << std::endl;
 		_tree.generateTree();
 	}
 
@@ -91,9 +99,6 @@ namespace Logique {
 			if (_validScore(moy)) {
 				sendXp();
 				Logger log("Loup.csv");
-				std::cout << "#Wolf action commited - old perf " << _tree.getMoy() << std::endl;
-				std::cout << "#Wolf new perf " << moy << std::endl;
-				std::cout << "#Wolf experience size " << _tree.getSize() << std::endl;
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
 				log.dump(_tree.getMoy());
