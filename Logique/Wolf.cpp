@@ -16,7 +16,7 @@ namespace Logique {
 	{
 		while (_actionStack.size()) {
 			ActionStore& top = _actionStack.top();
-			_tree.trainNot(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+			_tree.trainNot(top.foodcount, top.last, top.present, top.up, top.left, top.down, top.right, top.result);
 			_actionStack.pop();
 		}
 	}
@@ -30,7 +30,7 @@ namespace Logique {
 
 	Entity::EntityAction Wolf::computeAction() 
 	{
-		EntityAction act = _tree.computeAction(_foodCount, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT));
+		EntityAction act = _tree.computeAction(_foodCount, _lastAction, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT));
 		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), act, _lastAction));
 		_actual++;
 		return act;
@@ -43,38 +43,38 @@ namespace Logique {
 		Square other;
 		other.hasGrass(true);
 
-		_tree.train(0, present, other, other, other, other, EAT);
+		_tree.train(0, _tree.randomAction(), present, other, other, other, other, EAT);
 		other.hasGrass(false);
-		_tree.train(1, present, other, other, other, other, EAT);
+		_tree.train(1, _tree.randomAction(), present, other, other, other, other, EAT);
 		other.hasSheep(0);
-		_tree.train(2, present, other, other, other, other, EAT);
+		_tree.train(2, _tree.randomAction(), present, other, other, other, other, EAT);
 		other.hasSheep(reinterpret_cast<Logique::Entity*>(1));
-		_tree.train(3, present, 0, other, other, other, EAT);
+		_tree.train(3, _tree.randomAction(), present, 0, other, other, other, EAT);
 		other.addOdour(1);
-		_tree.train(4, present, other, 0, other, other, EAT);
+		_tree.train(4, _tree.randomAction(), present, other, 0, other, other, EAT);
 		other.addOdour(1);
-		_tree.train(5, present, other, other, other, 0, EAT);
+		_tree.train(5, _tree.randomAction(), present, other, other, other, 0, EAT);
 		other.addOdour(1);
-		_tree.train(6, present, other, other, 0, other, EAT);
+		_tree.train(6, _tree.randomAction(), present, other, other, 0, other, EAT);
 		other.addOdour(1);
 		other.hasGrass(true);
-		_tree.train(7, present, 0, other, other, 0, EAT);
+		_tree.train(7, _tree.randomAction(), present, 0, other, other, 0, EAT);
 		other.addOdour(1);
-		_tree.train(8, present, other, other, other, other, EAT);
+		_tree.train(8, _tree.randomAction(), present, other, other, other, other, EAT);
 		other.addOdour(10);
-		_tree.train(9, present, other, 0, 0, other, EAT);
+		_tree.train(9, _tree.randomAction(), present, other, 0, 0, other, EAT);
 
 		other.hasWolf(reinterpret_cast<Entity*>(1));
 		present.hasSheep(0);
-		_tree.train(13, present, other, 0, 0, 0, REPRODUCE);
-		_tree.train(14, present, 0, other, 0, 0, REPRODUCE);
-		_tree.train(15, present, 0, 0, 0, other, REPRODUCE);
+		_tree.train(13, _tree.randomAction(), present, other, 0, 0, 0, REPRODUCE);
+		_tree.train(14, _tree.randomAction(), present, 0, other, 0, 0, REPRODUCE);
+		_tree.train(15, _tree.randomAction(), present, 0, 0, 0, other, REPRODUCE);
 
 		other.hasWolf(reinterpret_cast<Entity*>(1));
 		present.hasSheep(reinterpret_cast<Entity*>(1));
-		_tree.train(15, present, 0, other, 0, 0, REPRODUCE);
-		_tree.train(14, present, 0, 0, 0, other, REPRODUCE);
-		_tree.train(13, present, 0, 0, other, 0, REPRODUCE);
+		_tree.train(15, _tree.randomAction(), present, 0, other, 0, 0, REPRODUCE);
+		_tree.train(14, _tree.randomAction(), present, 0, 0, 0, other, REPRODUCE);
+		_tree.train(13, _tree.randomAction(), present, 0, 0, other, 0, REPRODUCE);
 
 		_tree.generateTree();
 	}
@@ -84,7 +84,7 @@ namespace Logique {
 		std::cout << "### Wolf start sending" << std::endl;
 		while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
-					_tree.train(top.foodcount, top.present, top.up, top.left, top.down, top.right, top.result);
+					_tree.train(top.foodcount, top.last, top.present, top.up, top.left, top.down, top.right, top.result);
 					_actionStack.pop();
 		}
 		std::cout << "@@@ Wolf end sending" << std::endl;
