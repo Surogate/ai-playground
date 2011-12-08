@@ -1,0 +1,15 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:Client2D_ViewModel="clr-namespace:Client2D.ViewModel" x:Class="Client2D.ViewWindow.WolfPopWindow"
+        Title="WolfPopWindow">
+	<Window.DataContext>
+		<Client2D_ViewModel:WolfViewModel/>
+	</Window.DataContext>
+    <Grid>
+        <DVC:Chart x:Name="chart" Margin="-1,-1,0,0" Title="{Binding Title}">
+            <DVC:LineSeries DependentValuePath="Time" IndependentValuePath="Total" ItemsSource="{Binding Population, Mode=OneWay}" DependentValueBinding="{Binding Total}" IndependentValueBinding="{Binding Time}"/>
+        </DVC:Chart>
+    </Grid>
+</Window>

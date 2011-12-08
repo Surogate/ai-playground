@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Client2D.Utils
 {
-    class BasicViewModel : INotifyPropertyChanged
+    public class BasicViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
