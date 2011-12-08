@@ -86,10 +86,8 @@ namespace Logique {
 			
 			if (_validScore(moy)) {
 				sendXp();
-				Logger log("Mouton.csv");
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
-				log.dump(_tree.getMoy());
 			}
 			reInitPerf();
 		}
