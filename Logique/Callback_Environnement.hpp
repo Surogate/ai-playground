@@ -15,6 +15,7 @@ namespace Logique {
 	public:
 		typedef boost::function< void (const Entity&) > EntityFunctor;
 		typedef boost::function< void (const Board&) > BoardFunctor;
+		typedef boost::function< void (float, float) > MoyFunctor;
 
 		void setSpawnSheep(const EntityFunctor& onSpawnSheep);
 		void setSpawnWolf(const EntityFunctor& onSpawnWolf);
@@ -23,7 +24,9 @@ namespace Logique {
 		void setOnEntityEat(const EntityFunctor& onEntityEat);
 		void setOnEntityDead(const EntityFunctor& onEntityDead);
 		void setOnBoardChange(const BoardFunctor& onBoardChange);
+		void setSendMoy(const MoyFunctor& SendMoyCallback);
 
+		void cb_sendMoy(const float& sheep, const float& wolf) const;
 		void cb_onBoardChange(const Board& value) const;
 		void cb_onEntityDeath(const Entity& value) const;
 		void cb_onSheepSpawn(const Entity& value) const;
@@ -45,6 +48,7 @@ namespace Logique {
 		EntityFunctor _onEntityEat;
 		EntityFunctor _onEntityReproduce;
 		EntityFunctor _onEntityMove;
+		MoyFunctor _sendMoyCallback;
 	};
 
 }
