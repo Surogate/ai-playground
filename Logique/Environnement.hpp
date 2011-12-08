@@ -98,7 +98,9 @@ namespace Logique {
 		void insertActionStack();
 		void preRun();
 		Action createBoardPlay();
+		Action createLog();
 		void boardPlay();
+		void doLog();
 		void initEntity(boost::shared_ptr<Entity> value, const Coord& loc);
 		void spawnSheep();
 		void onEntityDeath(Entity& value);

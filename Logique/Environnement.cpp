@@ -19,6 +19,7 @@ namespace Logique {
 		_entityNum[Square::WOLF] = 0;
 		_baseTime = boost::posix_time::milliseconds(500);
 		addAction(createBoardPlay());
+		addAction(createLog());
 	}
 
 	Environnement::~Environnement() {}
@@ -91,12 +92,14 @@ namespace Logique {
 		std::cout << "Simulation end" << std::endl;
 	}
 
-	void Environnement::setBaseTime(const boost::posix_time::time_duration& time) {
+	void Environnement::setBaseTime(const boost::posix_time::time_duration& time) 
+	{
 		_baseTime = time;
 	}
 
 	//spawn Entity function
-	bool Environnement::addSheep(const Coord& loc) {
+	bool Environnement::addSheep(const Coord& loc) 
+	{
 		if (!_board(loc).hasSheep()) {
 			//std::cout << "spawn sheep at " << loc << std::endl;
 			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
@@ -113,7 +116,8 @@ namespace Logique {
 		return false;
 	}
 
-	bool Environnement::addWolf(const Coord& loc) {
+	bool Environnement::addWolf(const Coord& loc) 
+	{
 		if (!_board(loc).hasWolf()) {
 			//std::cout << "spawn wolf at " << loc << std::endl;
 			boost::shared_ptr<Wolf> wolfPtr(new Wolf());
@@ -130,7 +134,8 @@ namespace Logique {
 		return false;
 	}
 
-	void Environnement::addSheep(unsigned int num) {
+	void Environnement::addSheep(unsigned int num) 
+	{
 		Coord loc;
 		unsigned int i = 0;
 
@@ -147,7 +152,8 @@ namespace Logique {
 		}
 	}
 
-	void Environnement::addWolf(unsigned int num) {
+	void Environnement::addWolf(unsigned int num) 
+	{
 		Coord loc;
 		unsigned int i = 0;
 
@@ -164,7 +170,8 @@ namespace Logique {
 		}
 	}
 
-	bool Environnement::popSheepNear(const Coord& loc) {
+	bool Environnement::popSheepNear(const Coord& loc) 
+	{
 		bool found = false;
 		Coord locFound;
 
@@ -181,7 +188,8 @@ namespace Logique {
 		return found && addSheep(locFound);
 	}
 
-	bool Environnement::popWolfNear(const Coord& loc) {
+	bool Environnement::popWolfNear(const Coord& loc) 
+	{
 		bool found = false;
 		Coord locFound;
 
@@ -198,11 +206,13 @@ namespace Logique {
 		return found && addWolf(locFound);
 	}
 
-	unsigned int Environnement::getSheepNum() const {
+	unsigned int Environnement::getSheepNum() const 
+	{
 		return _entityNum[Square::SHEEP];
 	}
 
-	unsigned int Environnement::getWolfNum() const {
+	unsigned int Environnement::getWolfNum() const 
+	{
 		return _entityNum[Square::WOLF];
 	}
 
@@ -227,25 +237,30 @@ namespace Logique {
 		return  value && (value >= moy);
 	}
 
-	const Environnement::EntityPtrSet& Environnement::getEntityList() const {
+	const Environnement::EntityPtrSet& Environnement::getEntityList() const 
+	{
 		return _entityList;
 	}
 
-	void Environnement::lock() {
+	void Environnement::lock() 
+	{
 		_attriMtx.lock();
 	}
 
-	void Environnement::unlock() {
+	void Environnement::unlock() 
+	{
 		_attriMtx.unlock();
 	}
 
-	void Environnement::addAction(const Action& value) {
+	void Environnement::addAction(const Action& value) 
+	{
 		_listMtx.lock(); // ##list lock
 		_actionTmpStack.push(value);
 		_listMtx.unlock(); // ## list unlock
 	}
 
-	void Environnement::unsafeInsertAction(const Action& value) {
+	void Environnement::unsafeInsertAction(const Action& value) 
+	{
 		ActionList::iterator it = _actionList.begin();
 		ActionList::iterator ite = _actionList.end();
 
@@ -255,7 +270,8 @@ namespace Logique {
 		_actionList.insert(it, value);
 	}
 
-	void Environnement::insertActionStack() {
+	void Environnement::insertActionStack() 
+	{
 		_listMtx.lock(); // ##list lock
 		while (_actionTmpStack.size()) {
 			unsafeInsertAction(_actionTmpStack.top());
@@ -264,12 +280,43 @@ namespace Logique {
 		_listMtx.unlock(); // ## list unlock
 	}
 
-	Action Environnement::createBoardPlay() {
+	Action Environnement::createBoardPlay() 
+	{
 		Action act;
 
 		act._action = boost::bind(&Environnement::boardPlay, this);
 		act._tickBeforeAction = 1;
 		return act;
+	}
+
+	Action Environnement::createLog()
+	{
+		Action act;
+
+		act._action = boost::bind(&Environnement::doLog, this);
+		act._tickBeforeAction = 2 * 30;
+		return act;
+	}
+
+	void Environnement::doLog()
+	{
+		float totalSheep = 0;
+		float totalWolf = 0;
+
+		EntityPtrSet::const_iterator it = _entityList.begin();
+		EntityPtrSet::const_iterator ite = _entityList.end();
+
+		while (it != ite)
+		{
+			if (it->first->getType() == Square::SHEEP)
+				totalSheep += it->first->getLastMoy();
+			else
+				totalWolf += it->first->getLastMoy();
+
+			++it;
+		}
+
+		Callback_Environnement::getInstance().cb_sendMoy(totalSheep / static_cast<float>(_entityNum[Square::SHEEP]), totalWolf / static_cast<float>(_entityNum[Square::WOLF]));
 	}
 
 	void Environnement::boardPlay() {
