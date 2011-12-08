@@ -8,10 +8,12 @@ using System.Net.Sockets;
 using System.Diagnostics;
 using System.Threading;
 using Client2D.Utils;
+using Microsoft.Xna.Framework;
+using Client2D.View;
 
 namespace Client2D.ViewModel
 {
-    class Client : BasicViewModel
+    public class Client : BasicViewModel
     {
         private class StateObject
         {
@@ -20,13 +22,13 @@ namespace Client2D.ViewModel
             public StringBuilder sb = new StringBuilder();
         }
 
+        public delegate void ConnectDelegate(string host, string port);
+
         #region Attributes
         private string address_ = "127.0.0.1";
         private string port_ = "16000";
-        private string command_;
-        private List<string> logs_ = new List<string>();
-        private ObservableCollection<string> logs_printed_;
-        private TcpClient client_ = null;
+        private ViewWindow.SheepPopWindow windowS_;
+        private ViewWindow.WolfPopWindow windowW_;
         #endregion
 
         #region Properties
@@ -59,33 +61,32 @@ namespace Client2D.ViewModel
             }
         }
 
-        public string Command
+        public ConnectDelegate ConnectTo
         {
-            get
-            {
-                return (command_);
-            }
-            set
-            {
-                if (command_ != value)
-                    command_ = value;
-                OnPropertyChanged("Command");
-            }
+            get;
+            set;
         }
 
-        public ObservableCollection<string> Logs
+        public WolfViewModel WolfPop
         {
-            get
-            {
-                return logs_printed_;
-            }
-            set
-            {
-                logs_printed_ = value;
-                OnPropertyChanged("Logs");
-            }
+            get;
+            set;
         }
 
+        public SheepViewModel SheepPop
+        {
+            get;
+            set;
+        }
+
+        public XNAView ViewXNA
+        {
+            get;
+            set;
+        }
+        #endregion
+
+        #region Constructor
 
         #endregion
 
@@ -99,11 +100,7 @@ namespace Client2D.ViewModel
             {
                 try
                 {
-                    Int32 port = Int32.Parse(Port);
-                    if (client_ != null)
-                        client_.Close();
-                    client_ = new TcpClient(Address, port);
-                    start_recv();
+                    ConnectTo(Address, Port);
                 }
                 catch (Exception e)
                 {
@@ -112,60 +109,60 @@ namespace Client2D.ViewModel
             }
         }
 
-        private void send()
+        // Allows the game to exit
+        //if (Keyboard.GetState().IsKeyDown(Keys.Up))
+        //    Camera.X += 2;
+        //if (Keyboard.GetState().IsKeyDown(Keys.Down))
+        //    Camera.X -= 2;
+        //if (Keyboard.GetState().IsKeyDown(Keys.Right))
+        //        Camera.Y+=2;
+        //if (Keyboard.GetState().IsKeyDown(Keys.Left))
+        //        Camera.Y-=2;
+
+        private void moveCamUp()
         {
-            Debug.WriteLine("send()");
+            ViewXNA.Game.Camera.Y += 20;
         }
 
-       
-
-        private void start_recv()
+        private void moveCamDown()
         {
-            try
-            {
-                if (client_.Connected)
-                {
-                    StateObject state = new StateObject();
-                    client_.Client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-                client_.Close();
-            }
+            ViewXNA.Game.Camera.Y -= 20;
         }
 
-        private void ReceiveCallback(IAsyncResult ar)
+        private void moveCamLeft()
         {
-            try
-            {
-                StateObject state = (StateObject)ar.AsyncState;
+            ViewXNA.Game.Camera.X += 20;
+        }
 
-                int bytesRead = client_.Client.EndReceive(ar);
-                if (bytesRead > 0)
-                {
-                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                    logs_.Add(state.sb.ToString());
-                    state.sb.Clear();
-                    if (logs_.Count > 10)
-                    {
-                        for (int i = 0; i < 5; i++)
-                            logs_.RemoveAt(i);
-                    }
-                    Logs = new ObservableCollection<string>(logs_);
-                    client_.Client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
-                }
-                else
-                {
-                    start_recv();
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-                client_.Close();
-            }
+        private void moveCamRight()
+        {
+            ViewXNA.Game.Camera.X -= 20;
+        }
+
+        private void showPopulationWolf()
+        {
+            ViewWindow.WolfPopWindow window = new ViewWindow.WolfPopWindow();
+            if (windowW_ == null)
+                this.WolfPop = (WolfViewModel)window.DataContext;
+            if (windowW_ != null)
+                windowW_.Close();
+            windowW_ = window;
+            window.DataContext = this.WolfPop;
+            window.Show();
+            this.WolfPop.Update();
+        }
+
+        private void showPopulationSheep()
+        {
+            ViewWindow.SheepPopWindow window = new ViewWindow.SheepPopWindow();
+            if (windowS_ == null)
+                this.SheepPop = (SheepViewModel)window.DataContext;
+            if (windowS_ != null)
+                windowS_.Close();
+            windowS_ = window;
+            window.DataContext = this.SheepPop;
+            window.Show();
+            this.SheepPop.Update();
         }
 
         #endregion
@@ -177,7 +174,13 @@ namespace Client2D.ViewModel
         #region Commands
 
         public RelayCommand connect_ = null;
-        public RelayCommand send_ = null;
+        public RelayCommand up_ = null;
+        public RelayCommand down_ = null;
+        public RelayCommand left_ = null;
+        public RelayCommand right_ = null;
+        public RelayCommand populateW_ = null;
+        public RelayCommand populateS_ = null;
+
 
         public ICommand Connect
         {
@@ -189,13 +192,63 @@ namespace Client2D.ViewModel
             }
         }
 
-        public ICommand Send
+        public ICommand Up
         {
             get
             {
-                if (send_ == null)
-                    send_ = new RelayCommand(param => this.send());
-                return (send_);
+                if (up_ == null)
+                    up_ = new RelayCommand(param => this.moveCamUp());
+                return (up_);
+            }
+        }
+
+        public ICommand Down
+        {
+            get
+            {
+                if (down_ == null)
+                    down_ = new RelayCommand(param => this.moveCamDown());
+                return (down_);
+            }
+        }
+
+        public ICommand Left
+        {
+            get
+            {
+                if (left_ == null)
+                    left_ = new RelayCommand(param => this.moveCamLeft());
+                return (left_);
+            }
+        }
+
+        public ICommand Right
+        {
+            get
+            {
+                if (right_ == null)
+                    right_ = new RelayCommand(param => this.moveCamRight());
+                return (right_);
+            }
+        }
+
+        public ICommand ShowPopW
+        {
+            get
+            {
+                if (populateW_ == null)
+                    populateW_ = new RelayCommand(param => this.showPopulationWolf());
+                return (populateW_);
+            }
+        }
+
+        public ICommand ShowPopS
+        {
+            get
+            {
+                if (populateS_ == null)
+                    populateS_ = new RelayCommand(param => this.showPopulationSheep());
+                return (populateS_);
             }
         }
 

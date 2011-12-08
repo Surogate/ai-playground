@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Client2D.Utils
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         readonly Action<object>     execute_;
         readonly Predicate<object>  canExecute_;
