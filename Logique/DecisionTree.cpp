@@ -108,6 +108,12 @@ namespace Logique {
 		return i;
 	}
 
+	std::size_t DecisionTree::initInputArray(float* tab, int val)
+	{
+		tab[0] = static_cast<float>(val) / static_cast<float>(Square::getIntmax());
+		return 1;
+	}
+
 }
 
 

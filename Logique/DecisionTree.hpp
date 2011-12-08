@@ -16,6 +16,9 @@ namespace Logique {
 
 	class DecisionTree {
 	public:
+		typedef boost::array<float, Entity::ACTION_CONTAINER_SIZE> OutputArray;
+		typedef boost::array<float, 27> InputArray;
+
 		DecisionTree();
 
 		Entity::EntityAction computeAction(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
@@ -29,7 +32,9 @@ namespace Logique {
 	private:
 		void initInputArray(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right);
 		void initOutputArray(Entity::EntityAction val, float valBase, float valChoice);
-		std::size_t initInputArray(float* val, const Square& s);
+		std::size_t initInputArray(float* tab, const Square& s);
+		std::size_t initInputArray(float* tab, int val);
+
 		FANN::neural_net _ann;
 		boost::array<float, Entity::ACTION_CONTAINER_SIZE> _output;
 		boost::array<float, 27> _input;
