@@ -16,6 +16,9 @@ namespace Logique {
 
 	class DecisionTree {
 	public:
+		typedef boost::array<float, Entity::ACTION_CONTAINER_SIZE> OutputArray;
+		typedef boost::array<float, 27> InputArray;
+
 		DecisionTree();
 
 		Entity::EntityAction computeAction(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
