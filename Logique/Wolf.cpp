@@ -79,8 +79,8 @@ namespace Logique {
 		_tree.generateTree();
 	}
 
-
-	void Wolf::sendXp() {
+	void Wolf::sendXp() 
+	{
 		std::cout << "### Wolf start sending" << std::endl;
 		while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
@@ -91,24 +91,24 @@ namespace Logique {
 		_tree.generateTree();
 	}
 
-	Action Wolf::getNewAction() {
+	Action Wolf::getNewAction() 
+	{
 		EntityAction act = computeAction();
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 
 			if (_validScore(moy)) {
 				sendXp();
-				Logger log("Loup.csv");
 				_lastMoy = moy;
 				_tree.sendMoy(moy);
-				log.dump(_tree.getMoy());
 			}
 			reInitPerf();
 		}
 		return _actionArray[act];
 	}
 
-	void Wolf::eat(Board& board) {
+	void Wolf::eat(Board& board) 
+	{
 		if (isAlive() && _getSquare(_loc).hasSheep()) {
 			_lastAction = EAT;
 			_numberEat++;
@@ -124,8 +124,8 @@ namespace Logique {
 	}
 
 	void Wolf::reproduce(Board& board) {
-		if (isAlive() && _foodCount > _rep_limit && hasWolfNext() && _popEntity(_loc)) {
-			_numberRep++;
+		if (isAlive() && _foodCount > _rep_limit && hasWolfNext() && _popEntity(_loc) && _popEntity(_loc)) {
+			_numberRep += 2;
 			std::cout << "Wolf reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);

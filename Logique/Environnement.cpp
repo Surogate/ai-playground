@@ -315,8 +315,15 @@ namespace Logique {
 
 			++it;
 		}
+		totalSheep /= static_cast<float>(_entityNum[Square::SHEEP]);
+		totalWolf /= static_cast<float>(_entityNum[Square::WOLF]);
 
-		Callback_Environnement::getInstance().cb_sendMoy(totalSheep / static_cast<float>(_entityNum[Square::SHEEP]), totalWolf / static_cast<float>(_entityNum[Square::WOLF]));
+		Logger sheepLog("Mouton.csv");
+		sheepLog.dump(totalSheep);
+		Logger wolfLog("Loup.csv");
+		wolfLog.dump(totalWolf);
+
+		Callback_Environnement::getInstance().cb_sendMoy(totalSheep, totalWolf);
 	}
 
 	void Environnement::boardPlay() {

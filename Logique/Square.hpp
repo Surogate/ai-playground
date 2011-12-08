@@ -111,6 +111,19 @@ namespace Logique {
 			return value;
 		}
 
+		static inline int getIntmax()
+		{
+			int value = ODOUR_MAX;
+			value = value << 4;
+
+			value |= USEABLE_MASK;
+			value |= GRASS_MASK;
+			value |= SHEEP_MASK;
+			value |= WOLF_MASK;
+
+			return value;
+		}
+
 		inline void addOdour(unsigned int odour) {
 			_odour += odour;
 			if (_odour > ODOUR_MAX) {
