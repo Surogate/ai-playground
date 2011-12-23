@@ -18,13 +18,14 @@ namespace Logique {
 	public:
 		typedef boost::array<float, Entity::ACTION_CONTAINER_SIZE> OutputArray;
 		typedef boost::array<float, 27> InputArray;
+		typedef Entity::EntityAction ReturnValue;
 
 		DecisionTree();
 
-		Entity::EntityAction computeAction(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
-		void train(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, Entity::EntityAction result);
-		void trainNot(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, Entity::EntityAction result);
-		Entity::EntityAction randomAction();
+		ReturnValue computeAction(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
+		void train(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
+		void trainNot(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
+		ReturnValue randomAction();
 		const float& getMoy() const;
 		void sendMoy(float value);
 		void generateTree();
