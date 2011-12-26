@@ -9,16 +9,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Client2D.ViewWindow
+namespace ClientXNA.Views
 {
     /// <summary>
-    /// Interaction logic for SheepPopWindow.xaml
+    /// Interaction logic for Chart.xaml
     /// </summary>
-    public partial class SheepPopWindow : Window
+    public partial class Chart : UserControl
     {
-        public SheepPopWindow()
+        public Chart()
         {
             InitializeComponent();
         }
