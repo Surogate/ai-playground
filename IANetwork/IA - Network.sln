@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientXNA", "ClientXNA\Clie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientXNAContent", "ClientXNA\ClientXNAContent\ClientXNAContent.contentproj", "{7899C2DC-FC3E-48D6-B440-50059FB67ED6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client2D", "Client2D\Client2D.csproj", "{CB728297-0A76-47B3-8E40-34240B6EFCCE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -45,16 +43,6 @@ Global
 		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Release|Win32.ActiveCfg = Release|x86
 		{7899C2DC-FC3E-48D6-B440-50059FB67ED6}.Release|x86.ActiveCfg = Release|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Debug|Win32.ActiveCfg = Debug|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Debug|x86.ActiveCfg = Debug|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Debug|x86.Build.0 = Debug|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Release|Mixed Platforms.Build.0 = Release|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Release|Win32.ActiveCfg = Release|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Release|x86.ActiveCfg = Release|x86
-		{CB728297-0A76-47B3-8E40-34240B6EFCCE}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

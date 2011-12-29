@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace Client2D.Utils
+namespace ClientXNA.ViewModels
 {
     public class BasicViewModel : INotifyPropertyChanged
     {

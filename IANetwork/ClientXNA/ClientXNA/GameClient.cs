@@ -12,6 +12,12 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Windows.Forms;
+using System.Windows.Forms.Integration;
+using System.Windows.Controls.DataVisualization.Charting;
+
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace ClientXNA
 {
@@ -27,6 +33,9 @@ namespace ClientXNA
             public byte[] buffer = new byte[BUFFER_SIZE];
         }
 
+        #region Constants
+        private const int TIME_TO_WAIT = 10000;
+        #endregion
 
         #region Utils
         private delegate void Command(GameClient gcl, string message);
@@ -41,10 +50,34 @@ namespace ClientXNA
         private List<string> incoming_packages_;
         private Command[] commands_ = {new Command(spawn), new Command(move), new Command(eat)
                                     , new Command(die) , new Command(starving) , new Command(clone)
-                                    , new Command(board_beg) , new Command(board) , new Command(board_end)};
+                                    , new Command(board_beg) , new Command(board) , new Command(board_end), new Command(perf)};
         private Board board_ = null;
         private Hashtable entities_ = null;
-        private GUI console_;
+        private int sheepNumber_;
+        private int wolfNumber_;
+        private float sheepLastPerf_;
+        private float wolfLastPerf_;
+        private int elaspedTime_ = 0;
+        private int chartTime_ = 0;
+        #endregion
+
+        #region WPF
+
+        #region Host
+        private ElementHost controlBar_;
+        private ElementHost chartHost_;
+        #endregion
+
+        #region Models
+        ViewModels.ChartsViewModel chartsModels_;
+        #endregion
+
+        #region Views
+        private Views.ControlBar vControlBar_;
+        private Views.Chart vChart_;
+        #endregion
+
+        int cdView = 0;
         #endregion
 
         public GameClient()
@@ -57,6 +90,7 @@ namespace ClientXNA
             incoming_packages_ = new List<string>();
             camera_ = new Vector2();
             entities_ = new Hashtable();
+            chartsModels_ = new ViewModels.ChartsViewModel();
         }
 
         #region OverrideMethods
@@ -70,10 +104,76 @@ namespace ClientXNA
         {
             // TODO: Add your initialization logic here
             //StartRecv();
-            console_ = new GUI() { Visible = true, Width = 1024, Height = 720, Font = Content.Load<SpriteFont>("Verdana") };
-            console_.Init(GraphicsDevice);
-            console_.ConnectTo = new GUI.Connect(ConnectTo);
+            vControlBar_ = new Views.ControlBar();
+            vControlBar_.Connect.Click += new System.Windows.RoutedEventHandler(Connect_Click);
+            vControlBar_.CloseChart.Click += new System.Windows.RoutedEventHandler(CloseChart_Click);
+            vControlBar_.ChartPopW.Click += new System.Windows.RoutedEventHandler(ChartPopW_Click);
+            vControlBar_.ChartPopS.Click += new System.Windows.RoutedEventHandler(ChartPopS_Click);
+            vControlBar_.ChartPerfW.Click += new System.Windows.RoutedEventHandler(ChartPrefW_Click);
+            vControlBar_.ChartPerfS.Click += new System.Windows.RoutedEventHandler(ChartPerfS_Click);
+
+            // View LineSeries....
+            vChart_ = new Views.Chart();
+            vChart_.DataContext = chartsModels_;
+
+            controlBar_ = new ElementHost();
+            controlBar_.Size = new System.Drawing.Size(GraphicsDevice.Viewport.Width, 40);
+            controlBar_.Child = vControlBar_;
+            Control.FromHandle(Window.Handle).Controls.Add(controlBar_);
+            chartHost_ = new ElementHost();
+            chartHost_.Location = new System.Drawing.Point(0, 40);
+            chartHost_.Size = new System.Drawing.Size(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height - 40);
+            chartHost_.Child = vChart_;
+            //Control.FromHandle(Window.Handle).Controls.Add(chartHost_);
+            //Control.FromHandle(Window.Handle).Controls.Remove(chartHost_);
             base.Initialize();
+        }
+
+        void ChartPerfS_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (Control.FromHandle(Window.Handle).Controls.Contains(chartHost_))
+                Control.FromHandle(Window.Handle).Controls.Remove(chartHost_);
+            vChart_.chart.Title = "Sheep Performances";
+            vChart_.line.ItemsSource = chartsModels_.SheepPerformances;
+            Control.FromHandle(Window.Handle).Controls.Add(chartHost_);
+        }
+
+        void ChartPrefW_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (Control.FromHandle(Window.Handle).Controls.Contains(chartHost_))
+                Control.FromHandle(Window.Handle).Controls.Remove(chartHost_);
+            vChart_.chart.Title = "Wolf Performances";
+            vChart_.line.ItemsSource = chartsModels_.WolfPerformances;
+            Control.FromHandle(Window.Handle).Controls.Add(chartHost_);
+        }
+
+        void CloseChart_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (Control.FromHandle(Window.Handle).Controls.Contains(chartHost_))
+                Control.FromHandle(Window.Handle).Controls.Remove(chartHost_);
+        }
+
+        void ChartPopS_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (Control.FromHandle(Window.Handle).Controls.Contains(chartHost_))
+                Control.FromHandle(Window.Handle).Controls.Remove(chartHost_);
+            vChart_.chart.Title = "Sheep Population";
+            vChart_.line.ItemsSource = chartsModels_.SheepPopulation;
+            Control.FromHandle(Window.Handle).Controls.Add(chartHost_);
+        }
+
+        void ChartPopW_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (Control.FromHandle(Window.Handle).Controls.Contains(chartHost_))
+                Control.FromHandle(Window.Handle).Controls.Remove(chartHost_);
+            vChart_.chart.Title = "Wolf Population";
+            vChart_.line.ItemsSource = chartsModels_.WolfPopulation;
+            Control.FromHandle(Window.Handle).Controls.Add(chartHost_);
+        }
+
+        void Connect_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ConnectTo(vControlBar_.Address.Text, vControlBar_.Port.Text);
         }
 
         /// <summary>
@@ -104,27 +204,77 @@ namespace ClientXNA
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
                 this.Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.F1))
-                console_.Visible = true;
-            if (Keyboard.GetState().IsKeyDown(Keys.F2))
-                console_.Visible = false;
+
+            #region UIControl
+            if (vControlBar_.Address.IsFocused)
+            {
+                cdView--;
+                if (cdView < 0)
+                    cdView = 5;
+                if (cdView == 0)
+                {
+                    foreach (Keys key in Keyboard.GetState().GetPressedKeys())
+                    {
+                        if (key >= Keys.D0 && key <= Keys.D9 || key.ToString().Length == 1 || key == Keys.Decimal || key == Keys.OemPeriod)
+                            if (key == Keys.Decimal || key == Keys.OemPeriod)
+                                vControlBar_.Address.Text += '.';
+                            else
+                                vControlBar_.Address.Text += (char)key;
+                    }
+                }
+            }
+            if (vControlBar_.Port.IsFocused)
+            {
+                cdView--;
+                if (cdView < 0)
+                    cdView = 5;
+                if (cdView == 0)
+                {
+                    foreach (Keys key in Keyboard.GetState().GetPressedKeys())
+                    {
+                        if (key >= Keys.D0 && key <= Keys.D9 || key.ToString().Length == 1 || key == Keys.Decimal || key == Keys.OemPeriod)
+                            if (key == Keys.Decimal || key == Keys.OemPeriod)
+                                vControlBar_.Port.Text += '.';
+                            else
+                                vControlBar_.Port.Text += (char)key;
+                    }
+                }
+            }
+            #endregion
+
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= 120)
                     camera_.X+=2;
                 else if (Mouse.GetState().X >= (this.graphics.PreferredBackBufferWidth - 120) && Mouse.GetState().X <= this.graphics.PreferredBackBufferWidth)
                     camera_.X-=2;
-                if (Mouse.GetState().Y >= 0 && Mouse.GetState().Y <= 80)
+                if (Mouse.GetState().Y >= 41 && Mouse.GetState().Y <= 100)
                     camera_.Y+=2;
                 else if (Mouse.GetState().Y >= (this.graphics.PreferredBackBufferHeight - 80) && Mouse.GetState().Y <= this.graphics.PreferredBackBufferHeight)
                     camera_.Y-=2;
             }
-            // TODO: Add your update logic here
+
+            #region ChartsUpdate
+            if (client_ != null && client_.Connected)
+                elaspedTime_ += gameTime.ElapsedGameTime.Milliseconds;
+            if (elaspedTime_ > TIME_TO_WAIT)
+            {
+                chartTime_ += TIME_TO_WAIT / 1000;
+                chartsModels_.WolfPopulation.Add(new ViewModels.ChartsViewModel.ChartModel() { Time = chartTime_, Value = wolfNumber_ });
+                chartsModels_.SheepPopulation.Add(new ViewModels.ChartsViewModel.ChartModel() { Time = chartTime_, Value = sheepNumber_ });
+                chartsModels_.WolfPerformances.Add(new ViewModels.ChartsViewModel.ChartModel() { Time = chartTime_, Value = wolfLastPerf_ });
+                chartsModels_.SheepPerformances.Add(new ViewModels.ChartsViewModel.ChartModel() { Time = chartTime_, Value = sheepLastPerf_ });
+                elaspedTime_ = 0;
+            }
+            #endregion
+
+            #region ManagingPackage
             lock (incoming_packages_)
             {
                 while (incoming_packages_.Count > 0)
@@ -147,6 +297,8 @@ namespace ClientXNA
                     incoming_packages_.RemoveAt(0);
                 }
             }
+            #endregion
+
             lock (entities_)
             {
                 IDictionaryEnumerator it = entities_.GetEnumerator();
@@ -155,8 +307,6 @@ namespace ClientXNA
                     ((Entity)it.Value).Update(gameTime);
                 }
             }
-            if (console_.Visible)
-                console_.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -188,8 +338,6 @@ namespace ClientXNA
                     ((Entity)it.Value).Draw(spriteBatch, camera_);
                 }
             }
-            if (console_.Visible)
-                console_.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -200,14 +348,27 @@ namespace ClientXNA
         {
             try
             {
+                if (client_ != null)
+                {
+                    client_.Close();
+                }
                 client_ = new TcpClient(host, Int32.Parse(port));
-                console_.SheepNumberALive = 0;
-                console_.SheepNumberDeath = 0;
-                console_.WolfNumberALive = 0;
-                console_.WolfNumberDeath = 0;
                 incoming_packages_.Clear();
                 entities_.Clear();
                 StartRecv();
+                sheepNumber_ = 0;
+                wolfNumber_ = 0;
+                sheepLastPerf_ = 0;
+                wolfLastPerf_ = 0;
+                chartsModels_.WolfPopulation = new System.Collections.Concurrent.ConcurrentBag<ViewModels.ChartsViewModel.ChartModel>();
+                chartsModels_.WolfPerformances = new System.Collections.Concurrent.ConcurrentBag<ViewModels.ChartsViewModel.ChartModel>();
+                chartsModels_.SheepPopulation = new System.Collections.Concurrent.ConcurrentBag<ViewModels.ChartsViewModel.ChartModel>();
+                chartsModels_.SheepPerformances = new System.Collections.Concurrent.ConcurrentBag<ViewModels.ChartsViewModel.ChartModel>();
+                chartsModels_.WolfPopulation.Add(new ViewModels.ChartsViewModel.ChartModel() { Time = 0, Value = 0 });
+                chartsModels_.WolfPerformances.Add(new ViewModels.ChartsViewModel.ChartModel() { Time = 0, Value = 0 });
+                chartsModels_.SheepPopulation.Add(new ViewModels.ChartsViewModel.ChartModel() { Time = 0, Value = 0 });
+                chartsModels_.SheepPerformances.Add(new ViewModels.ChartsViewModel.ChartModel() { Time = 0, Value = 0 });
+                chartTime_ = 0;
             }
             catch (Exception e)
             {
@@ -274,12 +435,12 @@ namespace ClientXNA
                     if (type == "s")
                     {
                         gcl.entities_.Add(id, new Sheep(new Vector2(y, x), gcl.Content.Load<Texture2D>("sheep")));
-                        gcl.console_.SheepNumberALive = gcl.console_.SheepNumberALive + 1;
+                        gcl.sheepNumber_++;
                     }
                     else
                     {
                         gcl.entities_.Add(id, new Wolf(new Vector2(y, x), gcl.Content.Load<Texture2D>("wolf")));
-                        gcl.console_.WolfNumberALive = gcl.console_.WolfNumberALive + 1;
+                        gcl.wolfNumber_++;
                     }
                 }
             }
@@ -325,13 +486,11 @@ namespace ClientXNA
                     int id = int.Parse(msg);
                     if (gcl.entities_[id] is Sheep)
                     {
-                        gcl.console_.SheepNumberDeath = gcl.console_.SheepNumberDeath + 1;
-                        gcl.console_.SheepNumberALive = gcl.console_.SheepNumberALive - 1;
+                        gcl.sheepNumber_--;
                     }
                     if (gcl.entities_[id] is Wolf)
                     {
-                        gcl.console_.WolfNumberDeath = gcl.console_.WolfNumberDeath + 1;
-                        gcl.console_.WolfNumberALive = gcl.console_.WolfNumberALive - 1;
+                        gcl.wolfNumber_--;
                     }
                     gcl.entities_.Remove(id);
                 }
@@ -407,6 +566,26 @@ namespace ClientXNA
         private static void board_end(GameClient gcl, string msg)
         {
             return;
+        }
+
+        private static void perf(GameClient gcl, string msg)
+        {
+            msg = msg.Replace('.', ',');
+            string[] tokens = msg.Split(new char[] { ';' });
+            if (tokens.Count() < 0)
+                return;
+            try
+            {
+                float sheep = float.Parse(tokens[0]);
+                float wolf = float.Parse(tokens[1]);
+                gcl.sheepLastPerf_ = sheep;
+                gcl.wolfLastPerf_ = wolf;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
         }
 
         #endregion

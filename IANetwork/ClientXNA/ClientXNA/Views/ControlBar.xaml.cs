@@ -9,16 +9,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Client2D.ViewWindow
+namespace ClientXNA.Views
 {
     /// <summary>
-    /// Interaction logic for SheepPerfWindow.xaml
+    /// Interaction logic for ControlBar.xaml
     /// </summary>
-    public partial class SheepPerfWindow : Window
+    public partial class ControlBar : UserControl
     {
-        public SheepPerfWindow()
+        public ControlBar()
         {
             InitializeComponent();
         }

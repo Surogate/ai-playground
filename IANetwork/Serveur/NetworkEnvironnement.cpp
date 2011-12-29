@@ -10,6 +10,7 @@ namespace Wrapper
 	NetworkEnvironnement::NetworkEnvironnement(Networking::Server * server) : env_(), server_(server)
 	{
 		server_->setSynchronize(boost::bind(&NetworkEnvironnement::synchronize, this, _1));
+		// Still working don't do any change.
 		env_.setSpawnSheep(boost::bind(&NetworkEnvironnement::onSpawnSheep, this, _1));
 		env_.setSpawnWolf(boost::bind(&NetworkEnvironnement::onSpawnWolf, this, _1));
 		env_.setOnEntityMove(boost::bind(&NetworkEnvironnement::onEntityMove, this, _1));
@@ -17,6 +18,8 @@ namespace Wrapper
 		env_.setOnEntityEat(boost::bind(&NetworkEnvironnement::onEntityEat, this, _1));
 		env_.setOnEntityDead(boost::bind(&NetworkEnvironnement::onEntityDead, this, _1));
 		env_.setOnBoardChange(boost::bind(&NetworkEnvironnement::onBoardChange, this, _1));
+		// Last maj you can do that.
+		Logique::Callback_Environnement::getInstance().setSendMoy(boost::bind(&NetworkEnvironnement::onSendMoy, this, _1, _2));
 		boost::thread env_thr(boost::bind(&Logique::Environnement::run, &env_));
 	}
 
@@ -134,5 +137,15 @@ namespace Wrapper
 		packages.push_back(Networking::Server::Package_ptr(end));
 		server_->add_sending_packages(packages);
 		const_cast<Logique::Board&>(board).unlock();
+	}
+
+	void NetworkEnvironnement::onSendMoy(const float& sheep, const float& wolf)
+	{
+		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
+
+		std::stringstream sstream;
+		sstream << PERF << ";" <<  sheep << ";" << wolf;
+		package->init(sstream.str());
+		server_->add_sending_package(package);
 	}
 }
