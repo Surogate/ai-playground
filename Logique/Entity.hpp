@@ -12,6 +12,8 @@
 #include "Action.hpp"
 #include "Coord.hpp"
 #include "Square.hpp"
+#include "ActionStore.hpp"
+#include "EntityConstant.hpp"
 
 namespace Logique  {
 
@@ -19,26 +21,6 @@ namespace Logique  {
 
 	class Entity : public boost::enable_shared_from_this<Entity> {
 	public:
-		enum Constant{
-			BASEFOODTIME = 12,
-			BASEFOODDECREASE = 1,
-			FOOD_MAX = 15,
-			FOOD_REP_LIMIT_START = 16,
-			FOOD_REP_LIMIT_END = 7,
-			MOVE_TIME = 2
-		};
-
-		enum EntityAction {
-			MOVE_UP,
-			MOVE_DOWN,
-			MOVE_LEFT,
-			MOVE_RIGHT,
-			EAT,
-			REPRODUCE,
-			WAIT,
-			ACTION_CONTAINER_SIZE
-		};
-
 		typedef boost::shared_ptr<Entity> Ptr;
 		typedef boost::function< void (const Action&) > ActionFunctor;
 		typedef boost::function< void (Entity&) > EntityFunctor;
@@ -99,22 +81,6 @@ namespace Logique  {
 		void dumpType();
 
 		float computeMoy() const;
-		
-		struct ActionStore {
-			unsigned int foodcount;
-			Square present;
-			Square up;
-			Square left;
-			Square down;
-			Square right;
-
-			EntityAction result;
-			EntityAction last;
-
-			ActionStore(unsigned int foodcount, const Square& _present_, const Square& _up_, const Square& _left_, const Square& _down_, const Square& _right_, EntityAction _result_, EntityAction _last_)
-				: present (_present_), up(_up_), left(_left_), down(_down_), right(_right_), result(_result_), last(_last_)
-			{}
-		};
 
 		typedef std::stack< ActionStore > ActionStoreStack;
 
@@ -139,6 +105,7 @@ namespace Logique  {
 		unsigned int _foodCount;
 		float _lastMoy;
 		EntityAction _lastAction;
+		DecisionTree::ReturnValue _lastCompute;
 
 	private:
 		bool moveToThisLocation(Board& board, const Coord& newLoc);

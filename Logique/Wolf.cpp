@@ -28,55 +28,56 @@ namespace Logique {
 		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, shared_from_this(), boost::ref(board)));
 	}
 
-	Entity::EntityAction Wolf::computeAction() 
+	EntityAction Wolf::computeAction() 
 	{
-		EntityAction act = _tree.computeAction(_foodCount, _lastAction, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT));
-		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), act, _lastAction));
+		DecisionTree::ReturnValue result = _tree.computeAction(_foodCount, _lastCompute, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT)); 
+		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), _lastCompute, result));
+		_lastCompute = result;
 		_actual++;
-		return act;
+		return _tree.getValue(result);
 	}
 
 	void Wolf::initExp() 
 	{
-		Square present;
-		present.hasSheep(reinterpret_cast<Logique::Entity*>(1));
-		Square other;
-		other.hasGrass(true);
+		//Square present;
+		//present.hasSheep(reinterpret_cast<Logique::Entity*>(1));
+		//Square other;
+		//other.hasGrass(true);
 
-		_tree.train(0, _tree.randomAction(), present, other, other, other, other, EAT);
-		other.hasGrass(false);
-		_tree.train(1, _tree.randomAction(), present, other, other, other, other, EAT);
-		other.hasSheep(0);
-		_tree.train(2, _tree.randomAction(), present, other, other, other, other, EAT);
-		other.hasSheep(reinterpret_cast<Logique::Entity*>(1));
-		_tree.train(3, _tree.randomAction(), present, 0, other, other, other, EAT);
-		other.addOdour(1);
-		_tree.train(4, _tree.randomAction(), present, other, 0, other, other, EAT);
-		other.addOdour(1);
-		_tree.train(5, _tree.randomAction(), present, other, other, other, 0, EAT);
-		other.addOdour(1);
-		_tree.train(6, _tree.randomAction(), present, other, other, 0, other, EAT);
-		other.addOdour(1);
-		other.hasGrass(true);
-		_tree.train(7, _tree.randomAction(), present, 0, other, other, 0, EAT);
-		other.addOdour(1);
-		_tree.train(8, _tree.randomAction(), present, other, other, other, other, EAT);
-		other.addOdour(10);
-		_tree.train(9, _tree.randomAction(), present, other, 0, 0, other, EAT);
+		//_tree.train(0, _tree.randomAction(), present, other, other, other, other, EAT);
+		//other.hasGrass(false);
+		//_tree.train(1, _tree.randomAction(), present, other, other, other, other, EAT);
+		//other.hasSheep(0);
+		//_tree.train(2, _tree.randomAction(), present, other, other, other, other, EAT);
+		//other.hasSheep(reinterpret_cast<Logique::Entity*>(1));
+		//_tree.train(3, _tree.randomAction(), present, 0, other, other, other, EAT);
+		//other.addOdour(1);
+		//_tree.train(4, _tree.randomAction(), present, other, 0, other, other, EAT);
+		//other.addOdour(1);
+		//_tree.train(5, _tree.randomAction(), present, other, other, other, 0, EAT);
+		//other.addOdour(1);
+		//_tree.train(6, _tree.randomAction(), present, other, other, 0, other, EAT);
+		//other.addOdour(1);
+		//other.hasGrass(true);
+		//_tree.train(7, _tree.randomAction(), present, 0, other, other, 0, EAT);
+		//other.addOdour(1);
+		//_tree.train(8, _tree.randomAction(), present, other, other, other, other, EAT);
+		//other.addOdour(10);
+		//_tree.train(9, _tree.randomAction(), present, other, 0, 0, other, EAT);
 
-		other.hasWolf(reinterpret_cast<Entity*>(1));
-		present.hasSheep(0);
-		_tree.train(13, _tree.randomAction(), present, other, 0, 0, 0, REPRODUCE);
-		_tree.train(14, _tree.randomAction(), present, 0, other, 0, 0, REPRODUCE);
-		_tree.train(15, _tree.randomAction(), present, 0, 0, 0, other, REPRODUCE);
+		//other.hasWolf(reinterpret_cast<Entity*>(1));
+		//present.hasSheep(0);
+		//_tree.train(13, _tree.randomAction(), present, other, 0, 0, 0, REPRODUCE);
+		//_tree.train(14, _tree.randomAction(), present, 0, other, 0, 0, REPRODUCE);
+		//_tree.train(15, _tree.randomAction(), present, 0, 0, 0, other, REPRODUCE);
 
-		other.hasWolf(reinterpret_cast<Entity*>(1));
-		present.hasSheep(reinterpret_cast<Entity*>(1));
-		_tree.train(15, _tree.randomAction(), present, 0, other, 0, 0, REPRODUCE);
-		_tree.train(14, _tree.randomAction(), present, 0, 0, 0, other, REPRODUCE);
-		_tree.train(13, _tree.randomAction(), present, 0, 0, other, 0, REPRODUCE);
+		//other.hasWolf(reinterpret_cast<Entity*>(1));
+		//present.hasSheep(reinterpret_cast<Entity*>(1));
+		//_tree.train(15, _tree.randomAction(), present, 0, other, 0, 0, REPRODUCE);
+		//_tree.train(14, _tree.randomAction(), present, 0, 0, 0, other, REPRODUCE);
+		//_tree.train(13, _tree.randomAction(), present, 0, 0, other, 0, REPRODUCE);
 
-		_tree.generateTree();
+		//_tree.generateTree();
 	}
 
 	void Wolf::sendXp() 

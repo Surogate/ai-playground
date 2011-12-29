@@ -103,11 +103,13 @@
     <ClInclude Include="..\..\AITest\TreeBuilders.hpp" />
     <ClInclude Include="..\..\AITest\TypedTree.hpp" />
     <ClInclude Include="..\..\Logique\Action.hpp" />
+    <ClInclude Include="..\..\Logique\ActionStore.hpp" />
     <ClInclude Include="..\..\Logique\Board.hpp" />
     <ClInclude Include="..\..\Logique\Callback_Environnement.hpp" />
     <ClInclude Include="..\..\Logique\Coord.hpp" />
     <ClInclude Include="..\..\Logique\DecisionTree.hpp" />
     <ClInclude Include="..\..\Logique\Entity.hpp" />
+    <ClInclude Include="..\..\Logique\EntityConstant.hpp" />
     <ClInclude Include="..\..\Logique\Environnement.hpp" />
     <ClInclude Include="..\..\Logique\Logger.hpp" />
     <ClInclude Include="..\..\Logique\Sheep.hpp" />

@@ -134,5 +134,11 @@
     <ClInclude Include="..\..\AITest\TypedTree.hpp">
       <Filter>Header Files\Logique</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Logique\ActionStore.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Logique\EntityConstant.hpp">
+      <Filter>Header Files\Logique</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

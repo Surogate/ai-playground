@@ -117,8 +117,6 @@ namespace Logique {
 	void Entity::goUp(Board& board) {
 		if (isAlive() && _loc.x > 0) {
 			_lastAction = MOVE_UP;
-			//dumpType();
-			//std::cout << " move up" << std::endl;
 			Coord newLoc(_loc.x - 1, _loc.y);
 			moveToThisLocation(board, newLoc);
 		}
@@ -176,7 +174,7 @@ namespace Logique {
 		if (isAlive()) _add_action(getNewAction());
 	}
 
-	Entity::EntityAction Entity::getLastAction() const {
+	Logique::EntityAction Entity::getLastAction() const {
 		return _lastAction;
 	}
 
