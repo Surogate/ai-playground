@@ -8,37 +8,45 @@
 #include "ID3Class.hpp"
 #include "fann.h"
 #include "fann_cpp.h"
-
-#include "Entity.hpp"
 #include "Square.hpp"
+#include "EntityConstant.hpp"
 
 namespace Logique {
 
 	class DecisionTree {
 	public:
-		typedef boost::array<float, Entity::ACTION_CONTAINER_SIZE> OutputArray;
-		typedef boost::array<float, 27> InputArray;
-		typedef Entity::EntityAction ReturnValue;
+		enum {
+			INPUTFOODSIZE = 1,
+			INPUTLASTACTIONSIZE = ACTION_CONTAINER_SIZE,
+			SQUAREEXPANDSIZE = 5,
+			SQUAREINTSIZE = 1,
+			INPUTSIZE = INPUTFOODSIZE + INPUTLASTACTIONSIZE + 5 * SQUAREEXPANDSIZE
+		};
+
+		typedef boost::array<float, ACTION_CONTAINER_SIZE> OutputArray;
+		typedef boost::array<float, INPUTSIZE> InputArray;
+		typedef OutputArray ReturnValue;
 
 		DecisionTree();
 
-		ReturnValue computeAction(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
-		void train(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
-		void trainNot(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
-		ReturnValue randomAction();
+		ReturnValue computeAction(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
+		void train(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
+		void trainNot(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
 		const float& getMoy() const;
 		void sendMoy(float value);
 		void generateTree();
+		EntityAction randomAction();
+		EntityAction getValue(const ReturnValue& ret);
 
 	private:
-		void initInputArray(unsigned int foodcount, Entity::EntityAction lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right);
-		void initOutputArray(Entity::EntityAction val, float valBase, float valChoice);
-		std::size_t initInputArray(float* tab, const Square& s);
-		std::size_t initInputArray(float* tab, int val);
+		void initInputArray(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right);
+		std::size_t initArray(float* tab, const Square& s);
+		std::size_t initArray(float* tab, int val);
+		std::size_t initArray(float* tab, const ReturnValue& val);
 
 		FANN::neural_net _ann;
-		boost::array<float, Entity::ACTION_CONTAINER_SIZE> _output;
-		boost::array<float, 27> _input;
+		OutputArray _output;
+		InputArray _input;
 
 		float _moyenne;
 		boost::random::random_device _randomD;

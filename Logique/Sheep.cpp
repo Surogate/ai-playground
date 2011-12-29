@@ -29,11 +29,12 @@ namespace Logique {
 		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, shared_from_this(), boost::ref(board)));
 	}
 
-	Entity::EntityAction Sheep::computeAction() {
-		EntityAction act = _tree.computeAction(_foodCount, _lastAction, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT)); 
-		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), act, _lastAction));
+	EntityAction Sheep::computeAction() {
+		DecisionTree::ReturnValue result = _tree.computeAction(_foodCount, _lastCompute, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT)); 
+		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), _lastCompute, result));
+		_lastCompute = result;
 		_actual++;
-		return act;
+		return _tree.getValue(result);
 	}
 
 	void Sheep::sendXp() {
@@ -49,33 +50,33 @@ namespace Logique {
 	}
 
 	void Sheep::initExp() {
-		Square present;
-		present.hasGrass(true);
-		Square other;
-		Square other2;
-		other.hasGrass(true);
+		//Square present;
+		//present.hasGrass(true);
+		//Square other;
+		//Square other2;
+		//other.hasGrass(true);
 
-		_tree.train(1, _tree.randomAction(), present, other, other, other, other, EAT);
-		_tree.train(5, _tree.randomAction(), present, other, other, other, other, EAT);
-		_tree.train(6, _tree.randomAction(), present, other, other, other, other, EAT);
-		other.hasGrass(false);
-		_tree.train(2, _tree.randomAction(), present, other, other, other, other, EAT);
-		_tree.train(3, _tree.randomAction(), present, other, other, other, other, EAT);
-		_tree.train(4, _tree.randomAction(), present, other, other, other, other, EAT);
+		//_tree.train(1, _tree.randomAction(), present, other, other, other, other, EAT);
+		//_tree.train(5, _tree.randomAction(), present, other, other, other, other, EAT);
+		//_tree.train(6, _tree.randomAction(), present, other, other, other, other, EAT);
+		//other.hasGrass(false);
+		//_tree.train(2, _tree.randomAction(), present, other, other, other, other, EAT);
+		//_tree.train(3, _tree.randomAction(), present, other, other, other, other, EAT);
+		//_tree.train(4, _tree.randomAction(), present, other, other, other, other, EAT);
 
-		other.hasSheep(reinterpret_cast<Entity*>(1));
+		//other.hasSheep(reinterpret_cast<Entity*>(1));
 
-		_tree.train(7, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		_tree.train(8, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		_tree.train(9, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
+		//_tree.train(7, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
+		//_tree.train(8, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
+		//_tree.train(9, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
 
-		other2.hasSheep(reinterpret_cast<Entity*>(1));
+		//other2.hasSheep(reinterpret_cast<Entity*>(1));
 
-		_tree.train(7, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		_tree.train(8, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		_tree.train(9, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		
-		_tree.generateTree();
+		//_tree.train(7, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
+		//_tree.train(8, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
+		//_tree.train(9, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
+		//
+		//_tree.generateTree();
 	}
 
 	Action Sheep::getNewAction() {
