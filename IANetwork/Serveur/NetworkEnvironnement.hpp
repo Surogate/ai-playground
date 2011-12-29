@@ -18,7 +18,8 @@ namespace Wrapper
 			CLONE,
 			BOARD_BEG,
 			BOARD,
-			BOARD_END
+			BOARD_END,
+			PERF
 		};
 
 		NetworkEnvironnement(Networking::Server * server);
@@ -36,6 +37,7 @@ namespace Wrapper
 		void onEntityDead(Logique::Entity const &);
 		void onReproduce(Logique::Entity const &);
 		void onBoardChange(Logique::Board const &);
+		void onSendMoy(const float& sheep, const float& wolf);
 	};
 }
 
