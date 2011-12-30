@@ -24,11 +24,12 @@ namespace Logique {
 			SQUAREINTSIZE = 1,
 			INPUTSIZE = INPUTFOODSIZE + INPUTLASTACTIONSIZE + 5 * SQUAREEXPANDSIZE + 8 * SQUAREINTSIZE,
 			OUTPUTSIZE = ACTION_CONTAINER_SIZE,
-			HIDDENSIZE = INPUTSIZE,
-			LAYERNUM = 3
+			HIDDENSIZE = INPUTSIZE / 2,
+			LAYERNUM = 4
 		};
 
 		static const float DECISIONSTEP;
+		static const float TRAINSTEP;
 
 		typedef boost::array<float, OUTPUTSIZE> OutputArray;
 		typedef boost::array<float, INPUTSIZE> InputArray;

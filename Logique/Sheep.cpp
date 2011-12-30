@@ -16,11 +16,7 @@ namespace Logique {
 
 	Sheep::~Sheep()
 	{
-		while (_actionStack.size()) {
-			ActionStore& top = _actionStack.top();
-			_tree.trainNot(top);
-			_actionStack.pop();
-		}
+		sendXpNot();
 	}
 
 	void Sheep::initActionArray(Board& board) {
@@ -42,9 +38,17 @@ namespace Logique {
 
 	void Sheep::sendXp() {
 		while (_actionStack.size()) {
-					ActionStore& top = _actionStack.top();
-					_tree.train(top);		
+					_tree.train(_actionStack.top());		
 					_actionStack.pop();
+		}
+
+		_tree.generateTree();
+	}
+
+	void Sheep::sendXpNot() {
+		while (_actionStack.size()) {
+			_tree.trainNot(_actionStack.top());
+			_actionStack.pop();
 		}
 
 		_tree.generateTree();
@@ -85,11 +89,11 @@ namespace Logique {
 
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
-			
+			_lastMoy = moy;
 			if (_validScore(moy)) {
 				sendXp();
-				_lastMoy = moy;
-				_tree.sendMoy(moy);
+			} else if (moy == 0) {
+				sendXpNot();
 			}
 			reInitPerf();
 		}
