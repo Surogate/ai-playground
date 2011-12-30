@@ -50,18 +50,19 @@ namespace ClientXNA
             {
                 elapsedTime_ = 0;
                 x_frame_ = (x_frame_ < 3) ? (x_frame_ + 1) : (0);
-                if (Action == EntityAction.MOVE_UP)
-                    if (Position.Y > NextPosition.Y)
-                        position_.Y -= 0.1f;
-                if (Action == EntityAction.MOVE_DOWN)
-                    if (Position.Y < NextPosition.Y)
-                        position_.Y += 0.1f;
-                if (Action == EntityAction.MOVE_LEFT)
-                    if (Position.X > NextPosition.X)
-                        position_.X -= 0.1f;
-                if (Action == EntityAction.MOVE_RIGHT)
-                    if (Position.X < NextPosition.X)
-                        position_.X += 0.1f;
+                //if (Action == EntityAction.MOVE_UP)
+                //    if (Position.Y > NextPosition.Y)
+                //        position_.Y -= 0.1f;
+                //if (Action == EntityAction.MOVE_DOWN)
+                //    if (Position.Y < NextPosition.Y)
+                //        position_.Y += 0.1f;
+                //if (Action == EntityAction.MOVE_LEFT)
+                //    if (Position.X > NextPosition.X)
+                //        position_.X -= 0.1f;
+                //if (Action == EntityAction.MOVE_RIGHT)
+                //    if (Position.X < NextPosition.X)
+                //        position_.X += 0.1f;
+                Position = NextPosition;
             }
             if (elapsedTimeR_ - gameTime.ElapsedGameTime.Milliseconds > 1000)
             {
