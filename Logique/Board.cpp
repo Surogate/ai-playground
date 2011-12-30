@@ -65,10 +65,10 @@ namespace Logique {
 	}
 
 	bool Board::coordValid(const Coord& pos) {
-		return (pos.x < BOARD_SIZE && pos.y < BOARD_SIZE);
+		return coordValid(pos.x, pos.y);
 	}
 
-	bool Board::coordValid(unsigned int x, unsigned int y) {
-		return (x < BOARD_SIZE && y < BOARD_SIZE);
+	bool Board::coordValid(int x, int y) {
+		return (x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE);
 	}
 }
