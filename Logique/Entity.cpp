@@ -107,51 +107,35 @@ namespace Logique {
 	void Entity::wait() {
 		if (isAlive())
 		{
-			//dumpType();
-			//std::cout << " wait" << std::endl;
 			_lastAction = WAIT;
 		}
 		generateNewAction();
 	}
 
 	void Entity::goUp(Board& board) {
-		if (isAlive() && _loc.x > 0) {
+		if (isAlive() && moveToThisLocation(board, board.getValidValue(_loc + Coord::UP))) {
 			_lastAction = MOVE_UP;
-			Coord newLoc(_loc.x - 1, _loc.y);
-			moveToThisLocation(board, newLoc);
 		}
 		generateNewAction();
 	}
 
 	void Entity::goLeft(Board& board) {
-		if (isAlive() && _loc.y > 0) {
+		if (isAlive() && moveToThisLocation(board, board.getValidValue(_loc + Coord::LEFT))) {
 			_lastAction = MOVE_LEFT;
-			//dumpType();
-			//std::cout << " move down" << std::endl;
-			Coord newLoc(_loc.x, _loc.y - 1);
-			moveToThisLocation(board, newLoc);
 		}
 		generateNewAction();
 	}
 
 	void Entity::goRight(Board& board) {
-		if (isAlive() && _loc.y < BOARD_SIZE - 1) {
+		if (isAlive() && moveToThisLocation(board, board.getValidValue(_loc + Coord::RIGHT))) {
 			_lastAction = MOVE_RIGHT;
-			//dumpType();
-			//std::cout << " move right" << std::endl;
-			Coord newLoc(_loc.x, _loc.y + 1);
-			moveToThisLocation(board, newLoc);
 		}
 		generateNewAction();
 	}
 
 	void Entity::goDown(Board& board) {
-		if (isAlive() && _loc.x < BOARD_SIZE - 1) {
+		if (isAlive() && moveToThisLocation(board, board.getValidValue(_loc + Coord::DOWN))) {
 			_lastAction = MOVE_DOWN;
-			//dumpType();
-			//std::cout << " move down" << std::endl;
-			Coord newLoc(_loc.x + 1, _loc.y);
-			moveToThisLocation(board, newLoc);
 		}
 		generateNewAction();
 	}
@@ -176,24 +160,6 @@ namespace Logique {
 
 	Logique::EntityAction Entity::getLastAction() const {
 		return _lastAction;
-	}
-
-	const Square& Entity::getSquareSup(Coord loc, const Coord& dir)
-	{
-		return _getSquare(loc + dir);
-	}
-
-	const Square& Entity::getSquareLess(Coord loc, const Coord& dir)
-	{
-		return _getSquare(loc - dir);
-	}
-
-	int Entity::getIntFromSup(Coord loc, const Coord& dir) {
-		return _getSquare(loc + dir).getInt();
-	}
-
-	int Entity::getIntFromLess(Coord loc, const Coord& dir) {
-		return _getSquare(loc - dir).getInt();
 	}
 
 	void Entity::reInitPerf() {

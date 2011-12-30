@@ -3,8 +3,6 @@
 
 namespace Logique {
 
-	
-
 	Board::Board() 
 		: boost::array< boost::array<Square, BOARD_SIZE >, BOARD_SIZE >(), _mtx(), _default()
 	{}
@@ -17,16 +15,24 @@ namespace Logique {
 		_mtx.unlock(); 
 	}
 
+	const Square& Board::get(int x, int y) const {
+		if (coordValid(x, y))
+			return at(x)[y];
+		return at(getValidValue(x))[getValidValue(y)];
+	}
+
+	Square& Board::get(int x, int y) {
+		if (coordValid(x, y))
+			return at(x)[y];
+		return at(getValidValue(x))[getValidValue(y)];
+	}
+
 	const Square& Board::get(const Coord& pos) const {
-		if (coordValid(pos))
-			return at(pos.x)[pos.y];
-		return _default;
+		return get(pos.x, pos.y);
 	}
 
 	Square& Board::get(const Coord& pos) { 
-		if (coordValid(pos))
-			return at(pos.x)[pos.y];
-		return _default;
+		return get(pos.x, pos.y);
 	}
 
 	const Square& Board::operator()(const Coord& pos) const { 
@@ -58,10 +64,24 @@ namespace Logique {
 	}
 
 	int Board::getSquare(const Coord& pos) const {
-		if (Board::coordValid(pos)) {
-			return get(pos).getInt();
+		return get(pos).getInt();
+	}
+
+	Coord Board::getValidValue(int x, int y) const {
+		return Coord(getValidValue(x), getValidValue(y));
+	}
+
+	Coord Board::getValidValue(const Coord& val) const {
+		return getValidValue(val.x, val.y);
+	}
+
+	int Board::getValidValue(int val) const {
+		if (val < 0)
+			return BOARD_SIZE + val;
+		else if (val >= BOARD_SIZE) {
+			return val % BOARD_SIZE;
 		}
-		return Square(false).getInt();
+		return val;
 	}
 
 	bool Board::coordValid(const Coord& pos) {

@@ -136,10 +136,10 @@ namespace Logique {
 	}
 
 	bool Wolf::hasWolfNext() {
-		int up = getIntFromLess(_loc, Coord::DOWN);
-		int left = getIntFromLess(_loc, Coord::RIGHT);
-		int down = getIntFromSup(_loc, Coord::DOWN);
-		int right = getIntFromSup(_loc, Coord::RIGHT);
+		int up = _getSquare(_loc + Coord::UP);
+		int left = _getSquare(_loc + Coord::LEFT);
+		int down = _getSquare(_loc + Coord::DOWN);
+		int right = _getSquare(_loc + Coord::RIGHT);
 		return (up & Square::WOLF_MASK) 
 			|| (left & Square::WOLF_MASK)
 			|| (down & Square::WOLF_MASK)

@@ -63,10 +63,6 @@ namespace Logique  {
 		virtual void reproduce(Board& board) = 0;
 		void generateNewAction();
 		EntityAction getLastAction() const;
-		const Square& getSquareSup(Coord loc, const Coord& dir);
-		const Square& getSquareLess(Coord loc, const Coord& dir);
-		int getIntFromSup(Coord loc, const Coord& dir); 
-		int getIntFromLess(Coord loc, const Coord& dir);
 		void reInitPerf();
 		void setFood(unsigned int value);
 		const float& getLastMoy() const;
