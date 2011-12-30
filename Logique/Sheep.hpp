@@ -30,6 +30,7 @@ namespace Logique {
 		static void initExp();
 
 		void sendXp();
+		void sendXpNot();
 
 		Action getNewAction();
 		unsigned int evaluate() const;

@@ -6,12 +6,13 @@
 namespace Logique {
 
 	const float DecisionTree::DECISIONSTEP = 0.2f;
+	const float DecisionTree::TRAINSTEP = 0.05f;
 
 	DecisionTree::DecisionTree() 
 		: _ann(), _moyenne(0.f)
 		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
 	{
-		_ann.create_standard(LAYERNUM, INPUTSIZE, HIDDENSIZE, OUTPUTSIZE);
+		_ann.create_standard(LAYERNUM, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
 		_ann.set_activation_function_hidden(FANN::SIGMOID_SYMMETRIC);
 		_ann.set_activation_function_output(FANN::SIGMOID_SYMMETRIC);
 		_ann.randomize_weights(0.3f, 0.7f);
@@ -70,10 +71,10 @@ namespace Logique {
 				choice = i;
 				maxChoice = value.result[i];
 			}
-			_output[i] -= 0.1f;
+			_output[i] -= TRAINSTEP;
 			++i;
 		}
-		_output[choice] += 0.2f;
+		_output[choice] += TRAINSTEP * 2;
 		_ann.train(_input.c_array(), _output.c_array());
 	}
 
@@ -89,10 +90,10 @@ namespace Logique {
 				choice = i;
 				maxChoice = _output[i];
 			}
-			_output[i] += 0.1f;
+			_output[i] += TRAINSTEP;
 			++i;
 		}
-		_output[choice] -= 0.2f;
+		_output[choice] -= TRAINSTEP * 2;
 		_ann.train(_input.c_array(), _output.c_array());
 	}
 

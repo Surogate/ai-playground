@@ -14,11 +14,7 @@ namespace Logique {
 
 	Wolf::~Wolf() 
 	{
-		while (_actionStack.size()) {
-			ActionStore& top = _actionStack.top();
-			_tree.trainNot(top);
-			_actionStack.pop();
-		}
+		sendXpNot();
 	}
 
 	void Wolf::initActionArray(Board& board) 
@@ -86,11 +82,17 @@ namespace Logique {
 	void Wolf::sendXp() 
 	{
 		while (_actionStack.size()) {
-					ActionStore& top = _actionStack.top();
-					_tree.train(top);
-					_actionStack.pop();
+			_tree.train(_actionStack.top());
+			_actionStack.pop();
 		}
 		_tree.generateTree();
+	}
+
+	void Wolf::sendXpNot() {
+		while (_actionStack.size()) {
+			_tree.trainNot(_actionStack.top());
+			_actionStack.pop();
+		}
 	}
 
 	Action Wolf::getNewAction() 
@@ -99,10 +101,12 @@ namespace Logique {
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 
+			_lastMoy = moy;
 			if (_validScore(moy)) {
-				sendXp();
-				_lastMoy = moy;
+				sendXp();	
 				_tree.sendMoy(moy);
+			} else if (moy == 0) {
+				sendXpNot();
 			}
 			reInitPerf();
 		}

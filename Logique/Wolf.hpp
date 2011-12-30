@@ -28,6 +28,7 @@ namespace Logique {
 
 		static void initExp();
 		void sendXp();
+		void sendXpNot();
 
 		EntityAction computeAction();
 		unsigned int evaluate() const;
