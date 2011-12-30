@@ -19,6 +19,9 @@ namespace Logique {
 		void lock();
 		void unlock();
 
+		const Square& get(int x, int y) const;
+		Square& get(int x, int y);
+
 		const Square& get(const Coord& pos) const;
 		Square& get(const Coord& pos);
 
@@ -26,6 +29,9 @@ namespace Logique {
 		Square& operator()(const Coord& pos);
 		
 		int getSquare(const Coord& pos) const;
+		Coord getValidValue(const Coord& val) const;
+		Coord getValidValue(int x, int y) const;
+		int getValidValue(int val) const;
 
 		void dump() const;
 		void dumpSheep() const;

@@ -16,13 +16,11 @@ namespace Logique {
 
 	Sheep::~Sheep()
 	{
-		std::cout << "@ send xp sheep death" <<  std::endl;
 		while (_actionStack.size()) {
 			ActionStore& top = _actionStack.top();
 			_tree.trainNot(top);
 			_actionStack.pop();
 		}
-		std::cout << "@ send xp sheep death" <<  std::endl;
 	}
 
 	void Sheep::initActionArray(Board& board) {
@@ -123,10 +121,10 @@ namespace Logique {
 	}
 
 	bool Sheep::hasSheepNext() {
-		int up = getIntFromLess(_loc, Coord::DOWN);
-		int left = getIntFromLess(_loc, Coord::RIGHT);
-		int down = getIntFromSup(_loc, Coord::DOWN);
-		int right = getIntFromSup(_loc, Coord::RIGHT);
+		int up = _getSquare(_loc + Coord::UP);
+		int left = _getSquare(_loc + Coord::LEFT);
+		int down = _getSquare(_loc + Coord::DOWN);
+		int right = _getSquare(_loc + Coord::RIGHT);
 		return (up & Square::SHEEP_MASK) 
 			|| (left & Square::SHEEP_MASK)
 			|| (down & Square::SHEEP_MASK)

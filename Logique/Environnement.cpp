@@ -177,10 +177,9 @@ namespace Logique {
 
 		for (int x = loc.x - 1; x <= loc.x + 1 && !found; ++x) {
 			for (int y = loc.y - 1; y <= loc.y + 1 && !found; ++y) {
-				found = Board::coordValid(x, y) && !_board[x][y].hasSheep();
+				found = !_board.get(x, y).hasSheep();
 				if (found) {
-					locFound.x = x;
-					locFound.y = y;
+					locFound = _board.getValidValue(x, y);
 				}
 			}
 		}
@@ -195,10 +194,9 @@ namespace Logique {
 
 		for (int x = loc.x - 1; x <= loc.x + 1 && !found; ++x) {
 			for (int y = loc.x - 1; y <= loc.y + 1 && !found; ++y) {
-				found = Board::coordValid(x, y) && !_board[x][y].hasWolf();
+				found = !_board.get(x, y).hasWolf();
 				if (found) {
-					locFound.x = x;
-					locFound.y = y;
+					locFound = _board.getValidValue(x, y);
 				}
 			}
 		}
@@ -436,9 +434,7 @@ namespace Logique {
 	}
 
 	void Environnement::addOdour(int x, int y, unsigned int value) {
-		if (x >= 0 && x < BOARD_SIZE  && y >= 0 && y < BOARD_SIZE ) {
-			_board[x][y].addOdour(value);
-		}
+		_board.get(x, y).addOdour(value);
 	}
 
 
