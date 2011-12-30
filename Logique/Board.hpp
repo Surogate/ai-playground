@@ -31,7 +31,7 @@ namespace Logique {
 		void dumpSheep() const;
 
 		static bool coordValid(const Coord& pos);
-		static bool coordValid(unsigned int x, unsigned int y);
+		static bool coordValid(int x, int y);
 	private:
 		boost::mutex _mtx;
 		Square _default;

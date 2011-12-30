@@ -20,18 +20,36 @@ namespace Logique {
 			INPUTLASTACTIONSIZE = ACTION_CONTAINER_SIZE,
 			SQUAREEXPANDSIZE = 5,
 			SQUAREINTSIZE = 1,
-			INPUTSIZE = INPUTFOODSIZE + INPUTLASTACTIONSIZE + 5 * SQUAREEXPANDSIZE
+			INPUTSIZE = INPUTFOODSIZE + INPUTLASTACTIONSIZE + 5 * SQUAREEXPANDSIZE + 8 * SQUAREINTSIZE,
+			OUTPUTSIZE = ACTION_CONTAINER_SIZE,
+			HIDDENSIZE = INPUTSIZE,
+			LAYERNUM = 3
 		};
 
-		typedef boost::array<float, ACTION_CONTAINER_SIZE> OutputArray;
+		static const float DECISIONSTEP;
+
+		typedef boost::array<float, OUTPUTSIZE> OutputArray;
 		typedef boost::array<float, INPUTSIZE> InputArray;
 		typedef OutputArray ReturnValue;
 
 		DecisionTree();
 
 		ReturnValue computeAction(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
+		ReturnValue computeAction(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right,
+			int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft);
+
 		void train(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
+		
+		void train(unsigned int foodcount, ReturnValue lastAction, 
+			const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite,
+			int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft,
+			ReturnValue result);
+		
 		void trainNot(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
+		void trainNot(unsigned int foodcount, ReturnValue lastAction, 
+			const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite,
+			int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft,
+			ReturnValue result);
 		const float& getMoy() const;
 		void sendMoy(float value);
 		void generateTree();
@@ -39,7 +57,10 @@ namespace Logique {
 		EntityAction getValue(const ReturnValue& ret);
 
 	private:
-		void initInputArray(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right);
+		void initArray(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right);
+		void initArray(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right,
+			int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft);
+
 		std::size_t initArray(float* tab, const Square& s);
 		std::size_t initArray(float* tab, int val);
 		std::size_t initArray(float* tab, const ReturnValue& val);

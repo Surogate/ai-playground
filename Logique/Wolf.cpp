@@ -30,8 +30,13 @@ namespace Logique {
 
 	EntityAction Wolf::computeAction() 
 	{
-		DecisionTree::ReturnValue result = _tree.computeAction(_foodCount, _lastCompute, _getSquare(_loc), getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT)); 
-		_actionStack.push(ActionStore(_foodCount, _getSquare(_loc),  getSquareLess(_loc, Coord::DOWN), getSquareLess(_loc, Coord::RIGHT), getSquareSup(_loc, Coord::DOWN), getSquareSup(_loc, Coord::RIGHT), _lastCompute, result));
+		DecisionTree::ReturnValue result = _tree.computeAction(_foodCount, _lastCompute, _getSquare(_loc), _getSquare(_loc + Coord::UP), _getSquare(_loc + Coord::LEFT), _getSquare(_loc + Coord::DOWN), _getSquare(_loc + Coord::RIGHT), 
+			_getSquare(_loc + Coord::LEFT + Coord::UP), _getSquare(_loc + Coord::UP + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::LEFT), 
+			_getSquare(_loc + Coord::UP + Coord::UP), _getSquare(_loc + Coord::RIGHT + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::DOWN), _getSquare(_loc + Coord::LEFT + Coord::LEFT));
+
+		_actionStack.push(ActionStore(_foodCount, _lastCompute, _getSquare(_loc), _getSquare(_loc + Coord::UP), _getSquare(_loc + Coord::LEFT), _getSquare(_loc + Coord::DOWN), _getSquare(_loc + Coord::RIGHT), 
+			_getSquare(_loc + Coord::LEFT + Coord::UP), _getSquare(_loc + Coord::UP + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::LEFT), 
+			_getSquare(_loc + Coord::UP + Coord::UP), _getSquare(_loc + Coord::RIGHT + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::DOWN), _getSquare(_loc + Coord::LEFT + Coord::LEFT), result));
 		_lastCompute = result;
 		_actual++;
 		return _tree.getValue(result);
@@ -85,7 +90,9 @@ namespace Logique {
 		std::cout << "### Wolf start sending" << std::endl;
 		while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
-					_tree.train(top.foodcount, top.last, top.present, top.up, top.left, top.down, top.right, top.result);
+					_tree.train(top.foodcount, top.last, top.present, top.up, top.left, top.down, top.right, 
+						top.upleft, top.upright, top.downright, top.downleft, top.upup, top.rightright, top.downdown, top.leftleft,
+						top.result);
 					_actionStack.pop();
 		}
 		std::cout << "@@@ Wolf end sending" << std::endl;

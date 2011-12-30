@@ -175,8 +175,8 @@ namespace Logique {
 		bool found = false;
 		Coord locFound;
 
-		for (unsigned int x = loc.x - 1; x <= loc.x + 1 && !found; ++x) {
-			for (unsigned int y = loc.y - 1; y <= loc.y + 1 && !found; ++y) {
+		for (int x = loc.x - 1; x <= loc.x + 1 && !found; ++x) {
+			for (int y = loc.y - 1; y <= loc.y + 1 && !found; ++y) {
 				found = Board::coordValid(x, y) && !_board[x][y].hasSheep();
 				if (found) {
 					locFound.x = x;
@@ -193,8 +193,8 @@ namespace Logique {
 		bool found = false;
 		Coord locFound;
 
-		for (unsigned int x = loc.x - 1; x <= loc.x + 1 && !found; ++x) {
-			for (unsigned int y = loc.x - 1; y <= loc.y + 1 && !found; ++y) {
+		for (int x = loc.x - 1; x <= loc.x + 1 && !found; ++x) {
+			for (int y = loc.x - 1; y <= loc.y + 1 && !found; ++y) {
 				found = Board::coordValid(x, y) && !_board[x][y].hasWolf();
 				if (found) {
 					locFound.x = x;
