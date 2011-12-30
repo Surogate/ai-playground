@@ -18,7 +18,9 @@ namespace Logique {
 	{
 		while (_actionStack.size()) {
 			ActionStore& top = _actionStack.top();
-			_tree.trainNot(top.foodcount, top.last, top.present, top.up, top.left, top.down, top.right, top.result);
+			_tree.trainNot(top.foodcount, top.last, top.present, top.up, top.left, top.down, top.right, 
+						top.upleft, top.upright, top.downright, top.downleft, top.upup, top.rightright, top.downdown, top.leftleft,
+						top.result);
 			_actionStack.pop();
 		}
 	}
