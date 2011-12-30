@@ -13,6 +13,8 @@
 
 namespace Logique {
 
+	struct ActionStore;
+
 	class DecisionTree {
 	public:
 		enum {
@@ -34,22 +36,9 @@ namespace Logique {
 
 		DecisionTree();
 
-		ReturnValue computeAction(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite);
-		ReturnValue computeAction(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right,
-			int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft);
-
-		void train(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
-		
-		void train(unsigned int foodcount, ReturnValue lastAction, 
-			const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite,
-			int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft,
-			ReturnValue result);
-		
-		void trainNot(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite, ReturnValue result);
-		void trainNot(unsigned int foodcount, ReturnValue lastAction, 
-			const Square& present, const Square& haut, const Square& gauche, const Square& bas, const Square& droite,
-			int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft,
-			ReturnValue result);
+		ReturnValue computeAction(const ActionStore& value);
+		void train(const ActionStore& value);
+		void trainNot(const ActionStore& value);
 		const float& getMoy() const;
 		void sendMoy(float value);
 		void generateTree();
@@ -57,14 +46,6 @@ namespace Logique {
 		EntityAction getValue(const ReturnValue& ret);
 
 	private:
-		void initArray(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right);
-		void initArray(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right,
-			int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft);
-
-		std::size_t initArray(float* tab, const Square& s);
-		std::size_t initArray(float* tab, int val);
-		std::size_t initArray(float* tab, const ReturnValue& val);
-
 		FANN::neural_net _ann;
 		OutputArray _output;
 		InputArray _input;

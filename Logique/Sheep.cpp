@@ -16,13 +16,13 @@ namespace Logique {
 
 	Sheep::~Sheep()
 	{
+		std::cout << "@ send xp sheep death" <<  std::endl;
 		while (_actionStack.size()) {
 			ActionStore& top = _actionStack.top();
-			_tree.trainNot(top.foodcount, top.last, top.present, top.up, top.left, top.down, top.right, 
-						top.upleft, top.upright, top.downright, top.downleft, top.upup, top.rightright, top.downdown, top.leftleft,
-						top.result);
+			_tree.trainNot(top);
 			_actionStack.pop();
 		}
+		std::cout << "@ send xp sheep death" <<  std::endl;
 	}
 
 	void Sheep::initActionArray(Board& board) {
@@ -32,30 +32,24 @@ namespace Logique {
 	}
 
 	EntityAction Sheep::computeAction() {
-		DecisionTree::ReturnValue result = _tree.computeAction(_foodCount, _lastCompute, _getSquare(_loc), _getSquare(_loc + Coord::UP), _getSquare(_loc + Coord::LEFT), _getSquare(_loc + Coord::DOWN), _getSquare(_loc + Coord::RIGHT), 
-			_getSquare(_loc + Coord::LEFT + Coord::UP), _getSquare(_loc + Coord::UP + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::LEFT), 
-			_getSquare(_loc + Coord::UP + Coord::UP), _getSquare(_loc + Coord::RIGHT + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::DOWN), _getSquare(_loc + Coord::LEFT + Coord::LEFT));
-
 		_actionStack.push(ActionStore(_foodCount, _lastCompute, _getSquare(_loc), _getSquare(_loc + Coord::UP), _getSquare(_loc + Coord::LEFT), _getSquare(_loc + Coord::DOWN), _getSquare(_loc + Coord::RIGHT), 
 			_getSquare(_loc + Coord::LEFT + Coord::UP), _getSquare(_loc + Coord::UP + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::LEFT), 
-			_getSquare(_loc + Coord::UP + Coord::UP), _getSquare(_loc + Coord::RIGHT + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::DOWN), _getSquare(_loc + Coord::LEFT + Coord::LEFT), result));
+			_getSquare(_loc + Coord::UP + Coord::UP), _getSquare(_loc + Coord::RIGHT + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::DOWN), _getSquare(_loc + Coord::LEFT + Coord::LEFT)));
+		DecisionTree::ReturnValue result = _tree.computeAction(_actionStack.top());
 		_lastCompute = result;
+		_actionStack.top().result = result;
 		_actual++;
 		return _tree.getValue(result);
 	}
 
 	void Sheep::sendXp() {
-		std::cout << "### Sheep start sending" << std::endl;
 		while (_actionStack.size()) {
 					ActionStore& top = _actionStack.top();
-					_tree.train(top.foodcount, top.last, top.present, top.up, top.left, top.down, top.right, 
-						top.upleft, top.upright, top.downright, top.downleft, top.upup, top.rightright, top.downdown, top.leftleft,
-						top.result);		
+					_tree.train(top);		
 					_actionStack.pop();
 		}
 
 		_tree.generateTree();
-		std::cout << "@@@ Sheep start sending" << std::endl;
 	}
 
 	void Sheep::initExp() {
