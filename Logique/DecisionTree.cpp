@@ -5,8 +5,8 @@
 
 namespace Logique {
 
-	const float DecisionTree::DECISIONSTEP = 0.2f;
-	const float DecisionTree::TRAINSTEP = 0.05f;
+	const float DecisionTree::DECISIONSTEP = 0.15f;
+	const float DecisionTree::TRAINSTEP = 0.08f;
 
 	DecisionTree::DecisionTree() 
 		: _ann(), _moyenne(0.f)
@@ -59,7 +59,7 @@ namespace Logique {
 		return _moyenne;
 	}
 
-	void DecisionTree::train(const ActionStore& value) 
+	void DecisionTree::train(const ActionStore& value, float power) 
 	{
 		value.initArray(_input.c_array());
 		unsigned int i = 0;
@@ -71,14 +71,14 @@ namespace Logique {
 				choice = i;
 				maxChoice = value.result[i];
 			}
-			_output[i] -= TRAINSTEP;
+			_output[i] -= TRAINSTEP * power;
 			++i;
 		}
-		_output[choice] += TRAINSTEP * 2;
+		_output[choice] += TRAINSTEP * 2 * power;
 		_ann.train(_input.c_array(), _output.c_array());
 	}
 
-	void DecisionTree::trainNot(const ActionStore& value) 
+	void DecisionTree::trainNot(const ActionStore& value, float power) 
 	{
 		value.initArray(_input.c_array());
 		unsigned int i = 0;
@@ -90,10 +90,10 @@ namespace Logique {
 				choice = i;
 				maxChoice = _output[i];
 			}
-			_output[i] += TRAINSTEP;
+			_output[i] += TRAINSTEP * power;
 			++i;
 		}
-		_output[choice] -= TRAINSTEP * 2;
+		_output[choice] -= TRAINSTEP * 2 * power;
 		_ann.train(_input.c_array(), _output.c_array());
 	}
 
@@ -105,74 +105,6 @@ namespace Logique {
 	void DecisionTree::generateTree() 
 	{
 	}
-
-
-	//void DecisionTree::initArray(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right)
-	//{
-	//	std::size_t i = 0;
-	//	_input[i] = static_cast<float>(foodcount / (Logique::FOOD_MAX));
-	//	i++;
-	//	i += initArray(&_input[i], lastAction);
-	//	i += initArray(&_input[i], present);
-	//	i += initArray(&_input[i], up);
-	//	i += initArray(&_input[i], left);
-	//	i += initArray(&_input[i], down);
-	//	i += initArray(&_input[i], right);
-	//}
-
-	//void DecisionTree::initArray(unsigned int foodcount, ReturnValue lastAction, const Square& present, const Square& up, const Square& left, const Square& down, const Square& right,
-	//		int upleft, int upright, int downright, int downleft, int upup, int rightright, int downdown, int leftleft)
-	//{
-	//	std::size_t i = 0;
-	//	_input[i] = static_cast<float>(foodcount / (Logique::FOOD_MAX));
-	//	i++;
-	//	i += initArray(&_input[i], lastAction);
-	//	i += initArray(&_input[i], present);
-	//	i += initArray(&_input[i], up);
-	//	i += initArray(&_input[i], left);
-	//	i += initArray(&_input[i], down);
-	//	i += initArray(&_input[i], right);
-	//	i += initArray(&_input[i], upleft);
-	//	i += initArray(&_input[i], upright);
-	//	i += initArray(&_input[i], downright);
-	//	i += initArray(&_input[i], downleft);
-	//	i += initArray(&_input[i], upup);
-	//	i += initArray(&_input[i], rightright);
-	//	i += initArray(&_input[i], downdown);
-	//	i += initArray(&_input[i], leftleft);
-	//}
-
-	//std::size_t DecisionTree::initArray(float* tab, const Square& s)
-	//{
-	//	std::size_t i = 0;
-
-	//	tab[i] = static_cast<float>(s.useable());
-	//	i++;
-	//	tab[i] = static_cast<float>(s.hasGrass());
-	//	i++;
-	//	tab[i] = static_cast<float>(s.hasSheep());
-	//	i++;
-	//	tab[i] = static_cast<float>(s.hasWolf());
-	//	i++;
-	//	tab[i] = static_cast<float>(s.odour() / Square::ODOUR_MAX);
-	//	i++;
-	//	return i;
-	//}
-
-	//std::size_t DecisionTree::initArray(float* tab, int val)
-	//{
-	//	tab[0] = static_cast<float>(val) / static_cast<float>(Square::getIntmax());
-	//	return 1;
-	//}
-
-	//std::size_t DecisionTree::initArray(float* tab, const ReturnValue& val) {
-	//	unsigned int i = 0;
-	//	while (i < val.size()) {
-	//		tab[i] = val[i];
-	//		++i;
-	//	}
-	//	return i;
-	//}
 }
 
 

@@ -24,7 +24,7 @@ namespace Logique {
 			SQUAREINTSIZE = 1,
 			INPUTSIZE = INPUTFOODSIZE + INPUTLASTACTIONSIZE + 5 * SQUAREEXPANDSIZE + 8 * SQUAREINTSIZE,
 			OUTPUTSIZE = ACTION_CONTAINER_SIZE,
-			HIDDENSIZE = INPUTSIZE / 2,
+			HIDDENSIZE = INPUTSIZE,
 			LAYERNUM = 4
 		};
 
@@ -38,8 +38,8 @@ namespace Logique {
 		DecisionTree();
 
 		ReturnValue computeAction(const ActionStore& value);
-		void train(const ActionStore& value);
-		void trainNot(const ActionStore& value);
+		void train(const ActionStore& value, float power);
+		void trainNot(const ActionStore& value, float power);
 		const float& getMoy() const;
 		void sendMoy(float value);
 		void generateTree();
