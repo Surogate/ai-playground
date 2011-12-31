@@ -5,12 +5,13 @@
 namespace Logique {
 	enum Constant 
 	{
-			BASEFOODTIME = 12,
-			BASEFOODDECREASE = 1,
-			FOOD_MAX = 15,
-			FOOD_REP_LIMIT_START = 16,
-			FOOD_REP_LIMIT_END = 7,
-			MOVE_TIME = 2
+		BASEFOODTIME = 10,
+		BASEFOODDECREASE = 1,
+		FOOD_START = 15,
+		FOOD_MAX = 25,
+		FOOD_REP_LIMIT_START = 17,
+		FOOD_REP_LIMIT_END = 10,
+		MOVE_TIME = 2
 	};
 
 	enum EntityAction 

@@ -14,7 +14,7 @@ namespace Logique {
 
 	Wolf::~Wolf() 
 	{
-		sendXpNot();
+		sendXpNot(1.f);
 	}
 
 	void Wolf::initActionArray(Board& board) 
@@ -79,18 +79,18 @@ namespace Logique {
 		//_tree.generateTree();
 	}
 
-	void Wolf::sendXp() 
+	void Wolf::sendXp(float power) 
 	{
 		while (_actionStack.size()) {
-			_tree.train(_actionStack.top());
+			_tree.train(_actionStack.top(), power);
 			_actionStack.pop();
 		}
 		_tree.generateTree();
 	}
 
-	void Wolf::sendXpNot() {
+	void Wolf::sendXpNot(float power) {
 		while (_actionStack.size()) {
-			_tree.trainNot(_actionStack.top());
+			_tree.trainNot(_actionStack.top(), power);
 			_actionStack.pop();
 		}
 	}
@@ -101,12 +101,15 @@ namespace Logique {
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 
-			_lastMoy = moy;
-			if (_validScore(moy)) {
-				sendXp();	
-				_tree.sendMoy(moy);
-			} else if (moy == 0) {
-				sendXpNot();
+			if (moy > 0) {
+				_lastMoy = moy;
+				if (_validScore(moy)) {
+					sendXp(2.f);
+				} else {
+					sendXp(1.f);
+				}
+			} else {
+				sendXpNot(0.1f);
 			}
 			reInitPerf();
 		}
@@ -130,8 +133,9 @@ namespace Logique {
 	}
 
 	void Wolf::reproduce(Board& board) {
-		if (isAlive() && _foodCount > _rep_limit && hasWolfNext() && _popEntity(_loc) && _popEntity(_loc)) {
+		if (isAlive() && _rep_limit > REPRODUCE_COUNTER && hasWolfNext() && _popEntity(_loc) && _popEntity(_loc) && _popEntity(_loc)) {
 			_numberRep += 2;
+			_rep_limit = REPRODUCE_COUNTER / 2;
 			std::cout << "Wolf reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);

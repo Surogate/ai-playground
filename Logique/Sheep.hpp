@@ -10,10 +10,10 @@ namespace Logique {
 	class Sheep : public Entity {
 	public:
 		enum Constant {
-			FOOD_GAIN = 4,
+			FOOD_GAIN = 5,
 			EAT_TIME = 2,
-			REPRODUCE_TIME = 16,
-			REPRODUCE_LIMIT = 13
+			REPRODUCE_TIME = 14,
+			REPRODUCE_COUNTER = 15
 		};
 
 		Sheep();
@@ -29,8 +29,8 @@ namespace Logique {
 
 		static void initExp();
 
-		void sendXp();
-		void sendXpNot();
+		void sendXp(float power);
+		void sendXpNot(float power);
 
 		Action getNewAction();
 		unsigned int evaluate() const;

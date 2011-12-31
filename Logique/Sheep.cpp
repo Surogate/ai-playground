@@ -16,7 +16,7 @@ namespace Logique {
 
 	Sheep::~Sheep()
 	{
-		sendXpNot();
+		sendXpNot(1.f);
 	}
 
 	void Sheep::initActionArray(Board& board) {
@@ -36,18 +36,18 @@ namespace Logique {
 		return _tree.getValue(result);
 	}
 
-	void Sheep::sendXp() {
+	void Sheep::sendXp(float power) {
 		while (_actionStack.size()) {
-					_tree.train(_actionStack.top());		
-					_actionStack.pop();
+			_tree.train(_actionStack.top(), power);		
+			_actionStack.pop();
 		}
 
 		_tree.generateTree();
 	}
 
-	void Sheep::sendXpNot() {
+	void Sheep::sendXpNot(float power) {
 		while (_actionStack.size()) {
-			_tree.trainNot(_actionStack.top());
+			_tree.trainNot(_actionStack.top(), power);
 			_actionStack.pop();
 		}
 
@@ -89,11 +89,16 @@ namespace Logique {
 
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
-			_lastMoy = moy;
-			if (_validScore(moy)) {
-				sendXp();
-			} else if (moy == 0) {
-				sendXpNot();
+
+			if (moy > 0) {
+				_lastMoy = moy;
+				if (_validScore(moy)) {
+					sendXp(2.f);
+				} else {
+					sendXp(1.f);
+				}
+			} else {
+				sendXpNot(0.1f);
 			}
 			reInitPerf();
 		}
@@ -115,8 +120,9 @@ namespace Logique {
 	}
 
 	void Sheep::reproduce(Board& board) {
-		if (isAlive() && _foodCount > _rep_limit && hasSheepNext() && _popEntity(_loc)) {
+		if (isAlive() && _rep_limit > REPRODUCE_COUNTER && hasSheepNext() && _popEntity(_loc)) {
 			_numberRep++;
+			_rep_limit = REPRODUCE_COUNTER / 2;
 			std::cout << "sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);

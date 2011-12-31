@@ -13,7 +13,7 @@ namespace Logique {
 			FOOD_GAIN = 8,
 			EAT_TIME = 3,
 			REPRODUCE_TIME = 18,
-			REPRODUCE_LIMIT = 13
+			REPRODUCE_COUNTER = 15
 		};
 
 		Wolf();
@@ -27,8 +27,8 @@ namespace Logique {
 		void reproduce(Board& board);
 
 		static void initExp();
-		void sendXp();
-		void sendXpNot();
+		void sendXp(float power);
+		void sendXpNot(float power);
 
 		EntityAction computeAction();
 		unsigned int evaluate() const;
