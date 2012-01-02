@@ -16,13 +16,13 @@ namespace Logique {
 	{}
 
 	void Logger::wipeFile() {
-		std::ofstream descriptor(_file, std::ios::trunc);
+		std::ofstream descriptor(_file.c_str(), std::ios::trunc);
 
 		start = boost::chrono::system_clock::now();
 	}
 
 	void Logger::dump(const std::string& value) {
-		std::ofstream descriptor(_file, std::ios::app | std::ios::out);
+		std::ofstream descriptor(_file.c_str(), std::ios::app | std::ios::out);
 
 		if (descriptor.good()) {
 			boost::chrono::duration<double> sec = boost::chrono::system_clock::now() - start;
