@@ -12,9 +12,8 @@
     	<Label Content="Port" HorizontalAlignment="Left" Margin="117.735,9.5,0,10" Width="48.25"/>
     	<Button x:Name="ChartPopW" Content="Pop W" Margin="325.641,11.5,0,0" HorizontalAlignment="Left" Width="88" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
     	<Button x:Name="ChartPopS" Content="Pop S" Margin="417.641,11.5,0,0" HorizontalAlignment="Left" Width="88" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
-    	<Button x:Name="ChartPerfW" Content="Perf W" Margin="0,11.5,418.359,0" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height" HorizontalAlignment="Right" Width="88"/>
-    	<Button x:Name="ChartPerfS" Content="Perf S" Margin="0,11.5,326.359,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="88" d:LayoutOverrides="Height"/>
-    	<Button x:Name="CloseChart" Content="Close Chart" Margin="0,11.5,224.359,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="88" d:LayoutOverrides="Height"/>
+        <Button x:Name="CloseChart" Content="Close Chart" Margin="0,11.5,421,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="88" d:LayoutOverrides="Height"/>
+        <Button x:Name="Reset" Content="Reset Cam" Margin="0,11.5,322,0" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height" HorizontalAlignment="Right" Width="88"/>
             
     </Grid>
 </UserControl>
