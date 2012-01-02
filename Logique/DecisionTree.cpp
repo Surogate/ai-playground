@@ -6,7 +6,8 @@
 namespace Logique {
 
 	const float DecisionTree::DECISIONSTEP = 0.15f;
-	const float DecisionTree::TRAINSTEP = 0.05f;
+	const float DecisionTree::TRAINSTEP = 0.08f;
+	const float DecisionTree::LEARNINGRATE = 0.4f;
 
 	DecisionTree::DecisionTree() 
 		: _ann(), _moyenne(0.f)
@@ -16,6 +17,7 @@ namespace Logique {
 		_ann.set_activation_function_hidden(FANN::SIGMOID_SYMMETRIC);
 		_ann.set_activation_function_output(FANN::SIGMOID_SYMMETRIC);
 		_ann.randomize_weights(0.3f, 0.7f);
+		_ann.set_learning_rate(LEARNINGRATE);
 	}
 
 	EntityAction DecisionTree::randomAction() 

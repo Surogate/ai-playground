@@ -27,6 +27,7 @@ namespace Logique {
 			LAYERNUM = 4
 		};
 
+		static const float LEARNINGRATE;
 		static const float DECISIONSTEP;
 		static const float TRAINSTEP;
 
