@@ -6,7 +6,7 @@
 namespace Logique {
 
 	const float DecisionTree::DECISIONSTEP = 0.15f;
-	const float DecisionTree::TRAINSTEP = 0.08f;
+	const float DecisionTree::TRAINSTEP = 0.05f;
 
 	DecisionTree::DecisionTree() 
 		: _ann(), _moyenne(0.f)

@@ -396,7 +396,7 @@ namespace Logique {
 
 		_board.lock();
 		popOdour(value.getLocation());
-		_board(value.getLocation()).hasEntity(value.getType(), false);
+		_board(value.getLocation()).hasEntity(value.getType(), 0);
 		_board.unlock();
 		
 		_attriMtx.lock();

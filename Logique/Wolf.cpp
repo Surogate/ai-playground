@@ -104,12 +104,12 @@ namespace Logique {
 			if (moy > 0) {
 				_lastMoy = moy;
 				if (_validScore(moy)) {
-					sendXp(2.f);
+					sendXp(1.5f);
 				} else {
 					sendXp(1.f);
 				}
 			} else {
-				sendXpNot(0.1f);
+				sendXpNot(0.3f);
 			}
 			reInitPerf();
 		}
