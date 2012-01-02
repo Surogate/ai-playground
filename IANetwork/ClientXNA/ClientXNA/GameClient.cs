@@ -109,8 +109,7 @@ namespace ClientXNA
             vControlBar_.CloseChart.Click += new System.Windows.RoutedEventHandler(CloseChart_Click);
             vControlBar_.ChartPopW.Click += new System.Windows.RoutedEventHandler(ChartPopW_Click);
             vControlBar_.ChartPopS.Click += new System.Windows.RoutedEventHandler(ChartPopS_Click);
-            vControlBar_.ChartPerfW.Click += new System.Windows.RoutedEventHandler(ChartPrefW_Click);
-            vControlBar_.ChartPerfS.Click += new System.Windows.RoutedEventHandler(ChartPerfS_Click);
+            vControlBar_.Reset.Click += new System.Windows.RoutedEventHandler(Reset_Click);
 
             // View LineSeries....
             vChart_ = new Views.Chart();
@@ -129,22 +128,11 @@ namespace ClientXNA
             base.Initialize();
         }
 
-        void ChartPerfS_Click(object sender, System.Windows.RoutedEventArgs e)
+        void Reset_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (Control.FromHandle(Window.Handle).Controls.Contains(chartHost_))
-                Control.FromHandle(Window.Handle).Controls.Remove(chartHost_);
-            vChart_.chart.Title = "Sheep Performances";
-            vChart_.line.ItemsSource = chartsModels_.SheepPerformances;
-            Control.FromHandle(Window.Handle).Controls.Add(chartHost_);
-        }
-
-        void ChartPrefW_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (Control.FromHandle(Window.Handle).Controls.Contains(chartHost_))
-                Control.FromHandle(Window.Handle).Controls.Remove(chartHost_);
-            vChart_.chart.Title = "Wolf Performances";
-            vChart_.line.ItemsSource = chartsModels_.WolfPerformances;
-            Control.FromHandle(Window.Handle).Controls.Add(chartHost_);
+            if (board_ == null) return;
+            camera_.X = (board_.Size * 32) / 4;
+            camera_.Y = (board_.Size * 32) / 10;
         }
 
         void CloseChart_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -248,7 +236,7 @@ namespace ClientXNA
             }
             #endregion
 
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed && IsActive)
             {
                 if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= 120)
                     camera_.X+=2;
