@@ -373,7 +373,7 @@ namespace Logique {
 		value->setValidScore(boost::bind(&Environnement::validPerf, this, _1, value->getType()));
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
 		value->setOnDeath(boost::bind(&Environnement::onEntityDeath, this, _1));
-		value->setGetSquare(boost::bind(&Board::get, &_board, _1));
+		value->setGetSquare(boost::bind(static_cast<board_func>(&Board::get), &_board, _1));
 		value->reInitPerf();
 		addAction(value->createFoodAction());
 		addAction(value->getNewAction());

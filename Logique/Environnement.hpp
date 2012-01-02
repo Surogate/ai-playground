@@ -3,13 +3,9 @@
 #define ENVIRONNEMENT_HPP
 
 #include <list>
-#include <memory>
-#include <array>
 #include <stack>
-#include <random>
 #include <set>
 #include <map>
-
 
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
@@ -35,6 +31,7 @@ namespace Logique {
 		typedef std::list< Action > ActionList;
 		typedef std::map< const Entity*, Entity::Ptr > EntityPtrSet;
 		typedef std::stack< Action > ActionTmpStack;
+		typedef Square& (Board::*board_func)(const Coord&);
 
 		Environnement();
 		~Environnement();
@@ -68,7 +65,7 @@ namespace Logique {
 		}
 
 		void run();
-		void Environnement::test(int x, int y) {
+		void test(int x, int y) {
 			popOdour(Coord(x, y), 3);
 			_board.dump();
 		}
