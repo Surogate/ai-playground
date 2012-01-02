@@ -3,6 +3,7 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 #include <stdint.h>
+#include <string>
 #include <sstream>
 
 namespace Wrapper
@@ -39,10 +40,11 @@ namespace Wrapper
 
 			std::stringstream sstream;
 			if (it->first->getType() == Logique::Square::SHEEP)
-				sstream << SPAWN << ";s;" << (uint32_t)(it->first) << ";" << it->first->getLocation().x << ";" << it->first->getLocation().y;
+				sstream << SPAWN << ";s;" << (size_t)(it->first) << ";" << it->first->getLocation().x << ";" << it->first->getLocation().y;
 			else
-				sstream << SPAWN << ";w;" << (uint32_t)(it->first) << ";" << it->first->getLocation().x << ";" << it->first->getLocation().y;
-			package->init(sstream.str());
+				sstream << SPAWN << ";w;" << (size_t)(it->first) << ";" << it->first->getLocation().x << ";" << it->first->getLocation().y;
+			std::string str = sstream.str();
+			package->init(str);
 			if (!server_->send_message(socket, package)) break;
 		}
 		env_.unlock();
@@ -54,8 +56,9 @@ namespace Wrapper
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 		std::stringstream sstream;
-		sstream << SPAWN << ";s;" << (uint32_t)&entity << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
-		package->init(sstream.str());
+		sstream << SPAWN << ";s;" << (size_t)&entity << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
+			std::string str = sstream.str();
+			package->init(str);
 		server_->add_sending_package(package);
 	}
 
@@ -64,8 +67,9 @@ namespace Wrapper
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 		std::stringstream sstream;
-		sstream << SPAWN << ";w;" << (uint32_t)&entity << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
-		package->init(sstream.str());
+		sstream << SPAWN << ";w;" << (size_t)&entity << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
+			std::string str = sstream.str();
+			package->init(str);
 		server_->add_sending_package(package);
 	}
 
@@ -74,8 +78,9 @@ namespace Wrapper
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 		std::stringstream sstream;
-		sstream << MOVE << ";" << (uint32_t)&entity << ";" << entity.getLastAction() << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
-		package->init(sstream.str());
+		sstream << MOVE << ";" << (size_t)&entity << ";" << entity.getLastAction() << ";" << entity.getLocation().x << ";" << entity.getLocation().y;
+			std::string str = sstream.str();
+			package->init(str);
 		server_->add_sending_package(package);
 	}
 
@@ -84,8 +89,9 @@ namespace Wrapper
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 		std::stringstream sstream;
-		sstream << EAT << ";" << (uint32_t)&entity;
-		package->init(sstream.str());
+		sstream << EAT << ";" << (size_t)&entity;
+			std::string str = sstream.str();
+			package->init(str);
 		server_->add_sending_package(package);
 	}
 
@@ -94,8 +100,9 @@ namespace Wrapper
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 		std::stringstream sstream;
-		sstream << DIE << ";" <<  (uint32_t)&entity;
-		package->init(sstream.str());
+		sstream << DIE << ";" <<  (size_t)&entity;
+			std::string str = sstream.str();
+			package->init(str);
 		server_->add_sending_package(package);
 	}
 
@@ -104,11 +111,12 @@ namespace Wrapper
 		Networking::Server::Package_ptr package = Networking::Server::Package_ptr(new Networking::Package());
 
 		std::stringstream sstream;
-		sstream << CLONE << ";" <<  (uint32_t)&entity;
-		package->init(sstream.str());
+		sstream << CLONE << ";" <<  (size_t)&entity;
+			std::string str = sstream.str();
+			package->init(str);
 		server_->add_sending_package(package);
 	}
-	
+
 	void NetworkEnvironnement::onBoardChange(Logique::Board const & board)
 	{
 		const_cast<Logique::Board&>(board).lock();
@@ -117,7 +125,8 @@ namespace Wrapper
 		Networking::Package * begin = new Networking::Package();
 		std::stringstream sstreamb;
 		sstreamb << BOARD_BEG << ";" << board.size();
-		begin->init(sstreamb.str());
+		std::string strb = sstreamb.str();
+		begin->init(strb);
 		packages.push_back(Networking::Server::Package_ptr(begin));
 		for (uint32_t x = 0; x < board.size(); x++)
 		{
@@ -125,15 +134,17 @@ namespace Wrapper
 			{
 				std::stringstream sstreamp;
 				Networking::Package * pack = new Networking::Package();
-				sstreamp << BOARD << ";" << x << ";" << y << ";" << (int)board.get(Coord(x, y)).hasGrass() << ";" << board.get(Coord(x, y)).odour();
-				pack->init(sstreamp.str());
+				sstreamp << BOARD << ";" << x << ";" << y << ";" << (int32_t)board.get(Coord(x, y)).hasGrass() << ";" << board.get(Coord(x, y)).odour();
+				std::string str = sstreamp.str();
+				pack->init(str);
 				packages.push_back(Networking::Server::Package_ptr(pack));
 			}
 		}
 		Networking::Package * end = new Networking::Package();
 		std::stringstream sstreame;
-		sstreame << BOARD_END;;
-		end->init(sstreame.str());
+		sstreame << BOARD_END;
+		std::string stre = sstreame.str();
+		end->init(stre);
 		packages.push_back(Networking::Server::Package_ptr(end));
 		server_->add_sending_packages(packages);
 		const_cast<Logique::Board&>(board).unlock();
@@ -145,7 +156,8 @@ namespace Wrapper
 
 		std::stringstream sstream;
 		sstream << PERF << ";" <<  sheep << ";" << wolf;
-		package->init(sstream.str());
+					std::string str = sstream.str();
+			package->init(str);
 		server_->add_sending_package(package);
 	}
 }
