@@ -5,7 +5,6 @@
 #include <boost/random/random_device.hpp>
 #include <boost/random.hpp>
 #include <boost/array.hpp>
-#include "ID3Class.hpp"
 #include "fann.h"
 #include "fann_cpp.h"
 #include "Square.hpp"
