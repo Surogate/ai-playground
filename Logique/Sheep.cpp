@@ -120,9 +120,11 @@ namespace Logique {
 	}
 
 	void Sheep::reproduce(Board& board) {
-		if (isAlive() && _rep_limit > REPRODUCE_COUNTER && hasSheepNext() && _popEntity(_loc)) {
+		if (isAlive() && _rep_limit > REPRODUCE_COUNTER && hasSheepNext() && _popEntity(_loc) && _popEntity(_loc)) {
 			_numberRep++;
 			_rep_limit = REPRODUCE_COUNTER / 2;
+			if (_numberRep < 2)
+				_rep_limit += 2;
 			std::cout << "sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
