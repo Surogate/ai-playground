@@ -19,20 +19,19 @@ namespace Logique {
 		Wolf();
 		~Wolf();
 
-		Action getNewAction();
-
 		void initActionArray(Board& board);
 
+		void getNewAction();
 		void eat(Board& board);
 		void reproduce(Board& board);
 
-		static void initExp();
+		//static void initExp();
 		void sendXp(float power);
 		void sendXpNot(float power);
 
 		EntityAction computeAction();
-		unsigned int evaluate() const;
 		bool hasWolfNext();
+		unsigned int evaluate() const;
 
 		static DecisionTree _tree;
 	};

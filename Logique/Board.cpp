@@ -3,7 +3,7 @@
 
 namespace Logique {
 
-	Board::Board() 
+	Board::Board()
 		: boost::array< boost::array<Square, BOARD_SIZE >, BOARD_SIZE >(), _mtx(), _default()
 	{}
 

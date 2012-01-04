@@ -21,8 +21,9 @@ namespace Logique {
 
 	void Sheep::initActionArray(Board& board) {
 		Entity::initActionArray(board);
-		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Entity::eat, shared_from_this(), boost::ref(board)));
-		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, shared_from_this(), boost::ref(board)));
+		_newAction = Action(0, boost::bind(&Entity::getNewAction, shared_from_this()));
+		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Entity::eat, this, boost::ref(board)));
+		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, this, boost::ref(board)));
 	}
 
 	EntityAction Sheep::computeAction() {
@@ -36,7 +37,8 @@ namespace Logique {
 		return _tree.getValue(result);
 	}
 
-	void Sheep::sendXp(float power) {
+	void Sheep::sendXp(float power) 
+	{
 		while (_actionStack.size()) {
 			_tree.train(_actionStack.top(), power);		
 			_actionStack.pop();
@@ -45,7 +47,8 @@ namespace Logique {
 		_tree.generateTree();
 	}
 
-	void Sheep::sendXpNot(float power) {
+	void Sheep::sendXpNot(float power) 
+	{
 		while (_actionStack.size()) {
 			_tree.trainNot(_actionStack.top(), power);
 			_actionStack.pop();
@@ -54,37 +57,8 @@ namespace Logique {
 		_tree.generateTree();
 	}
 
-	void Sheep::initExp() {
-		//Square present;
-		//present.hasGrass(true);
-		//Square other;
-		//Square other2;
-		//other.hasGrass(true);
-
-		//_tree.train(1, _tree.randomAction(), present, other, other, other, other, EAT);
-		//_tree.train(5, _tree.randomAction(), present, other, other, other, other, EAT);
-		//_tree.train(6, _tree.randomAction(), present, other, other, other, other, EAT);
-		//other.hasGrass(false);
-		//_tree.train(2, _tree.randomAction(), present, other, other, other, other, EAT);
-		//_tree.train(3, _tree.randomAction(), present, other, other, other, other, EAT);
-		//_tree.train(4, _tree.randomAction(), present, other, other, other, other, EAT);
-
-		//other.hasSheep(reinterpret_cast<Entity*>(1));
-
-		//_tree.train(7, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		//_tree.train(8, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		//_tree.train(9, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-
-		//other2.hasSheep(reinterpret_cast<Entity*>(1));
-
-		//_tree.train(7, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		//_tree.train(8, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		//_tree.train(9, _tree.randomAction(), present, other, other, other2, other2, REPRODUCE);
-		//
-		//_tree.generateTree();
-	}
-
-	Action Sheep::getNewAction() {
+	void Sheep::getNewAction() 
+	{
 		EntityAction act = computeAction();
 
 		if (_actual && _actual >= _numberTot) {
@@ -102,11 +76,16 @@ namespace Logique {
 			}
 			reInitPerf();
 		}
-		return _actionArray[act];
+
+		if (isAlive()) {
+			_actionArray[act]();
+			_newAction._tickBeforeAction = _actionArray[act]._tickBeforeAction;
+			_add_action(_newAction);
+		}
 	}
 
 	void Sheep::eat(Board& board) {
-		if (isAlive() && board(_loc).hasGrass()) {
+		if (board(_loc).hasGrass()) {
 			_lastAction = EAT;
 			_numberEat++;
 			std::cout << "sheep eat" << std::endl;
@@ -116,11 +95,10 @@ namespace Logique {
 			addFood(FOOD_GAIN);
 			Callback_Environnement::getInstance().cb_onEntityEat(*this);
 		}
-		generateNewAction();
 	}
 
 	void Sheep::reproduce(Board& board) {
-		if (isAlive() && _rep_limit > REPRODUCE_COUNTER && hasSheepNext() && _popEntity(_loc) && _popEntity(_loc)) {
+		if (_rep_limit > REPRODUCE_COUNTER && hasSheepNext() && _popEntity(_loc) && _popEntity(_loc)) {
 			_numberRep++;
 			_rep_limit = REPRODUCE_COUNTER / 2;
 			if (_numberRep < 2)
@@ -129,7 +107,6 @@ namespace Logique {
 			_lastAction = REPRODUCE;
 			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
 		}
-		generateNewAction();
 	}
 
 	bool Sheep::hasSheepNext() {
