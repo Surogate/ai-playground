@@ -21,18 +21,16 @@ namespace Logique {
 
 		void initActionArray(Board& board);
 
+		void getNewAction();
 		void eat(Board& board);
 		void reproduce(Board& board);
-		bool hasSheepNext();
 
-		EntityAction computeAction();
-
-		static void initExp();
-
+		//static void initExp();
 		void sendXp(float power);
 		void sendXpNot(float power);
 
-		Action getNewAction();
+		EntityAction computeAction();
+		bool hasSheepNext();
 		unsigned int evaluate() const;
 
 		static DecisionTree _tree;

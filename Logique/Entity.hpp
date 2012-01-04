@@ -50,7 +50,9 @@ namespace Logique  {
 		void decreaseFood(unsigned int value);
 		Square::EntityContain getType() const;
 
-		virtual Action getNewAction() = 0;
+		virtual void getNewAction() = 0;
+		virtual void eat(Board& board) = 0;
+		virtual void reproduce(Board& board) = 0;
 
 		virtual void initActionArray(Board& board);
 
@@ -59,9 +61,7 @@ namespace Logique  {
 		void goRight(Board& board);
 		void goDown(Board& board);
 		void wait();
-		virtual void eat(Board& board) = 0;
-		virtual void reproduce(Board& board) = 0;
-		void generateNewAction();
+
 		EntityAction getLastAction() const;
 		void reInitPerf();
 		void setFood(unsigned int value);
@@ -102,6 +102,7 @@ namespace Logique  {
 		float _lastMoy;
 		EntityAction _lastAction;
 		DecisionTree::ReturnValue _lastCompute;
+		Action _newAction;
 
 	private:
 		bool moveToThisLocation(Board& board, const Coord& newLoc);

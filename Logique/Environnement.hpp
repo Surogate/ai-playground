@@ -13,6 +13,7 @@
 #include <boost/random.hpp>
 #include <boost/array.hpp>
 #include <boost/random/random_device.hpp>
+#include <boost/chrono.hpp>
 
 #include "Callback_Environnement.hpp"
 #include "Square.hpp"
@@ -70,7 +71,7 @@ namespace Logique {
 			_board.dump();
 		}
 		void addAction(const Action& value);
-		void setBaseTime(const boost::posix_time::time_duration& time);
+		void setBaseTime(const boost::chrono::duration<double>& time);
 
 		//spawn Entity function
 		bool addSheep(const Coord& loc);
@@ -104,10 +105,12 @@ namespace Logique {
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
 
+		void debugActionList();
+
 		boost::array<unsigned int, Square::ENTITY_CONTAINER_SIZE> _entityNum;
 
 		Board _board;
-		boost::posix_time::time_duration _baseTime;
+		boost::chrono::duration<double> _baseTime;
 		EntityPtrSet _entityList;
 		boost::mutex _listMtx;
 		boost::mutex _attriMtx;

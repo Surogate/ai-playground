@@ -18,6 +18,7 @@ namespace Logique {
 		for (unsigned int i = 0; i < _actionArray.size(); i++) {
 			_actionArray[i] = Action();
 		}
+		_newAction = Action();
 	}
 
 	void Entity::addFood(unsigned int value) {
@@ -103,39 +104,31 @@ namespace Logique {
 	}
 
 	void Entity::wait() {
-		if (isAlive())
-		{
-			_lastAction = WAIT;
-		}
-		generateNewAction();
+		_lastAction = WAIT;
 	}
 
 	void Entity::goUp(Board& board) {
-		if (isAlive() && moveToThisLocation(board, board.getValidValue(_loc + Coord::UP))) {
+		if (moveToThisLocation(board, board.getValidValue(_loc + Coord::UP))) {
 			_lastAction = MOVE_UP;
 		}
-		generateNewAction();
 	}
 
 	void Entity::goLeft(Board& board) {
-		if (isAlive() && moveToThisLocation(board, board.getValidValue(_loc + Coord::LEFT))) {
+		if (moveToThisLocation(board, board.getValidValue(_loc + Coord::LEFT))) {
 			_lastAction = MOVE_LEFT;
 		}
-		generateNewAction();
 	}
 
 	void Entity::goRight(Board& board) {
-		if (isAlive() && moveToThisLocation(board, board.getValidValue(_loc + Coord::RIGHT))) {
+		if (moveToThisLocation(board, board.getValidValue(_loc + Coord::RIGHT))) {
 			_lastAction = MOVE_RIGHT;
 		}
-		generateNewAction();
 	}
 
 	void Entity::goDown(Board& board) {
-		if (isAlive() && moveToThisLocation(board, board.getValidValue(_loc + Coord::DOWN))) {
+		if (moveToThisLocation(board, board.getValidValue(_loc + Coord::DOWN))) {
 			_lastAction = MOVE_DOWN;
 		}
-		generateNewAction();
 	}
 
 	bool Entity::moveToThisLocation(Board& board, const Coord& newLoc) {
@@ -150,10 +143,6 @@ namespace Logique {
 			return true;
 		}
 		return false;
-	}
-
-	void Entity::generateNewAction() {
-		if (isAlive()) _add_action(getNewAction());
 	}
 
 	Logique::EntityAction Entity::getLastAction() const {
