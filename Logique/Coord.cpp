@@ -30,11 +30,11 @@ void Coord::operator-=(const Coord& pos) {
 	y -= pos.y;
 }
 
-Coord Coord::operator+(const Coord& pos) {
+Coord Coord::operator+(const Coord& pos) const {
 	return Coord(x + pos.x, y + pos.y);
 }
 
-Coord Coord::operator-(const Coord& pos) {
+Coord Coord::operator-(const Coord& pos) const {
 	return Coord(x - pos.x, y - pos.y);
 }
 

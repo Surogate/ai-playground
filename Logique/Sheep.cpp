@@ -22,14 +22,13 @@ namespace Logique {
 	void Sheep::initActionArray(Board& board) {
 		Entity::initActionArray(board);
 		_newAction = Action(0, boost::bind(&Entity::getNewAction, shared_from_this()));
-		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Entity::eat, this, boost::ref(board)));
-		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Entity::reproduce, this, boost::ref(board)));
+		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Sheep::eat, this, boost::ref(board)));
+		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Sheep::reproduce, this, boost::ref(board)));
 	}
 
 	EntityAction Sheep::computeAction() {
-		_actionStack.push(ActionStore(_foodCount, _lastCompute, _getSquare(_loc), _getSquare(_loc + Coord::UP), _getSquare(_loc + Coord::LEFT), _getSquare(_loc + Coord::DOWN), _getSquare(_loc + Coord::RIGHT), 
-			_getSquare(_loc + Coord::LEFT + Coord::UP), _getSquare(_loc + Coord::UP + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::LEFT), 
-			_getSquare(_loc + Coord::UP + Coord::UP), _getSquare(_loc + Coord::RIGHT + Coord::RIGHT), _getSquare(_loc + Coord::DOWN + Coord::DOWN), _getSquare(_loc + Coord::LEFT + Coord::LEFT)));
+
+		_actionStack.push(ActionStore(_foodCount, _lastCompute, _loc, _getSquare));
 		DecisionTree::ReturnValue result = _tree.computeAction(_actionStack.top());
 		_lastCompute = result;
 		_actionStack.top().result = result;
