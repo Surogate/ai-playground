@@ -56,6 +56,13 @@ namespace Logique {
 	void Wolf::getNewAction() 
 	{
 		EntityAction act = computeAction();
+		
+		if (isAlive()) {
+			_actionArray[act]();
+			_newAction._tickBeforeAction = _actionArray[act]._tickBeforeAction;
+			_add_action(_newAction);
+		}
+
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 
@@ -67,15 +74,9 @@ namespace Logique {
 					sendXp(1.f);
 				}
 			} else {
-				sendXpNot(0.3f);
+				sendXpNot(0.5f);
 			}
 			reInitPerf();
-		}
-
-		if (isAlive()) {
-			_actionArray[act]();
-			_newAction._tickBeforeAction = _actionArray[act]._tickBeforeAction;
-			_add_action(_newAction);
 		}
 	}
 

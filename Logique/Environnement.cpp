@@ -23,15 +23,7 @@ namespace Logique {
 
 	void Environnement::preRun() {
 		addSheep(20);
-		addWolf(20);
-
-		//Wolf::initExp();
-		//Sheep::initExp();
-
-		//Logger log("Loup.csv");
-		//log.wipeFile();
-		//Logger logM("Mouton.csv");
-		//logM.wipeFile();
+		addWolf(10);
 
 		insertActionStack();
 
@@ -84,10 +76,10 @@ namespace Logique {
 			}
 
 			if (getSheepNum() <= 3) {
-				addSheep(15);
+				addSheep(20);
 			}
 			if (getWolfNum() <= 3) {
-				addWolf(15);
+				addWolf(10);
 			}
 
 			insertActionStack();
