@@ -343,7 +343,7 @@ namespace Logique {
 	void Environnement::boardPlay() {
 		unsigned int i = 0;
 
-		while (i < BOARD_SIZE / 10) {
+		while (i < BOARD_SIZE / 5) {
 			Coord grassSpawn;
 			unsigned int odour_higher = 0;
 
