@@ -109,6 +109,7 @@ namespace Logique {
 			initEntity(sheepPtr, loc);
 			Callback_Environnement::getInstance().cb_onSheepSpawn(*sheepPtr);
 			Callback_Environnement::getInstance().cb_onBoardChange(_board);
+			sheepPtr->getNewAction();
 			return true;
 		}
 		return false;
@@ -127,6 +128,7 @@ namespace Logique {
 			initEntity(wolfPtr, loc);
 			Callback_Environnement::getInstance().cb_onWolfSpawn(*wolfPtr);
 			Callback_Environnement::getInstance().cb_onBoardChange(_board);
+			wolfPtr->getNewAction();
 			return true;
 		}
 		return false;
@@ -390,7 +392,7 @@ namespace Logique {
 		value->setGetSquare(boost::bind(static_cast<board_func>(&Board::get), &_board, _1));
 		value->reInitPerf();
 		addAction(value->createFoodAction());
-		value->getNewAction();
+		
 	}
 
 	void Environnement::spawnSheep() {

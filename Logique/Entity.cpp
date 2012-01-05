@@ -153,7 +153,7 @@ namespace Logique {
 		_numberEat = 0;
 		_numberRep = 0;
 		_actual = 0;
-		_numberTot = static_cast<float>(_getSpecieNumber()) / 1.5f + 1.f;
+		_numberTot = 10;
 	}
 
 	float Entity::computeMoy() const {
