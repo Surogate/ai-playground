@@ -82,6 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Logique\ActionStore.cpp" />
     <ClCompile Include="..\..\Logique\Board.cpp" />
     <ClCompile Include="..\..\Logique\Callback_Environnement.cpp" />
     <ClCompile Include="..\..\Logique\Coord.cpp" />

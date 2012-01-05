@@ -72,6 +72,9 @@
     <ClCompile Include="..\..\Logique\Logger.cpp">
       <Filter>Source Files\Logique</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Logique\ActionStore.cpp">
+      <Filter>Source Files\Logique</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Logique\Action.hpp">

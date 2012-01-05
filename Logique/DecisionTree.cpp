@@ -13,7 +13,7 @@ namespace Logique {
 		: _ann(), _moyenne(0.f)
 		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
 	{
-		_ann.create_standard(LAYERNUM, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
+		_ann.create_standard(LAYERNUM, INPUTSIZE, HIDDENSIZE, HIDDENSIZE / 2, OUTPUTSIZE);
 		_ann.set_activation_function_hidden(FANN::SIGMOID_SYMMETRIC);
 		_ann.set_activation_function_output(FANN::SIGMOID_SYMMETRIC);
 		_ann.randomize_weights(0.3f, 0.7f);
