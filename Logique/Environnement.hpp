@@ -82,6 +82,7 @@ namespace Logique {
 		bool popWolfNear(const Coord& loc);
 		void addWolf(unsigned int num);
 
+		unsigned int getEntityNum(const Square::EntityContain& value) const;
 		unsigned int getSheepNum() const;
 		unsigned int getWolfNum() const;
 

@@ -11,12 +11,21 @@ namespace Logique {
 	class Entity;
 
 	struct Square {
-		enum { ODOUR_MAX = 10 };
 
 		enum EntityContain {
 			SHEEP,
 			WOLF,
 			ENTITY_CONTAINER_SIZE
+		};
+
+		enum Constant {
+			ODOUR_START = 0,
+			ODOUR_MAX = 10,
+			GRASS_START = 8,
+			GRASS_INC = 1,
+			GRASS_DEC = 2,
+			GRASS_MIN = 5,
+			GRASS_MAX = 15
 		};
 
 		enum {
@@ -27,22 +36,20 @@ namespace Logique {
 		};
 
 
-		Square() : _useable(true), _hasGrass(true), _odour(0)
+		Square() : _grass_value(GRASS_START), _entityIn(), _odour(ODOUR_START)
 		{
 			for (unsigned int i = 0; i < ENTITY_CONTAINER_SIZE; ++i) {
 				_entityIn[i] = 0;
 			}
 		}
 
-		Square(bool useable) : _useable(useable), _hasGrass(true), _odour(0)
+		inline bool hasEntity()
 		{
-			for (unsigned int i = 0; i < ENTITY_CONTAINER_SIZE; ++i) {
-				_entityIn[i] = 0;
-			}
-		}
+			unsigned int i = 0;
+			while (i < ENTITY_CONTAINER_SIZE && _entityIn[i] != 0)
+				++i;
 
-		inline bool useable() const {
-			return _useable;
+			return i == ENTITY_CONTAINER_SIZE;
 		}
 
 		inline bool hasEntity(const EntityContain& value) {
@@ -50,8 +57,7 @@ namespace Logique {
 		}
 
 		inline bool hasEntity(const EntityContain& value, Entity* set) {
-			if (_useable)
-				_entityIn[value] = set;
+			_entityIn[value] = set;
 			return _entityIn[value] != 0;
 		}
 
@@ -60,31 +66,38 @@ namespace Logique {
 		}
 
 		inline bool hasGrass() const  {
-			return _hasGrass;
+			return _grass_value >= GRASS_MIN;
+		}
+
+		inline bool increaseGrass() {
+			bool start = hasGrass();
+			increaseGrass(GRASS_INC);
+			return start != hasGrass();
+		}
+
+		inline bool decreaseGrass() {
+			bool start = hasGrass();
+			decreaseGrass(GRASS_DEC);
+			return start != hasGrass();
 		}
 
 		inline bool hasGrass(bool set) {
-			_hasGrass = _useable && set;
-			return _hasGrass;
+			if (hasGrass() != set)
+			{
+				if (set) {
+					increaseGrass(GRASS_MIN);
+				} else {
+					_grass_value = 0;
+				}
+			}
+			return hasGrass();
 		}
 
 		inline bool hasSheep() const  {
 			return _entityIn[SHEEP] != 0;
 		}
 
-		inline bool hasSheep(Entity* set) {
-			if (_useable)
-				_entityIn[SHEEP] = set; 
-			return _entityIn[SHEEP] != 0;
-		}
-
 		inline bool hasWolf() const {
-			return _entityIn[WOLF] != 0;
-		}
-
-		inline bool hasWolf(Entity* set) {
-			if (_useable)
-				_entityIn[WOLF] = set;
 			return _entityIn[WOLF] != 0;
 		}
 
@@ -95,9 +108,6 @@ namespace Logique {
 		inline int getInt() const {
 			int value = _odour;
 			value = value << 4;
-			
-			if (_useable)
-				value |= USEABLE_MASK;
 
 			if (hasGrass())
 				value |= GRASS_MASK;
@@ -131,19 +141,6 @@ namespace Logique {
 			}
 		}
 
-		inline void dump() const {
-			std::cout << _odour;
-		}
-
-		inline void dumpSheep() const {
-			if (hasSheep()) {
-				std::cout << "M";
-			} else {
-				std::cout << "O";
-			}
-
-		}
-
 		inline void decreaseOdour(unsigned int odour) {
 			if (odour < _odour)
 				_odour -= odour;
@@ -159,11 +156,38 @@ namespace Logique {
 			return _odour;
 		}
 
+		inline void dump() const {
+			std::cout << _odour;
+		}
+
+		inline void dumpSheep() const {
+			if (hasSheep()) {
+				std::cout << "M";
+			} else {
+				std::cout << "O";
+			}
+
+		}
+
 	private:
-		const bool _useable;
-		bool _hasGrass;
+		unsigned int _grass_value;
 		boost::array<Entity*, ENTITY_CONTAINER_SIZE> _entityIn;
 		unsigned int _odour;
+
+		void increaseGrass(unsigned int value) {
+			_grass_value += value;
+			if (_grass_value > GRASS_MAX) {
+				_grass_value = GRASS_MAX;
+			}
+		}
+
+		void decreaseGrass(unsigned int value) {
+			if (value <= _grass_value) {
+				_grass_value -= value;
+			} else {
+				_grass_value = 0;
+			}
+		}
 	};
 
 }

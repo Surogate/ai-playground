@@ -40,7 +40,6 @@ namespace Logique {
 		ActionList::iterator executor;
 		ActionList::iterator toDeleteEnd;
 		ActionList::iterator end;
-		debugActionList();
 		while (!_actionList.empty()) {
 			start = boost::chrono::system_clock::now();
 
@@ -204,6 +203,11 @@ namespace Logique {
 		return found && addWolf(locFound);
 	}
 
+	unsigned int Environnement::getEntityNum(const Square::EntityContain& value) const
+	{
+		return _entityNum[value];
+	}
+
 	unsigned int Environnement::getSheepNum() const 
 	{
 		return _entityNum[Square::SHEEP];
@@ -341,37 +345,22 @@ namespace Logique {
 	}
 
 	void Environnement::boardPlay() {
-		unsigned int i = 0;
+		bool change = false;
 
-		while (i < BOARD_SIZE / 5) {
-			Coord grassSpawn;
-			unsigned int odour_higher = 0;
-
-			for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
-				for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
-					if (_board[x][y].odour() > odour_higher && !_board[x][y].hasGrass()) {
-						odour_higher = _board[x][y].odour();
-						grassSpawn.x = x;
-						grassSpawn.y = y;
-					}
-				
-					_board[x][y].decreaseOdour(1);
-				}
+		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
+			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
+				Square& val = _board[x][y];
+				if (!val.hasEntity())
+					change = change || val.increaseGrass();
+				else
+					change = change || val.decreaseGrass();
+				val.decreaseOdour(1);
 			}
+		}
 
-			if (!odour_higher) {
-				grassSpawn = Coord(_distri(_gen), _distri(_gen));
-			} 
-
-			if (!_board(grassSpawn).hasGrass()) {
-				_board.lock();
-				_board(grassSpawn).hasGrass(true);
-				int value = _board(grassSpawn).getInt();
-				_board.unlock();
-				Callback_Environnement::getInstance().cb_onBoardChange(_board);
-			}
-
-			++i;
+		if (change)
+		{
+			Callback_Environnement::getInstance().cb_onBoardChange(_board);
 		}
 
 		addAction(createBoardPlay());
@@ -392,7 +381,6 @@ namespace Logique {
 		value->setGetSquare(boost::bind(static_cast<board_func>(&Board::get), &_board, _1));
 		value->reInitPerf();
 		addAction(value->createFoodAction());
-		
 	}
 
 	void Environnement::spawnSheep() {

@@ -153,7 +153,7 @@ namespace Logique {
 		_numberEat = 0;
 		_numberRep = 0;
 		_actual = 0;
-		_numberTot = 10;
+		_numberTot = 5;
 	}
 
 	float Entity::computeMoy() const {
