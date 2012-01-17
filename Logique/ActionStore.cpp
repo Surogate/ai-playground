@@ -71,8 +71,6 @@ namespace Logique {
 	{
 		std::size_t i = 0;
 
-		tab[i] = static_cast<float>(s.useable());
-		i++;
 		tab[i] = static_cast<float>(s.hasGrass());
 		i++;
 		tab[i] = static_cast<float>(s.hasSheep());
