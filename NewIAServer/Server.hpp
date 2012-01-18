@@ -10,6 +10,7 @@
 
 #include <Poco/Net/TCPServer.h>
 #include <Poco/Net/ServerSocket.h>
+#include <boost/thread/mutex.hpp>
 #include <map>
 #include <stdint.h>
 #include "Packet.hpp"
@@ -34,6 +35,7 @@ public:
     void SendPacket(Packet & packet);
     void AddConnection(Connection * connection);
     void RemoveConnection(Connection * connection);
+	void synchronize(Connection * connection);
 
 private:
     Server();
@@ -43,8 +45,8 @@ private:
     Poco::Net::TCPServer server_;
     std::map<std::size_t, Connection*> connections_;
     Logique::Environnement         environnement_;
-    
-    void synchronize(Connection * connection);
+    boost::mutex				   connections_mut_;
+
     void cmdSpawnSheep(Logique::Entity const &);
     void cmdSpawnWolf(Logique::Entity const &);
     void cmdEntityMove(Logique::Entity const &);

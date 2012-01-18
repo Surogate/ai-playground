@@ -22,6 +22,8 @@ public:
     void AddPacket(Packet & packet);
 
 private:
+
+	static const uint32_t BUFF_SIZE;
     std::deque<Packet> packets_;
     boost::mutex packet_mut_;
     
