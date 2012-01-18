@@ -131,8 +131,8 @@ Packet & Packet::operator >>(uint8_t & value)
 {
     if (CheckSize(sizeof(value)))
     {
-    value = *reinterpret_cast<const uint8_t*>(GetData() + reading_pos_);
-    reading_pos_ += sizeof(value);        
+		value = *reinterpret_cast<const uint8_t*>(GetData() + reading_pos_);
+		reading_pos_ += sizeof(value);
     }
     return (*this);
 }
@@ -142,7 +142,7 @@ Packet & Packet::operator >>(uint16_t & value)
     if (CheckSize(sizeof(value)))
     {
         value = *reinterpret_cast<const uint16_t*>(GetData() + reading_pos_);
-        reading_pos_ += sizeof(value);        
+        reading_pos_ += sizeof(value);
         value = Endians(value);
     }
     return (*this);
@@ -153,7 +153,7 @@ Packet & Packet::operator >>(uint32_t & value)
     if (CheckSize(sizeof(value)))
     {
         value = *reinterpret_cast<const uint32_t*>(GetData() + reading_pos_);
-        reading_pos_ += sizeof(value);        
+        reading_pos_ += sizeof(value);
         value = Endianl(value);
     }
     return (*this);    
@@ -164,7 +164,7 @@ Packet & Packet::operator >>(int8_t & value)
     if (CheckSize(sizeof(value)))
     {
         value = *reinterpret_cast<const int8_t*>(GetData() + reading_pos_);
-        reading_pos_ += sizeof(value);        
+        reading_pos_ += sizeof(value);
     }
     return (*this);
 }
@@ -174,7 +174,7 @@ Packet & Packet::operator >>(int16_t & value)
     if (CheckSize(sizeof(value)))
     {
         value = *reinterpret_cast<const int16_t*>(GetData() + reading_pos_);
-        reading_pos_ += sizeof(value);        
+        reading_pos_ += sizeof(value);
         value = Endians(value);
     }
     return (*this);
@@ -185,7 +185,7 @@ Packet & Packet::operator >>(int32_t & value)
     if (CheckSize(sizeof(value)))
     {
         value = *reinterpret_cast<const int32_t*>(GetData() + reading_pos_);
-        reading_pos_ += sizeof(value);        
+        reading_pos_ += sizeof(value);
         value = Endianl(value);
     }
     return (*this);
@@ -196,7 +196,7 @@ Packet & Packet::operator >>(float & value)
     if (CheckSize(sizeof(value)))
     {
         value = *reinterpret_cast<const float*>(GetData() + reading_pos_);
-        reading_pos_ += sizeof(value);        
+        reading_pos_ += sizeof(value);
     }
     return (*this);
 }
@@ -206,7 +206,7 @@ Packet & Packet::operator >>(double & value)
     if (CheckSize(sizeof(value)))
     {
         value = *reinterpret_cast<const double*>(GetData() + reading_pos_);
-        reading_pos_ += sizeof(value);        
+        reading_pos_ += sizeof(value);
     }
     return (*this);
 }

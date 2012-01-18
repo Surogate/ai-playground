@@ -28,7 +28,7 @@ namespace ClientXNA
     {
         private class NetworkData
         {
-            public const int BUFFER_SIZE = 512;
+            public const int BUFFER_SIZE = 256;
             public StringBuilder sb = new StringBuilder();
             public byte[] buffer = new byte[BUFFER_SIZE];
         }
@@ -38,7 +38,7 @@ namespace ClientXNA
         #endregion
 
         #region Utils
-        private delegate void Command(GameClient gcl, string message);
+        private delegate void Command(GameClient gcl, byte[] message);
         #endregion
 
         #region Attributes
@@ -47,9 +47,9 @@ namespace ClientXNA
         private SpriteBatch spriteBatch;
         private Texture2D   grass_;
         private Vector2 camera_;
-        private List<string> incoming_packages_;
+        private List<byte[]> incoming_packages_;
         private Command[] commands_ = {new Command(spawn), new Command(move), new Command(eat)
-                                    , new Command(die) , new Command(starving) , new Command(clone)
+                                    , new Command(die), new Command(clone)
                                     , new Command(board_beg) , new Command(board) , new Command(board_end), new Command(perf)};
         private Board board_ = null;
         private Hashtable entities_ = null;
@@ -87,7 +87,7 @@ namespace ClientXNA
             this.graphics.PreferredBackBufferHeight = 720;
             this.IsMouseVisible = true;
             Content.RootDirectory = "Content";
-            incoming_packages_ = new List<string>();
+            incoming_packages_ = new List<byte[]>();
             camera_ = new Vector2();
             entities_ = new Hashtable();
             chartsModels_ = new ViewModels.ChartsViewModel();
@@ -267,16 +267,18 @@ namespace ClientXNA
             {
                 while (incoming_packages_.Count > 0)
                 {
-                    string package = incoming_packages_.First();
-                    string[] tokens = package.Split(new char[]{';'});
+                    byte[] package = incoming_packages_.First();
+                    //string[] tokens = package.Split(new char[]{';'});
                     try
                     {
-                        int cmd = int.Parse(tokens[0]);
-                        StringBuilder sb = new StringBuilder();
-                        if (tokens.Count() > 1)
-                            commands_[cmd](this, package.Substring(tokens[0].Length + 1));
-                        else
-                            commands_[cmd](this, package);
+                        byte cmd = package[0];
+                        Debug.WriteLine("Command : " + (int)cmd);
+                        commands_[cmd](this, package);
+                        //int cmd = int.Parse(tokens[0])
+                        //if (tokens.Count() > 1)
+                        //    commands_[cmd](this, package.Substring(tokens[0].Length + 1));
+                        //else
+                        //    commands_[cmd](this, package);
                     }
                     catch (Exception e)
                     {
@@ -390,8 +392,7 @@ namespace ClientXNA
                 {
                     lock (incoming_packages_)
                     {
-                        nd.sb.Append(Encoding.ASCII.GetString(nd.buffer, 0, receiveSize));
-                        incoming_packages_.Add(nd.sb.ToString());
+                        incoming_packages_.Add(nd.buffer);
                         nd.sb.Clear();
                     }
                     client_.Client.BeginReceive(nd.buffer, 0, NetworkData.BUFFER_SIZE, 0, new AsyncCallback(ReceiveCallBack), nd);
@@ -407,20 +408,50 @@ namespace ClientXNA
             }
         }
 
-        private static void spawn(GameClient gcl, string msg)
+        static Int32 dataToInt32(byte[] msg, int startIndex)
         {
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
+            byte[] array = {
+                               msg[startIndex],
+                               msg[startIndex + 1],
+                               msg[startIndex + 2],
+                               msg[startIndex + 3]
+                           };
+            array.Reverse();
+
+            return BitConverter.ToInt32(array, 0);
+        }
+
+        static UInt32 dataToUInt32(byte[] msg, int startIndex)
+        {
+            byte[] array = {
+                               msg[startIndex],
+                               msg[startIndex + 1],
+                               msg[startIndex + 2],
+                               msg[startIndex + 3]
+                           };
+            array.Reverse();
+
+            return BitConverter.ToUInt32(array, 0);
+        }
+
+        private static void spawn(GameClient gcl, byte[] msg)
+        {
             try
             {
-                string type = tokens[0];
-                int id = int.Parse(tokens[1]);
-                int x = int.Parse(tokens[2]);
-                int y = int.Parse(tokens[3]);
+                int startIndex = 1;
+                UInt32 id = dataToUInt32(msg, startIndex);
+                startIndex += sizeof(int);
+                char type = (char)msg[startIndex];
+                startIndex += sizeof(char);
+                Int32 x = dataToInt32(msg, startIndex);
+                startIndex += sizeof(int);
+                Int32 y = dataToInt32(msg, startIndex);
+
+                Debug.WriteLine("Spawn "  + id + " " + type + " " + x + " " + y);
+
                 lock (gcl.entities_)
                 {
-                    if (type == "s")
+                    if (type == 0)
                     {
                         gcl.entities_.Add(id, new Sheep(new Vector2(y, x), gcl.Content.Load<Texture2D>("sheep")));
                         gcl.sheepNumber_++;
@@ -438,19 +469,84 @@ namespace ClientXNA
             }
         }
 
-        private static void move(GameClient gcl, string msg)
+        private static void move(GameClient gcl, byte[] msg)
         {
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
+            //try
+            //{
+            //    int id = int.Parse(tokens[0]);
+            //    int action = int.Parse(tokens[1]);
+            //    int x = int.Parse(tokens[2]);
+            //    int y = int.Parse(tokens[3]);
+            //    ((Entity)gcl.entities_[id]).Action = (Entity.EntityAction)action;
+            //    ((Entity)gcl.entities_[id]).NextPosition = new Vector2(y, x);
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.WriteLine(e.Message);
+            //}
+        }
+
+        private static void eat(GameClient gcl, byte[] msg)
+        {
+            //string[] tokens = msg.Split(new char[] { ';' });
+            //if (tokens.Count() < 0)
+            //    return;
+        }
+
+        private static void die(GameClient gcl, byte[] msg)
+        {
+            //try
+            //{
+            //    lock (gcl.entities_)
+            //    {
+            //        int id = int.Parse(msg);
+            //        if (gcl.entities_[id] is Sheep)
+            //        {
+            //            gcl.sheepNumber_--;
+            //        }
+            //        if (gcl.entities_[id] is Wolf)
+            //        {
+            //            gcl.wolfNumber_--;
+            //        }
+            //        gcl.entities_.Remove(id);
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.WriteLine(e.Message);
+            //}
+        }
+
+        private static void starving(GameClient gcl, byte[] msg)
+        {
+            //string[] tokens = msg.Split(new char[] { ';' });
+            //if (tokens.Count() < 0)
+            //    return;
+        }
+
+        private static void clone(GameClient gcl, byte[] msg)
+        {
+            //string[] tokens = msg.Split(new char[] { ';' });
+            //if (tokens.Count() < 0)
+            //    return;
+            //try
+            //{
+            //    int id = int.Parse(tokens[0]);
+            //    ((Entity)gcl.entities_[id]).Action = Entity.EntityAction.REPRODUCE;
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.WriteLine(e.Message);
+            //}
+        }
+
+        private static void board_beg(GameClient gcl, byte[] msg)
+        {
             try
             {
-                int id = int.Parse(tokens[0]);
-                int action = int.Parse(tokens[1]);
-                int x = int.Parse(tokens[2]);
-                int y = int.Parse(tokens[3]);
-                ((Entity)gcl.entities_[id]).Action = (Entity.EntityAction)action;
-                ((Entity)gcl.entities_[id]).NextPosition = new Vector2(y, x);
+                Int32 size = dataToInt32(msg, 1);
+                Debug.WriteLine("New Board " + size);
+                gcl.board_ = new Board(size);
             }
             catch (Exception e)
             {
@@ -458,90 +554,18 @@ namespace ClientXNA
             }
         }
 
-        private static void eat(GameClient gcl, string msg)
-        {
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
-        }
-
-        private static void die(GameClient gcl, string msg)
+        private static void board(GameClient gcl, byte[] msg)
         {
             try
             {
-                lock (gcl.entities_)
-                {
-                    int id = int.Parse(msg);
-                    if (gcl.entities_[id] is Sheep)
-                    {
-                        gcl.sheepNumber_--;
-                    }
-                    if (gcl.entities_[id] is Wolf)
-                    {
-                        gcl.wolfNumber_--;
-                    }
-                    gcl.entities_.Remove(id);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-        }
-
-        private static void starving(GameClient gcl, string msg)
-        {
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
-        }
-
-        private static void clone(GameClient gcl, string msg)
-        {
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
-            try
-            {
-                int id = int.Parse(tokens[0]);
-                ((Entity)gcl.entities_[id]).Action = Entity.EntityAction.REPRODUCE;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-        }
-
-        private static void board_beg(GameClient gcl, string msg)
-        {
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
-            if (gcl.board_ == null)
-            {
-                try
-                {
-                    int size = int.Parse(tokens[0]);
-                    gcl.board_ = new Board(size);
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e.Message);
-                }
-            }
-        }
-
-        private static void board(GameClient gcl, string msg)
-        {
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
-            try
-            {
-                int x = int.Parse(tokens[0]);
-                int y = int.Parse(tokens[1]);
-                int title = int.Parse(tokens[2]);
-                int odour = int.Parse(tokens[3]);
+                int startIndex = 1;
+                Int32 x = dataToInt32(msg, startIndex);
+                startIndex += sizeof(int);
+                Int32 y = dataToInt32(msg, startIndex);
+                startIndex += sizeof(int);
+                Int32 title = dataToInt32(msg, startIndex);
+                startIndex += sizeof(int);
+                Int32 odour = dataToInt32(msg, startIndex);
                 gcl.board_.Data[y][x].Odour = odour;
                 gcl.board_.Data[y][x].setHasGrass((title == 1));
             }
@@ -549,30 +573,46 @@ namespace ClientXNA
             {
                 Debug.WriteLine(e.Message);
             }
+            //string[] tokens = msg.Split(new char[] { ';' });
+            //if (tokens.Count() < 0)
+            //    return;
+            //try
+            //{
+            //    int x = int.Parse(tokens[0]);
+            //    int y = int.Parse(tokens[1]);
+            //    int title = int.Parse(tokens[2]);
+            //    int odour = int.Parse(tokens[3]);
+            //    gcl.board_.Data[y][x].Odour = odour;
+            //    gcl.board_.Data[y][x].setHasGrass((title == 1));
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.WriteLine(e.Message);
+            //}
         }
 
-        private static void board_end(GameClient gcl, string msg)
+        private static void board_end(GameClient gcl, byte[] msg)
         {
             return;
         }
 
-        private static void perf(GameClient gcl, string msg)
+        private static void perf(GameClient gcl, byte[] msg)
         {
-            msg = msg.Replace('.', ',');
-            string[] tokens = msg.Split(new char[] { ';' });
-            if (tokens.Count() < 0)
-                return;
-            try
-            {
-                float sheep = float.Parse(tokens[0]);
-                float wolf = float.Parse(tokens[1]);
-                gcl.sheepLastPerf_ = sheep;
-                gcl.wolfLastPerf_ = wolf;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
+            //msg = msg.Replace('.', ',');
+            //string[] tokens = msg.Split(new char[] { ';' });
+            //if (tokens.Count() < 0)
+            //    return;
+            //try
+            //{
+            //    float sheep = float.Parse(tokens[0]);
+            //    float wolf = float.Parse(tokens[1]);
+            //    gcl.sheepLastPerf_ = sheep;
+            //    gcl.wolfLastPerf_ = wolf;
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.WriteLine(e.Message);
+            //}
 
         }
 
