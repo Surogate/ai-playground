@@ -48,14 +48,14 @@ public:
     Packet & operator>>(char * data);
     Packet & operator>>(std::string & data);
 
-
+	uint32_t Endianl(uint32_t value);
+    uint16_t Endians(uint16_t value);
 
 private:
     std::vector<char> data_;
     uint32_t reading_pos_;
     
-    uint32_t Endianl(uint32_t value);
-    uint16_t Endians(uint16_t value);
+
     bool     CheckSize(uint32_t size);
 };
 

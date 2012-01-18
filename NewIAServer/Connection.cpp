@@ -30,8 +30,6 @@ void Connection::run() {
 	{
 		while (true)
 		{
-			boost::lock_guard<boost::mutex> lock(packet_mut_);
-
 			if (socket().poll(Poco::Timespan(1000), Poco::Net::Socket::SELECT_READ))
 			{
 				if (socket().receiveBytes(buffer, 512, 0) <= 0)
@@ -40,12 +38,19 @@ void Connection::run() {
 			}
 			else
 			{
+				boost::lock_guard<boost::mutex> lock(packet_mut_);
 				while (!packets_.empty())
 				{
 					Packet & pack = packets_.back();
-					while (pack.GetSize() < Connection::BUFF_SIZE)
-						pack << (uint8_t)0;
-					socket().sendBytes(pack.GetData(), pack.GetSize(), 0);
+					//while (pack.GetSize() < Connection::BUFF_SIZE)
+					//	pack << (uint8_t)0;
+					std::size_t size = pack.Endianl(pack.GetSize());
+					socket().sendBytes(reinterpret_cast<const void*>(&size), sizeof(size));
+					std::size_t send = 0;
+					for (; send < pack.GetSize(); )
+					{
+						send = socket().sendBytes(pack.GetData() + send, pack.GetSize() - send, 0);
+					}
 					packets_.pop_back();
 				}
 			}

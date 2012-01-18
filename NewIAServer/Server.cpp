@@ -90,7 +90,7 @@ void Server::synchronize(Connection * connection)
 void Server::cmdSpawnSheep(Logique::Entity const &e)
 {
     Packet packet;
-    
+
     packet << Server::SPAWN << (std::size_t) &e << (uint8_t)e.getType() << (int32_t)e.getLocation().x << (int32_t)e.getLocation().y;
     SendPacket(packet);
 }
@@ -99,7 +99,7 @@ void Server::cmdSpawnWolf(Logique::Entity const &e)
 {
     Packet packet;
     
-        packet << Server::SPAWN << (std::size_t) &e << (uint8_t)e.getType() << (int32_t)e.getLocation().x << (int32_t)e.getLocation().y;
+    packet << Server::SPAWN << (std::size_t) &e << (uint8_t)e.getType() << (int32_t)e.getLocation().x << (int32_t)e.getLocation().y;
     SendPacket(packet);
 }
 
