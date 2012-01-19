@@ -19,6 +19,8 @@ namespace Logique {
 		Sheep();
 		~Sheep();
 
+		void onDeath();
+
 		void initActionArray(Board& board);
 
 		void getNewAction(unsigned int actionStart);

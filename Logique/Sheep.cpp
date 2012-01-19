@@ -16,6 +16,11 @@ namespace Logique {
 
 	Sheep::~Sheep()
 	{
+		onDeath();
+	}
+
+	void Sheep::onDeath() 
+	{
 		sendXpNot(1.f);
 	}
 

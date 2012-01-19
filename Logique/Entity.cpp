@@ -60,6 +60,7 @@ namespace Logique {
 	Action Entity::createFoodAction(unsigned int time, unsigned int value) {
 		Action food;
 
+		food._tickStart = 0;
 		food._tickBeforeAction = time;
 		food._action = boost::bind(&Entity::decreaseFood, shared_from_this(), value);
 

@@ -14,6 +14,11 @@ namespace Logique {
 
 	Wolf::~Wolf() 
 	{
+		onDeath();
+	}
+
+	void Wolf::onDeath() 
+	{
 		sendXpNot(1.f);
 	}
 
