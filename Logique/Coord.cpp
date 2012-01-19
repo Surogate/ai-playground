@@ -38,6 +38,14 @@ Coord Coord::operator-(const Coord& pos) const {
 	return Coord(x - pos.x, y - pos.y);
 }
 
+bool Coord::operator==(const Coord& pos) const {
+	return x == pos.x && y == pos.y;
+}
+
+bool Coord::operator!=(const Coord& pos) const {
+	return !operator==(pos);
+}
+
 std::ostream& operator<<(std::ostream& cout, const Coord& value) {
 	cout << "x " << value.x << " y " << value.y;
 	return cout;

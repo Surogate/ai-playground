@@ -18,7 +18,8 @@ namespace Logique {
 			ENTITY_EAT,
 			ENTITY_DEATH,
 			GRASS_UP,
-			GRASS_DOWN
+			GRASS_DOWN,
+			TYPE_SIZE
 		};
 
 		Type _type;

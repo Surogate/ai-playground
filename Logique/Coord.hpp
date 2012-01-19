@@ -15,6 +15,8 @@ struct Coord {
 	void operator-=(const Coord& pos);
 	Coord operator+(const Coord& pos) const;
 	Coord operator-(const Coord& pos) const;
+	bool operator==(const Coord& pos) const;
+	bool operator!=(const Coord& pos) const;
 
 	static const Coord DOWN;
 	static const Coord RIGHT;

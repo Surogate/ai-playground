@@ -3,6 +3,7 @@
 #define CALLBACK_ENVIRONNEMENT
 
 #include <boost/thread.hpp>
+#include <boost/array.hpp>
 #include <deque>
 
 #include "Entity.hpp"
@@ -25,13 +26,24 @@ namespace Logique {
 
 		DequeProxy< Environnement_Event >&& getEventProxy();
 
+		void debugEvent(const Environnement_Event& ev);
+
 	private:
 		EventDeque _eventQueue;
 		boost::mutex _mut;
+		boost::array< const char *, Environnement_Event::TYPE_SIZE > _eventTypeString;
+		boost::array< const char *, Square::ENTITY_CONTAINER_SIZE > _entityTypeString;
 
 		Callback_Environnement();
 		~Callback_Environnement();
 		Callback_Environnement(const Callback_Environnement& value);
+
+		void initEventTypeString();
+		void initEntityTypeString();
+
+		void debugEvent(Environnement_Event::Type, Square::EntityContain type, Coord pos);
+		void debugEvent(Environnement_Event::Type, Square::EntityContain type, Coord pos, Coord newPos);
+		void debugEvent(Environnement_Event::Type, Coord pos);
 	};
 
 }
