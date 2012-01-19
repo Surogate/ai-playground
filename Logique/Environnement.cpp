@@ -1,6 +1,8 @@
 
 #include <iostream>
 
+#include <boost/foreach.hpp>
+
 #include "Environnement.hpp"
 #include "Logger.hpp"
 #include "Sheep.hpp"
@@ -14,9 +16,8 @@ namespace Logique {
 	{
 		_entityNum[Square::SHEEP] = 0;
 		_entityNum[Square::WOLF] = 0;
-		_baseTime = boost::chrono::milliseconds(500);
+		_baseTime = boost::chrono::milliseconds(1000);
 		addAction(createBoardPlay());
-		//addAction(createLog());
 	}
 
 	Environnement::~Environnement() {}
@@ -35,8 +36,9 @@ namespace Logique {
 	void Environnement::run() {
 		preRun();
 
-		boost::chrono::duration<double> total_time = boost::chrono::duration<double>(0);
 		boost::chrono::system_clock::time_point start;
+		boost::chrono::duration<double> total_time;
+
 		ActionList::iterator executor;
 		ActionList::iterator toDeleteEnd;
 		ActionList::iterator end;
@@ -45,42 +47,43 @@ namespace Logique {
 		while (!_actionList.empty()) {
 			start = boost::chrono::system_clock::now();
 
-			executor = _actionList.begin();
-			end = _actionList.end();
+			unsigned int tick_passed = std::floor(total_time.count() / _baseTime.count());
 
-			unsigned int tickpassed = std::floor(total_time.count() / _baseTime.count());
-			
-			if (tickpassed > 0) {
-				total_time -= (tickpassed * _baseTime);
+			if (tick_passed > 0) {
+				total_time -= (tick_passed * _baseTime);
 
-				while (executor != end && executor->increment(tickpassed)) {
+				executor = _actionList.begin();
+				end = _actionList.end();
+
+				while (executor != end && executor->increment(tick_passed)) {
 					++executor;
 				}
 
 				toDeleteEnd = executor;
+				executor++;
 
-				while (executor != end) {
-					executor->increment(tickpassed);
-					++executor;
+				while (executor != end)
+				{
+					executor->increment(tick_passed);
+					executor++;
 				}
 
-				if (_actionList.begin() != toDeleteEnd) {
+				if (toDeleteEnd != _actionList.begin())
 					_actionList.erase(_actionList.begin(), toDeleteEnd);
-				}
-			}
 
+			}
 			if (getSheepNum() <= 3) {
 				addSheep(20);
 			}
+
 			if (getWolfNum() <= 3) {
 				addWolf(10);
-			}
+			}				
 
 			insertActionStack();
 
 			total_time += boost::chrono::system_clock::now() - start;
 		}
-
 		std::cout << "Simulation end" << std::endl;
 	}
 
@@ -273,7 +276,7 @@ namespace Logique {
 
 		std::cout << "## size:" << _actionList.size() << std::endl;
 		while (it != ite) {
-			std::cout << "tick " << it->_tickBeforeAction << std::endl;
+			std::cout << "tick start:" << it->_tickStart << " tickEnd:" << it->_tickBeforeAction << " diff:" << it->tickBefore() << std::endl;
 			++it;
 		}
 		std::cout << "##" << std::endl;

@@ -19,6 +19,8 @@ namespace Logique {
 		Wolf();
 		~Wolf();
 
+		void onDeath();
+
 		void initActionArray(Board& board);
 
 		void getNewAction(unsigned int actionStart);
