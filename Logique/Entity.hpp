@@ -50,7 +50,7 @@ namespace Logique  {
 		void decreaseFood(unsigned int value);
 		Square::EntityContain getType() const;
 
-		virtual void getNewAction() = 0;
+		virtual void getNewAction(unsigned int actionStart) = 0;
 		virtual void eat(Board& board) = 0;
 		virtual void reproduce(Board& board) = 0;
 
@@ -81,7 +81,8 @@ namespace Logique  {
 		typedef std::stack< ActionStore > ActionStoreStack;
 
 		const Square::EntityContain _type;
-		boost::array<Action, ACTION_CONTAINER_SIZE> _actionArray;
+		boost::array<unsigned int, ACTION_CONTAINER_SIZE> _timeArray;
+		boost::array<boost::function< void () > , ACTION_CONTAINER_SIZE> _actionArray;
 		Coord _loc;
 
 		ActionFunctor _add_action;

@@ -21,7 +21,7 @@ namespace Logique {
 
 		void initActionArray(Board& board);
 
-		void getNewAction();
+		void getNewAction(unsigned int actionStart);
 		void eat(Board& board);
 		void reproduce(Board& board);
 

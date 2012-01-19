@@ -21,13 +21,15 @@ namespace Logique {
 
 	void Sheep::initActionArray(Board& board) {
 		Entity::initActionArray(board);
-		_newAction = Action(0, boost::bind(&Entity::getNewAction, shared_from_this()));
-		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Sheep::eat, this, boost::ref(board)));
-		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Sheep::reproduce, this, boost::ref(board)));
+		_newAction = Action(0, 0, boost::bind(&Entity::getNewAction, shared_from_this(), _1));
+		_actionArray[EAT] = boost::bind(&Sheep::eat, this, boost::ref(board));
+		_timeArray[EAT] = EAT_TIME;
+		_actionArray[REPRODUCE] = boost::bind(&Sheep::reproduce, this, boost::ref(board));
+		_timeArray[REPRODUCE] = REPRODUCE_TIME;
 	}
 
-	EntityAction Sheep::computeAction() {
-
+	EntityAction Sheep::computeAction() 
+	{
 		_actionStack.push(ActionStore(_foodCount, _lastCompute, _loc, _getSquare));
 		DecisionTree::ReturnValue result = _tree.computeAction(_actionStack.top());
 		_lastCompute = result;
@@ -56,14 +58,16 @@ namespace Logique {
 		_tree.generateTree();
 	}
 
-	void Sheep::getNewAction() 
+	void Sheep::getNewAction(unsigned int actionStart) 
 	{
 		EntityAction act = computeAction();
 
 		if (isAlive()) {
 			_actionArray[act]();
-			_newAction._tickBeforeAction = _actionArray[act]._tickBeforeAction;
-			_add_action(_newAction);
+			_newAction._tickStart = 0;
+			_newAction._tickBeforeAction = _timeArray[act];
+			if (!_newAction.increment(actionStart))
+				_add_action(_newAction);
 		}
 
 		if (_actual && _actual >= _numberTot) {
@@ -87,12 +91,12 @@ namespace Logique {
 		if (board(_loc).hasGrass()) {
 			_lastAction = EAT;
 			_numberEat++;
-			std::cout << "sheep eat" << std::endl;
 			board.lock();
 			board(_loc).hasGrass(false);
 			board.unlock();
 			addFood(FOOD_GAIN);
-			Callback_Environnement::getInstance().cb_onEntityEat(*this);
+			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_EAT, *this, _type, _loc);
+			Callback_Environnement::getInstance().addAction(Environnement_Event::GRASS_DOWN, _loc);
 		}
 	}
 
@@ -102,9 +106,8 @@ namespace Logique {
 			_rep_limit = REPRODUCE_COUNTER / 2;
 			if (_numberRep < 2)
 				_rep_limit += 2;
-			std::cout << "sheep reproduce" << std::endl;
 			_lastAction = REPRODUCE;
-			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
+			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_REPRODUCE, *this, _type, _loc);
 		}
 	}
 
