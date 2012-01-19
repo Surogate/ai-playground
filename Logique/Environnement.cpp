@@ -40,38 +40,33 @@ namespace Logique {
 		ActionList::iterator executor;
 		ActionList::iterator toDeleteEnd;
 		ActionList::iterator end;
+
+		std::cout << "simulation start" << std::endl;
 		while (!_actionList.empty()) {
 			start = boost::chrono::system_clock::now();
 
 			executor = _actionList.begin();
 			end = _actionList.end();
 
-			//on execute toute les action qui se sont deroulé pendant l'attente
-			while (executor != end && executor->_tickBeforeAction == 0) {
-				executor->_action();
-				++executor;
-			}
-
-			toDeleteEnd = executor;
-
-			unsigned int tickpassed = total_time.count() / _baseTime.count();
+			unsigned int tickpassed = std::floor(total_time.count() / _baseTime.count());
 			
-
-			//les action restante voient leurs temps avant execution diminuer
 			if (tickpassed > 0) {
-				total_time -= (_baseTime * tickpassed);
-				while (executor != end) {
-					if (executor->_tickBeforeAction > tickpassed) {
-						executor->_tickBeforeAction -= tickpassed;
-					} else {
-						executor->_tickBeforeAction = 0;
-					}
+				total_time -= (tickpassed * _baseTime);
+
+				while (executor != end && executor->increment(tickpassed)) {
 					++executor;
 				}
-			}
 
-			if (_actionList.begin() != toDeleteEnd) {
-				_actionList.erase(_actionList.begin(), toDeleteEnd);
+				toDeleteEnd = executor;
+
+				while (executor != end) {
+					executor->increment(tickpassed);
+					++executor;
+				}
+
+				if (_actionList.begin() != toDeleteEnd) {
+					_actionList.erase(_actionList.begin(), toDeleteEnd);
+				}
 			}
 
 			if (getSheepNum() <= 3) {
@@ -98,7 +93,6 @@ namespace Logique {
 	bool Environnement::addSheep(const Coord& loc) 
 	{
 		if (!_board(loc).hasSheep()) {
-			//std::cout << "spawn sheep at " << loc << std::endl;
 			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
 			sheepPtr->addFood(Logique::FOOD_START);
 			sheepPtr->initActionArray(_board);
@@ -106,9 +100,8 @@ namespace Logique {
 			sheepPtr->setGetNumberSpecies(boost::bind(&Environnement::getSheepNum, this));
 			sheepPtr->setPopEntityFunctor(boost::bind(&Environnement::popSheepNear, this, _1));
 			initEntity(sheepPtr, loc);
-			Callback_Environnement::getInstance().cb_onSheepSpawn(*sheepPtr);
-			Callback_Environnement::getInstance().cb_onBoardChange(_board);
-			sheepPtr->getNewAction();
+			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_SPAWN, *sheepPtr.get(), Square::SHEEP, loc);
+			sheepPtr->getNewAction(0);
 			return true;
 		}
 		return false;
@@ -125,9 +118,8 @@ namespace Logique {
 			wolfPtr->setGetNumberSpecies(boost::bind(&Environnement::getWolfNum, this));
 			wolfPtr->setPopEntityFunctor(boost::bind(&Environnement::popWolfNear, this, _1));
 			initEntity(wolfPtr, loc);
-			Callback_Environnement::getInstance().cb_onWolfSpawn(*wolfPtr);
-			Callback_Environnement::getInstance().cb_onBoardChange(_board);
-			wolfPtr->getNewAction();
+			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_SPAWN, *wolfPtr.get(), Square::WOLF, loc);
+			wolfPtr->getNewAction(0);
 			return true;
 		}
 		return false;
@@ -266,7 +258,7 @@ namespace Logique {
 		ActionList::iterator it = _actionList.begin();
 		ActionList::iterator ite = _actionList.end();
 
-		while (it != ite && it->_tickBeforeAction < value._tickBeforeAction) {
+		while (it != ite && it->tickBefore() < value.tickBefore()) {
 			++it;
 		}
 		if (it != ite) {
@@ -341,26 +333,19 @@ namespace Logique {
 		Logger wolfLog("Loup.csv");
 		wolfLog.dump(totalWolf);
 
-		Callback_Environnement::getInstance().cb_sendMoy(totalSheep, totalWolf);
+//		Callback_Environnement::getInstance().cb_sendMoy(totalSheep, totalWolf);
 	}
 
 	void Environnement::boardPlay() {
-		bool change = false;
-
 		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
 			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
 				Square& val = _board[x][y];
-				if (!val.hasEntity())
-					change = change || val.increaseGrass();
-				else
-					change = change || val.decreaseGrass();
+				if (!val.hasEntity() && val.increaseGrass())
+					Callback_Environnement::getInstance().addAction(Environnement_Event::GRASS_UP, Coord(x, y));
+				if (val.hasEntity() && val.decreaseGrass())
+					Callback_Environnement::getInstance().addAction(Environnement_Event::GRASS_DOWN, Coord(x, y));
 				val.decreaseOdour(1);
 			}
-		}
-
-		if (change)
-		{
-			Callback_Environnement::getInstance().cb_onBoardChange(_board);
 		}
 
 		addAction(createBoardPlay());
@@ -396,7 +381,7 @@ namespace Logique {
 	}
 
 	void Environnement::onEntityDeath(Entity& value) {
-		Callback_Environnement::getInstance().cb_onEntityDeath(value);
+		Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_DEATH, value, value.getType(), value.getLocation());
 
 		_board.lock();
 		popOdour(value.getLocation());
@@ -407,7 +392,6 @@ namespace Logique {
 		_entityNum[value.getType()]--;		
 		_attriMtx.unlock();
 
-		Callback_Environnement::getInstance().cb_onBoardChange(_board);
 		value.cleanVtable();
 		EntityPtrSet::iterator it = _entityList.find(&value);
 		if (it != _entityList.end()) {

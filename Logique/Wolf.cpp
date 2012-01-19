@@ -20,9 +20,11 @@ namespace Logique {
 	void Wolf::initActionArray(Board& board) 
 	{
 		Entity::initActionArray(board);
-		_newAction = Action(0, boost::bind(&Entity::getNewAction, shared_from_this()));
-		_actionArray[EAT] = Action(EAT_TIME, boost::bind(&Wolf::eat, this, boost::ref(board)));
-		_actionArray[REPRODUCE] = Action(REPRODUCE_TIME, boost::bind(&Wolf::reproduce, this, boost::ref(board)));
+		_newAction = Action(0, 0, boost::bind(&Entity::getNewAction, shared_from_this(), _1));
+		_actionArray[EAT] = boost::bind(&Wolf::eat, this, boost::ref(board));
+		_timeArray[EAT] = EAT_TIME;
+		_actionArray[REPRODUCE] = boost::bind(&Wolf::reproduce, this, boost::ref(board));
+		_timeArray[REPRODUCE] = REPRODUCE_TIME;
 	}
 
 	EntityAction Wolf::computeAction() 
@@ -51,14 +53,16 @@ namespace Logique {
 		}
 	}
 
-	void Wolf::getNewAction() 
+	void Wolf::getNewAction(unsigned int actionStart) 
 	{
 		EntityAction act = computeAction();
 		
 		if (isAlive()) {
 			_actionArray[act]();
-			_newAction._tickBeforeAction = _actionArray[act]._tickBeforeAction;
-			_add_action(_newAction);
+			_newAction._tickStart = 0;
+			_newAction._tickBeforeAction = _timeArray[act];
+			if (!_newAction.increment(actionStart))
+				_add_action(_newAction);
 		}
 
 		if (_actual && _actual >= _numberTot) {
@@ -83,13 +87,12 @@ namespace Logique {
 		if (isAlive() && _getSquare(_loc).hasSheep()) {
 			_lastAction = EAT;
 			_numberEat++;
-			std::cout << "Wolf eat" << std::endl;
 			Entity* sheep =_getSquare(_loc).getEntity(Square::SHEEP);
 			if (sheep) {
 				sheep->setFood(0);
 			}
 			addFood(FOOD_GAIN);
-			Callback_Environnement::getInstance().cb_onEntityEat(*this);
+			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_EAT, *this, _type, _loc);
 		}
 	}
 
@@ -97,9 +100,8 @@ namespace Logique {
 		if (isAlive() && _rep_limit > REPRODUCE_COUNTER && hasWolfNext() && _popEntity(_loc) && _popEntity(_loc) && _popEntity(_loc)) {
 			_numberRep += 2;
 			_rep_limit = REPRODUCE_COUNTER / 2;
-			std::cout << "Wolf reproduce" << std::endl;
 			_lastAction = REPRODUCE;
-			Callback_Environnement::getInstance().cb_onEntityReproduce(*this);
+			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_REPRODUCE, *this, _type, _loc);			
 		}
 	}
 

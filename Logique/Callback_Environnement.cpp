@@ -4,92 +4,86 @@
 namespace Logique {
 
 	Callback_Environnement::Callback_Environnement() 
-		: _onBoardChange(), _onEntityDeath(), _onSheepSpawn(), _onWolfSpawn()
-		, _onEntityEat(), _onEntityReproduce(), _onEntityMove(), _sendMoyCallback()
-	{}
+	{
+		initEventTypeString();
+		initEntityTypeString();
+	}
 
 	Callback_Environnement::~Callback_Environnement() {}
 
 	Callback_Environnement::Callback_Environnement(const Callback_Environnement& orig) {}
 
-	void Callback_Environnement::setSpawnSheep(const EntityFunctor& onSpawnSheep) 
+	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos)
 	{
-		_onSheepSpawn = onSpawnSheep;
+		//debugEvent(value, type, pos, newPos);
+		_mut.lock();
+		_eventQueue.push_back(Environnement_Event(value, id, type, pos, newPos));
+		_mut.unlock();
 	}
 
-	void Callback_Environnement::setSpawnWolf(const EntityFunctor& onSpawnWolf) 
+	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos)
 	{
-		_onWolfSpawn = onSpawnWolf;
+		//debugEvent(value, type, pos);
+		_mut.lock();
+		_eventQueue.push_back(Environnement_Event(value, id, type, pos));
+		_mut.unlock();
+	}
+	void Callback_Environnement::addAction(Environnement_Event::Type value, Coord pos)
+	{
+		//debugEvent(value, pos);
+		_mut.lock();
+		_eventQueue.push_back(Environnement_Event(value, pos));
+		_mut.unlock();
+	}
+
+	DequeProxy< Environnement_Event >&& Callback_Environnement::getEventProxy() {
+		return DequeProxy< Environnement_Event >(_eventQueue, _mut);
+	}
+
+	void Callback_Environnement::debugEvent(const Environnement_Event& ev) 
+	{
+		if (ev._entityId > 0) 
+		{
+			std::cout << _eventTypeString[ev._type] << " id:" << ev._entityId << " " << _entityTypeString[ev._entityType] << " " << ev._pos;
+			if (ev._pos != ev._newPos)
+				std::cout << " " << ev._newPos << std::endl;
+			else 
+				std::cout << std::endl;
+		} else {
+			std::cout << _eventTypeString[ev._type] << " " << ev._pos << std::endl;
+		}
 	}
 	
-	void Callback_Environnement::setOnEntityMove(const EntityFunctor& onEntityMove) 
+	void Callback_Environnement::debugEvent(Environnement_Event::Type value, Square::EntityContain type, Coord pos)
 	{
-		_onEntityMove = onEntityMove;
+		std::cout << _eventTypeString[value] << " " << _entityTypeString[type] << " " << pos << std::endl;
 	}
 
-	void Callback_Environnement::setOnReproduce(const EntityFunctor& onEntityRep) 
+	void Callback_Environnement::debugEvent(Environnement_Event::Type value, Square::EntityContain type, Coord pos, Coord newPos)
 	{
-		_onEntityReproduce = onEntityRep;
+		std::cout << _eventTypeString[value] << " " << _entityTypeString[type] << " " << pos << " " << newPos << std::endl;
 	}
 
-	void Callback_Environnement::setOnEntityEat(const EntityFunctor& onEntityEat) 
+	void Callback_Environnement::debugEvent(Environnement_Event::Type value, Coord pos)
 	{
-		_onEntityEat = onEntityEat;
+		std::cout << _eventTypeString[value] << " " << pos << std::endl;
 	}
 
-	void Callback_Environnement::setOnEntityDead(const EntityFunctor& onEntityDead) 
+	void Callback_Environnement::initEventTypeString() 
 	{
-		_onEntityDeath = onEntityDead;
+		_eventTypeString[Environnement_Event::NONE] = "NONE";
+		_eventTypeString[Environnement_Event::ENTITY_SPAWN] = "ENTITY_SPAWN";
+		_eventTypeString[Environnement_Event::ENTITY_MOVE] = "ENTITY_MOVE";
+		_eventTypeString[Environnement_Event::ENTITY_REPRODUCE] = "ENTITY_REPRODUCE";
+		_eventTypeString[Environnement_Event::ENTITY_EAT] = "ENTITY_EAT";
+		_eventTypeString[Environnement_Event::ENTITY_DEATH] = "ENTITY_DEATH";
+		_eventTypeString[Environnement_Event::GRASS_UP] = "GRASS_UP";
+		_eventTypeString[Environnement_Event::GRASS_DOWN] = "GRASS_DOWN";
 	}
 
-	void Callback_Environnement::setOnBoardChange(const BoardFunctor& onBoardChange) 
+	void Callback_Environnement::initEntityTypeString() 
 	{
-		_onBoardChange = onBoardChange;
-	}
-
-	void Callback_Environnement::setSendMoy(const MoyFunctor& sendMoyCallback)
-	{
-		_sendMoyCallback = sendMoyCallback;
-	}
-
-	void Callback_Environnement::cb_sendMoy(const float& sheep, const float& wolf) const 
-	{
-		if (_sendMoyCallback) _sendMoyCallback(sheep, wolf);
-	}
-
-	void Callback_Environnement::cb_onBoardChange(const Board& value) const 
-	{ 
-		if (_onBoardChange) _onBoardChange(value); 
-	}
-	
-	void Callback_Environnement::cb_onEntityDeath(const Entity& value) const 
-	{
-		if (_onEntityDeath) _onEntityDeath(value); 
-	}
-
-	void Callback_Environnement::cb_onSheepSpawn(const Entity& value) const 
-	{
-		if (_onSheepSpawn) _onSheepSpawn(value);
-	}
-
-	void Callback_Environnement::cb_onWolfSpawn(const Entity& value) const 
-	{
-		if (_onWolfSpawn) _onWolfSpawn(value);
-	}
-
-	void Callback_Environnement::cb_onEntityMove(const Entity& value) const 
-	{
-		if (_onEntityMove) _onEntityMove(value);
-	}
-
-	void Callback_Environnement::cb_onEntityReproduce(const Entity& value) const 
-	{
-		if (_onEntityReproduce) _onEntityReproduce(value);
-	}
-
-	void Callback_Environnement::cb_onEntityEat(const Entity& value) const 
-	{
-		if (_onEntityEat) _onEntityEat(value);
+		_entityTypeString[Square::SHEEP] = "SHEEP";
+		_entityTypeString[Square::WOLF] = "WOLF";
 	}
 }
-

@@ -59,6 +59,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>D:\Travail\fann-2.1.0\MicrosoftVisualC++.Net\Debug;E:\Document\fann-2.1.0\MicrosoftVisualC++.Net\Debug;C:\Users\calimeraw\Documents\dev\fann-2.1.0\MicrosoftVisualC++.Net\Debug;C:\Program Files\boost\boost_1_47\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libfann.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

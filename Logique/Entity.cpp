@@ -15,9 +15,6 @@ namespace Logique {
 	{}
 
 	void Entity::cleanVtable() {
-		for (unsigned int i = 0; i < _actionArray.size(); i++) {
-			_actionArray[i] = Action();
-		}
 		_newAction = Action();
 	}
 
@@ -64,7 +61,7 @@ namespace Logique {
 		Action food;
 
 		food._tickBeforeAction = time;
-		food._action = boost::bind(&Entity::decreaseFood, this->shared_from_this(), value);
+		food._action = boost::bind(&Entity::decreaseFood, shared_from_this(), value);
 
 		return food;
 	}
@@ -96,11 +93,16 @@ namespace Logique {
 	}
 
 	void Entity::initActionArray(Board& board) {
-		_actionArray[WAIT] = Action(1, boost::bind(&Entity::wait, shared_from_this()));
-		_actionArray[MOVE_UP] = Action(MOVE_TIME, boost::bind(&Entity::goUp, shared_from_this(), boost::ref(board)));
-		_actionArray[MOVE_DOWN] = Action(MOVE_TIME, boost::bind(&Entity::goDown, shared_from_this(), boost::ref(board)));
-		_actionArray[MOVE_LEFT] = Action(MOVE_TIME, boost::bind(&Entity::goLeft, shared_from_this(), boost::ref(board)));
-		_actionArray[MOVE_RIGHT] = Action(MOVE_TIME, boost::bind(&Entity::goRight, shared_from_this(), boost::ref(board)));
+		_actionArray[WAIT] = boost::bind(&Entity::wait, this);
+		_timeArray[WAIT] = WAIT_TIME;
+		_actionArray[MOVE_UP] = boost::bind(&Entity::goUp, this, boost::ref(board));
+		_timeArray[MOVE_UP] = MOVE_TIME;
+		_actionArray[MOVE_DOWN] = boost::bind(&Entity::goDown, this, boost::ref(board));
+		_timeArray[MOVE_DOWN] = MOVE_TIME;
+		_actionArray[MOVE_LEFT] = boost::bind(&Entity::goLeft, this, boost::ref(board));
+		_timeArray[MOVE_LEFT] = MOVE_TIME;
+		_actionArray[MOVE_RIGHT] = boost::bind(&Entity::goRight, this, boost::ref(board));
+		_timeArray[MOVE_RIGHT] = MOVE_TIME;
 	}
 
 	void Entity::wait() {
@@ -137,9 +139,8 @@ namespace Logique {
 			board(_loc).hasEntity(_type, 0);
 			board(newLoc).hasEntity(_type, this);
 			board.unlock();
+			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_MOVE, *this, _type, _loc, newLoc);
 			_loc = newLoc;
-			Callback_Environnement::getInstance().cb_onEntityMove(*this);
-			Callback_Environnement::getInstance().cb_onBoardChange(board);
 			return true;
 		}
 		return false;
