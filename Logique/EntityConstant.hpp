@@ -11,7 +11,8 @@ namespace Logique {
 		FOOD_MAX = 25,
 		FOOD_REP_LIMIT_START = 17,
 		FOOD_REP_LIMIT_END = 10,
-		MOVE_TIME = 2
+		MOVE_TIME = 2,
+		WAIT_TIME = 1
 	};
 
 	enum EntityAction 

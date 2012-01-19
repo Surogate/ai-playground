@@ -37,34 +37,6 @@ namespace Logique {
 		Environnement();
 		~Environnement();
 
-		void setSpawnSheep(const Callback_Environnement::EntityFunctor& func) {
-			Callback_Environnement::getInstance().setSpawnSheep(func);
-		}
-
-		void setSpawnWolf(const Callback_Environnement::EntityFunctor& func) {
-			Callback_Environnement::getInstance().setSpawnWolf(func);
-		}
-
-		void setOnEntityMove(const Callback_Environnement::EntityFunctor& func) {
-			Callback_Environnement::getInstance().setOnEntityMove(func);
-		}
-
-		void setOnReproduce(const Callback_Environnement::EntityFunctor& func) {
-			Callback_Environnement::getInstance().setOnReproduce(func);
-		}
-
-		void setOnEntityEat(const Callback_Environnement::EntityFunctor& func) {
-			Callback_Environnement::getInstance().setOnEntityEat(func);
-		}
-
-		void setOnEntityDead(const Callback_Environnement::EntityFunctor& func) {
-			Callback_Environnement::getInstance().setOnEntityDead(func);
-		}
-
-		void setOnBoardChange(const Callback_Environnement::BoardFunctor& func) {
-			Callback_Environnement::getInstance().setOnBoardChange(func);
-		}
-
 		void run();
 		void test(int x, int y) {
 			popOdour(Coord(x, y), 3);
