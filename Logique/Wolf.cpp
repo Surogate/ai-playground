@@ -19,7 +19,7 @@ namespace Logique {
 
 	void Wolf::onDeath() 
 	{
-		sendXpNot(1.f);
+		sendXpNot(0.1f);
 	}
 
 	void Wolf::initActionArray(Board& board) 
@@ -76,12 +76,12 @@ namespace Logique {
 			if (moy > 0) {
 				_lastMoy = moy;
 				if (_validScore(moy)) {
-					sendXp(1.8f);
+					sendXp(0.25f);
 				} else {
-					sendXp(1.4f);
+					sendXp(0.2f);
 				}
 			} else {
-				sendXpNot(0.5f);
+				sendXpNot(0.05f);
 			}
 			reInitPerf();
 		}
