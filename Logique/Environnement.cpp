@@ -72,15 +72,19 @@ namespace Logique {
 					_actionList.erase(_actionList.begin(), toDeleteEnd);
 
 			}
+
 			if (getSheepNum() <= 3) {
 				addSheep(20);
 			}
 
 			if (getWolfNum() <= 3) {
 				addWolf(10);
-			}				
+			}
 
 			insertActionStack();
+
+			if (total_time < _baseTime) 
+				boost::this_thread::sleep(boost::posix_time::seconds(_baseTime.count()));
 
 			total_time += boost::chrono::system_clock::now() - start;
 		}
