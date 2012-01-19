@@ -16,7 +16,7 @@ namespace Logique {
 	{
 		_entityNum[Square::SHEEP] = 0;
 		_entityNum[Square::WOLF] = 0;
-		_baseTime = boost::chrono::milliseconds(1000);
+		_baseTime = boost::chrono::milliseconds(100);
 		addAction(createBoardPlay());
 	}
 
@@ -49,7 +49,9 @@ namespace Logique {
 
 			unsigned int tick_passed = std::floor(total_time.count() / _baseTime.count());
 
-			if (tick_passed > 0) {
+			if (tick_passed == 0) {
+				boost::this_thread::sleep(boost::posix_time::milliseconds(_actionList.begin()->tickBefore() * _baseTime.count() * 1000));
+			} else {
 				total_time -= (tick_passed * _baseTime);
 
 				executor = _actionList.begin();
@@ -60,33 +62,32 @@ namespace Logique {
 				}
 
 				toDeleteEnd = executor;
-				executor++;
-
-				while (executor != end)
-				{
-					executor->increment(tick_passed);
+				if (executor != end) {
 					executor++;
+
+					while (executor != end)
+					{
+						executor->increment(tick_passed);
+						executor++;
+					}
 				}
 
 				if (toDeleteEnd != _actionList.begin())
 					_actionList.erase(_actionList.begin(), toDeleteEnd);
 
+				if (getSheepNum() <= 3) {
+					addSheep(20);
+				}
+
+				if (getWolfNum() <= 3) {
+					addWolf(10);
+				}
+
+				insertActionStack();
 			}
-
-			if (getSheepNum() <= 3) {
-				addSheep(20);
-			}
-
-			if (getWolfNum() <= 3) {
-				addWolf(10);
-			}
-
-			insertActionStack();
-
-			if (total_time < _baseTime) 
-				boost::this_thread::sleep(boost::posix_time::seconds(_baseTime.count()));
 
 			total_time += boost::chrono::system_clock::now() - start;
+
 		}
 		std::cout << "Simulation end" << std::endl;
 	}
