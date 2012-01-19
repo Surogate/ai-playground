@@ -41,18 +41,20 @@ namespace Logique {
 		ReturnValue computeAction(const ActionStore& value);
 		void train(const ActionStore& value, float power);
 		void trainNot(const ActionStore& value, float power);
-		const float& getMoy() const;
-		void sendMoy(float value);
 		void generateTree();
 		EntityAction randomAction();
 		EntityAction getValue(const ReturnValue& ret);
+		unsigned int getActionNum();
+		unsigned int getActionNeural();
+		void clear();
 
 	private:
 		FANN::neural_net _ann;
 		OutputArray _output;
 		InputArray _input;
 
-		float _moyenne;
+		unsigned int _numTotal;
+		unsigned int _numNeural;
 		boost::random::random_device _randomD;
 		boost::random::mt19937 _gen;
 		boost::random::uniform_int_distribution<unsigned int> _distri;

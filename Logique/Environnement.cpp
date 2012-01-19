@@ -18,6 +18,7 @@ namespace Logique {
 		_entityNum[Square::WOLF] = 0;
 		_baseTime = boost::chrono::milliseconds(100);
 		addAction(createBoardPlay());
+		addAction(createLog());
 	}
 
 	Environnement::~Environnement() {}
@@ -311,7 +312,8 @@ namespace Logique {
 		Action act;
 
 		act._action = boost::bind(&Environnement::doLog, this);
-		act._tickBeforeAction = 2 * 30;
+		act._tickStart = 0;
+		act._tickBeforeAction = 30;
 		return act;
 	}
 
@@ -332,15 +334,26 @@ namespace Logique {
 
 			++it;
 		}
-		totalSheep /= static_cast<float>(_entityNum[Square::SHEEP]);
-		totalWolf /= static_cast<float>(_entityNum[Square::WOLF]);
 
-		Logger sheepLog("Mouton.csv");
-		sheepLog.dump(totalSheep);
-		Logger wolfLog("Loup.csv");
-		wolfLog.dump(totalWolf);
+		if (_entityNum[Square::SHEEP] > 0)
+			totalSheep /= static_cast<float>(_entityNum[Square::SHEEP]);
+		else
+			totalSheep = 0;
 
-//		Callback_Environnement::getInstance().cb_sendMoy(totalSheep, totalWolf);
+		if (_entityNum[Square::WOLF] > 0)
+			totalWolf /= static_cast<float>(_entityNum[Square::WOLF]);
+		else
+			totalWolf = 0;
+
+		Callback_Environnement::getInstance().addMetric(
+			Metric(_entityNum[Square::SHEEP], _entityNum[Square::WOLF],
+			totalSheep, totalWolf,
+			Sheep::_tree.getActionNum(), Sheep::_tree.getActionNeural(),
+			Wolf::_tree.getActionNum(), Wolf::_tree.getActionNeural())
+			);
+		Sheep::_tree.clear();
+		Wolf::_tree.clear();
+		addAction(createLog());
 	}
 
 	void Environnement::boardPlay() {

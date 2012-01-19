@@ -12,6 +12,7 @@
 #include "Singleton.hpp"
 #include "Environnement_Event.h"
 #include "EventProxy.hpp"
+#include "Metric.hpp"
 
 namespace Logique {
 
@@ -20,19 +21,26 @@ namespace Logique {
 	public:
 
 		typedef std::deque< Environnement_Event, boost::pool_allocator<Environnement_Event> > EventDeque;
+		typedef std::deque< Metric, boost::pool_allocator<Metric> > MetricDeque;
 		typedef DequeProxy< EventDeque > EventProxy;
+		typedef DequeProxy< MetricDeque > MetricProxy;
 
 		void addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos);
 		void addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos);
 		void addAction(Environnement_Event::Type value, Coord pos);
+		void addMetric(const Metric& value);
 
 		EventProxy&& getEventProxy();
+		MetricProxy&& getMetricProxy();
 
 		void debugEvent(const Environnement_Event& ev);
+		void debugMetric(const Metric& ev);
 
 	private:
 		EventDeque _eventQueue;
+		MetricDeque _metricQueue;
 		boost::mutex _mut;
+		boost::mutex _metricMut;
 		
 		boost::array< const char *, Environnement_Event::TYPE_SIZE > _eventTypeString;
 		boost::array< const char *, Square::ENTITY_CONTAINER_SIZE > _entityTypeString;
