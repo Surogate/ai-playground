@@ -36,7 +36,7 @@ namespace Logique {
 		_mut.unlock();
 	}
 
-	DequeProxy< Environnement_Event >&& Callback_Environnement::getEventProxy() {
+	EventProxy&& Callback_Environnement::getEventProxy() {
 		return DequeProxy< Environnement_Event >(_eventQueue, _mut);
 	}
 

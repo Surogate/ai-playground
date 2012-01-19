@@ -19,12 +19,13 @@ namespace Logique {
 	public:
 
 		typedef std::deque< Environnement_Event > EventDeque;
+		typedef DequeProxy< Environnement_Event > EventProxy;
 
 		void addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos);
 		void addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos);
 		void addAction(Environnement_Event::Type value, Coord pos);
 
-		DequeProxy< Environnement_Event >&& getEventProxy();
+		EventProxy&& getEventProxy();
 
 		void debugEvent(const Environnement_Event& ev);
 
