@@ -14,7 +14,9 @@ namespace Logique {
 	template <typename deque_type>
 	class DequeProxy {
 	public:
-		DequeProxy(std::deque< deque_type >& stack, boost::mutex& mut)
+		typedef typename deque_type::value_type value_type;
+
+		DequeProxy(deque_type & stack, boost::mutex& mut)
 		: _stack(&stack), _mut(&mut)
 		{
 			_mut->lock();
@@ -26,22 +28,22 @@ namespace Logique {
 				_mut->unlock();
 		}
 
-		typename std::deque< deque_type >::iterator begin()
+		typename deque_type::iterator begin()
 		{
 			return _stack->begin();
 		}
 
-		typename std::deque< deque_type >::const_iterator begin() const
+		typename deque_type::const_iterator begin() const
 		{
 			return _stack->begin();
 		}
 
-		typename std::deque< deque_type >::iterator end() 
+		typename deque_type::iterator end() 
 		{
 			return _stack->end();
 		}
 
-		typename std::deque< deque_type >::const_iterator end() const
+		typename deque_type::const_iterator end() const
 		{
 			return _stack->end();
 		}
@@ -51,7 +53,7 @@ namespace Logique {
 			_stack->clear();
 		}
 
-		void foreach(const boost::function< void (const deque_type&) >& func)
+		void foreach(const boost::function< void (const value_type&) >& func)
 		{
 			BOOST_FOREACH(Environnement_Event ev, *_stack)
 			{
@@ -59,8 +61,13 @@ namespace Logique {
 			}
 		}
 
+		std::size_t size()
+		{
+			return _stack.size();
+		}
+
 	private:
-		std::deque< deque_type >* _stack;
+		deque_type* _stack;
 		boost::mutex* _mut;
 
 		DequeProxy& operator=(const DequeProxy& ) { return *this; }

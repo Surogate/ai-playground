@@ -93,7 +93,7 @@ namespace Logique {
 	bool Environnement::addSheep(const Coord& loc) 
 	{
 		if (!_board(loc).hasSheep()) {
-			boost::shared_ptr<Sheep> sheepPtr(new Sheep());
+			boost::shared_ptr<Sheep> sheepPtr(_sheepPool.construct(), boost::bind(&Environnement::destroySheep, this, _1));
 			sheepPtr->addFood(Logique::FOOD_START);
 			sheepPtr->initActionArray(_board);
 
@@ -110,8 +110,7 @@ namespace Logique {
 	bool Environnement::addWolf(const Coord& loc) 
 	{
 		if (!_board(loc).hasWolf()) {
-			//std::cout << "spawn wolf at " << loc << std::endl;
-			boost::shared_ptr<Wolf> wolfPtr(new Wolf());
+			boost::shared_ptr<Wolf> wolfPtr(_wolfPool.construct(), boost::bind(&Environnement::destroyWolf, this, _1));
 			wolfPtr->addFood(Logique::FOOD_START);
 			wolfPtr->initActionArray(_board);
 
@@ -425,5 +424,11 @@ namespace Logique {
 		_board.get(x, y).addOdour(value);
 	}
 
+	void Environnement::destroySheep(Sheep* value) {
+		_sheepPool.destroy(value);
+	}
 
+	void Environnement::destroyWolf(Wolf* value) {
+		_wolfPool.destroy(value);
+	}
 }

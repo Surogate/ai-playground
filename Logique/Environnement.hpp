@@ -14,12 +14,17 @@
 #include <boost/array.hpp>
 #include <boost/random/random_device.hpp>
 #include <boost/chrono.hpp>
+#include <boost/pool/pool_alloc.hpp>
+#include <boost/pool/object_pool.hpp>
+#include <boost/unordered_map.hpp>
 
 #include "Callback_Environnement.hpp"
 #include "Square.hpp"
 #include "Action.hpp"
 #include "Entity.hpp"
 #include "Board.hpp"
+#include "Sheep.hpp"
+#include "Wolf.hpp"
 
 namespace Logique {
 
@@ -29,9 +34,9 @@ namespace Logique {
 			ODOURONDEATH = 3
 		};
 
-		typedef std::list< Action > ActionList;
-		typedef std::map< const Entity*, Entity::Ptr > EntityPtrSet;
-		typedef std::stack< Action > ActionTmpStack;
+		typedef std::list< Action, boost::pool_allocator<Action> > ActionList;
+		typedef std::map< Entity*, Entity::Ptr, std::less< Entity* >, boost::pool_allocator< std::pair < Entity*, Entity::Ptr > > > EntityPtrSet;
+		typedef std::stack< Action, std::deque< Action, boost::pool_allocator< Action > > > ActionTmpStack;
 		typedef Square& (Board::*board_func)(const Coord&);
 
 		Environnement();
@@ -77,6 +82,8 @@ namespace Logique {
 		void onEntityDeath(Entity& value);
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
+		void destroySheep(Sheep* value);
+		void destroyWolf(Wolf* value);
 
 		void debugActionList();
 
@@ -89,6 +96,8 @@ namespace Logique {
 		boost::mutex _attriMtx;
 		ActionList _actionList;
 		ActionTmpStack _actionTmpStack;
+		boost::object_pool<Sheep> _sheepPool;
+		boost::object_pool<Wolf> _wolfPool;
 
 		boost::random::random_device _randomD;
 		boost::random::mt19937 _gen;
