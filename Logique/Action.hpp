@@ -32,10 +32,6 @@ namespace Logique {
 		}
 
 		bool increment(unsigned int tick_passed) {
-			if (tick_passed > 2) {
-				std::cout << "caca" << std::endl;
-			}
-
 			_tickStart += tick_passed;
 			if (_tickStart >= _tickBeforeAction) {
 				_action(_tickStart - _tickBeforeAction);
