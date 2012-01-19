@@ -76,12 +76,12 @@ namespace Logique {
 			if (moy > 0) {
 				_lastMoy = moy;
 				if (_validScore(moy)) {
-					sendXp(0.25f);
+					sendXp(0.4f);
 				} else {
-					sendXp(0.2f);
+					sendXp(0.3f);
 				}
 			} else {
-				sendXpNot(0.05f);
+				sendXpNot(0.03f);
 			}
 			reInitPerf();
 		}
