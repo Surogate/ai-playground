@@ -8,6 +8,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/array.hpp>
+#include <boost/pool/pool_alloc.hpp>
 
 #include "Action.hpp"
 #include "Coord.hpp"
@@ -78,7 +79,7 @@ namespace Logique  {
 
 		float computeMoy() const;
 
-		typedef std::stack< ActionStore > ActionStoreStack;
+		typedef std::stack< ActionStore, std::deque<ActionStore, boost::pool_allocator<ActionStore> > > ActionStoreStack;
 
 		const Square::EntityContain _type;
 		boost::array<unsigned int, ACTION_CONTAINER_SIZE> _timeArray;

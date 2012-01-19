@@ -15,29 +15,40 @@ namespace Logique {
 
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos)
 	{
-		//debugEvent(value, type, pos, newPos);
+		#ifdef LOGONOUT
+		debugEvent(value, type, pos, newPos);
+		#else
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, id, type, pos, newPos));
 		_mut.unlock();
+		#endif
 	}
 
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos)
 	{
-		//debugEvent(value, type, pos);
+		#ifdef LOGONOUT
+		debugEvent(value, type, pos);
+		#else
+
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, id, type, pos));
 		_mut.unlock();
+
+		#endif
 	}
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Coord pos)
 	{
-		//debugEvent(value, pos);
+		#ifdef LOGONOUT
+		debugEvent(value, pos);
+		#else
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, pos));
 		_mut.unlock();
+		#endif
 	}
 
 	Callback_Environnement::EventProxy&& Callback_Environnement::getEventProxy() {
-		return DequeProxy< Environnement_Event >(_eventQueue, _mut);
+		return EventProxy(_eventQueue, _mut);
 	}
 
 	void Callback_Environnement::debugEvent(const Environnement_Event& ev) 

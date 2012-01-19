@@ -4,6 +4,7 @@
 
 #include <boost/thread.hpp>
 #include <boost/array.hpp>
+#include <boost/pool/pool_alloc.hpp>
 #include <deque>
 
 #include "Entity.hpp"
@@ -18,8 +19,8 @@ namespace Logique {
 		SINGLETON_CLASS(Callback_Environnement);
 	public:
 
-		typedef std::deque< Environnement_Event > EventDeque;
-		typedef DequeProxy< Environnement_Event > EventProxy;
+		typedef std::deque< Environnement_Event, boost::pool_allocator<Environnement_Event> > EventDeque;
+		typedef DequeProxy< EventDeque > EventProxy;
 
 		void addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos);
 		void addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos);
@@ -32,6 +33,7 @@ namespace Logique {
 	private:
 		EventDeque _eventQueue;
 		boost::mutex _mut;
+		
 		boost::array< const char *, Environnement_Event::TYPE_SIZE > _eventTypeString;
 		boost::array< const char *, Square::ENTITY_CONTAINER_SIZE > _entityTypeString;
 
