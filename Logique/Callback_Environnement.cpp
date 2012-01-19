@@ -16,7 +16,7 @@ namespace Logique {
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos)
 	{
 		#ifdef LOGONOUT
-		debugEvent(value, type, pos, newPos);
+		//debugEvent(value, type, pos, newPos);
 		#else
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, id, type, pos, newPos));
@@ -27,7 +27,7 @@ namespace Logique {
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos)
 	{
 		#ifdef LOGONOUT
-		debugEvent(value, type, pos);
+		//debugEvent(value, type, pos);
 		#else
 
 		_mut.lock();
@@ -36,10 +36,11 @@ namespace Logique {
 
 		#endif
 	}
+	
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Coord pos)
 	{
 		#ifdef LOGONOUT
-		debugEvent(value, pos);
+		//debugEvent(value, pos);
 		#else
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, pos));
@@ -47,8 +48,24 @@ namespace Logique {
 		#endif
 	}
 
+	void Callback_Environnement::addMetric(const Metric& value)
+	{
+		#ifdef LOGONOUT
+		debugMetric(value);
+		#else
+		_metricMut.lock();
+		_metricQueue.push_back(value);
+		_metricMut.unlock();
+		#endif
+	}
+
 	Callback_Environnement::EventProxy&& Callback_Environnement::getEventProxy() {
 		return EventProxy(_eventQueue, _mut);
+	}
+
+	Callback_Environnement::MetricProxy&& Callback_Environnement::getMetricProxy()
+	{
+		return MetricProxy(_metricQueue, _metricMut);
 	}
 
 	void Callback_Environnement::debugEvent(const Environnement_Event& ev) 
@@ -65,6 +82,14 @@ namespace Logique {
 		}
 	}
 	
+	void Callback_Environnement::debugMetric(const Metric& ev)
+	{
+		std::cout << "sheepNum:" << ev.sheepNum << " wolfNum:" << ev.wolfNum << std::endl;
+		std::cout << " sheepMoy:" << ev.sheepMoy << " wolfMoy:" << ev.wolfMoy << std::endl;
+		std::cout << " sheepActionNum:" << ev.sheepActionNum << " sheepActionNeural:" << ev.sheepActionNeural << std::endl;
+		std::cout << " wolfActionNum:" << ev.wolfActionNum << " wolfActionNeural:" << ev.wolfActionNeural << std::endl;
+	}
+
 	void Callback_Environnement::debugEvent(Environnement_Event::Type value, Square::EntityContain type, Coord pos)
 	{
 		std::cout << _eventTypeString[value] << " " << _entityTypeString[type] << " " << pos << std::endl;

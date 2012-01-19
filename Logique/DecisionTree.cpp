@@ -10,7 +10,7 @@ namespace Logique {
 	const float DecisionTree::LEARNINGRATE = 0.5f;
 
 	DecisionTree::DecisionTree() 
-		: _ann(), _moyenne(0.f)
+		: _ann(), _numTotal(0), _numNeural(0)
 		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
 	{
 		_ann.create_standard(LAYERNUM, INPUTSIZE, HIDDENSIZE, HIDDENSIZE_2, OUTPUTSIZE);
@@ -42,8 +42,10 @@ namespace Logique {
 			}
 			++i;
 		}
+		_numTotal++;
 		if (notClearAnswer)
 			return randomAction();
+		_numNeural++;
 		return static_cast<EntityAction>(best);
 	}
 
@@ -54,11 +56,6 @@ namespace Logique {
 		for (unsigned int i = 0; i < _output.size(); ++i)
 			_output[i] = output[i];
 		return _output;
-	}
-
-	const float& DecisionTree::getMoy() const 
-	{
-		return _moyenne;
 	}
 
 	void DecisionTree::train(const ActionStore& value, float power) 
@@ -99,13 +96,21 @@ namespace Logique {
 		_ann.train(_input.c_array(), _output.c_array());
 	}
 
-	void DecisionTree::sendMoy(float value) 
-	{
-		_moyenne = (_moyenne + value) / 2.f;
-	}
-
 	void DecisionTree::generateTree() 
 	{
+	}
+
+	unsigned int DecisionTree::getActionNum() {
+		return _numTotal;
+	}
+
+	unsigned int DecisionTree::getActionNeural() {
+		return _numNeural;
+	}
+
+	void DecisionTree::clear() {
+		_numTotal = 0;
+		_numNeural = 0;
 	}
 }
 
