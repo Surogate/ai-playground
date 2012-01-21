@@ -7,7 +7,7 @@
 int main(void) {
 	Logique::Environnement env;
 
-	Logique::Callback_Environnement::EventProxy proxy = Logique::Callback_Environnement::getInstance().getEventProxy();
+	env.run();
 
 	std::cin.get();
 	return 0;

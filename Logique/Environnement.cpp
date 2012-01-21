@@ -12,7 +12,7 @@
 namespace Logique {
 
 	Environnement::Environnement()
-		: _board(), _baseTime(), _entityList(), _listMtx(), _attriMtx(), _actionList(), _actionTmpStack()
+		: _board(), _baseTime(), _entityList(), _actionList(), _actionTmpStack()
 		, _randomD(), _gen(_randomD), _distri(0, 15)
 	{
 		_entityNum[Square::SHEEP] = 0;
@@ -240,26 +240,9 @@ namespace Logique {
 		return  value && (value >= moy);
 	}
 
-	const Environnement::EntityPtrSet& Environnement::getEntityList() const 
-	{
-		return _entityList;
-	}
-
-	void Environnement::lock() 
-	{
-		_attriMtx.lock();
-	}
-
-	void Environnement::unlock() 
-	{
-		_attriMtx.unlock();
-	}
-
 	void Environnement::addAction(const Action& value) 
 	{
-		_listMtx.lock(); // ##list lock
 		_actionTmpStack.push(value);
-		_listMtx.unlock(); // ## list unlock
 	}
 
 	void Environnement::unsafeInsertAction(const Action& value) 
@@ -291,12 +274,10 @@ namespace Logique {
 
 	void Environnement::insertActionStack() 
 	{
-		_listMtx.lock(); // ##list lock
 		while (_actionTmpStack.size()) {
 			unsafeInsertAction(_actionTmpStack.top());
 			_actionTmpStack.pop();
 		}
-		_listMtx.unlock(); // ## list unlock
 	}
 
 	Action Environnement::createBoardPlay() 
@@ -358,16 +339,19 @@ namespace Logique {
 	}
 
 	void Environnement::boardPlay() {
+		_board.lock();
 		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
 			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
-				Square& val = _board[x][y];
-				if (!val.hasEntity() && val.increaseGrass())
+				
+				if (!_board(x, y).hasEntity() && _board(x, y).increaseGrass())
 					Callback_Environnement::getInstance().addAction(Environnement_Event::GRASS_UP, Coord(x, y));
-				if (val.hasEntity() && val.decreaseGrass())
+				if (_board(x, y).hasEntity() && _board(x, y).decreaseGrass())
 					Callback_Environnement::getInstance().addAction(Environnement_Event::GRASS_DOWN, Coord(x, y));
-				val.decreaseOdour(1);
+				_board(x, y).decreaseOdour(1);
+				
 			}
 		}
+		_board.unlock();
 
 		addAction(createBoardPlay());
 	}
@@ -376,10 +360,8 @@ namespace Logique {
 		_board.lock();
 		_board(loc).hasEntity(value->getType(), value.get());
 		_board.unlock();
-		_attriMtx.lock();
 		_entityList[value.get()] = value;
 		_entityNum[value->getType()]++;
-		_attriMtx.unlock();
 		value->setLocation(loc);
 		value->setValidScore(boost::bind(&Environnement::validPerf, this, _1, value->getType()));
 		value->setAddAction(boost::bind(&Environnement::addAction, this, _1));
@@ -409,16 +391,11 @@ namespace Logique {
 		_board(value.getLocation()).hasEntity(value.getType(), 0);
 		_board.unlock();
 		
-		_attriMtx.lock();
 		_entityNum[value.getType()]--;		
-		_attriMtx.unlock();
-
 		value.cleanVtable();
 		EntityPtrSet::iterator it = _entityList.find(&value);
 		if (it != _entityList.end()) {
-			_attriMtx.lock();
 			_entityList.erase(it);
-			_attriMtx.unlock();
 		}
 	}
 
@@ -452,5 +429,12 @@ namespace Logique {
 
 	void Environnement::destroyWolf(Wolf* value) {
 		_wolfPool.destroy(value);
+	}
+
+	void Environnement::getBoard(Board& out_Board)
+	{
+		_board.lock();
+		out_Board = _board;
+		_board.unlock();
 	}
 }
