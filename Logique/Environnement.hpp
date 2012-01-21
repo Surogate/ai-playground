@@ -47,7 +47,7 @@ namespace Logique {
 			popOdour(Coord(x, y), 3);
 			_board.dump();
 		}
-		void addAction(const Action& value);
+
 		void setBaseTime(const boost::chrono::duration<double>& time);
 
 		//spawn Entity function
@@ -65,11 +65,11 @@ namespace Logique {
 
 		bool validPerf(const float& value, Square::EntityContain type);
 
-		const EntityPtrSet& getEntityList() const;
-		void lock();
-		void unlock();
+		void getBoard(Board& out_board);
 
 	private:
+		void addAction(const Action& value);
+
 		void unsafeInsertAction(const Action& value);
 		void insertActionStack();
 		void preRun();
@@ -92,8 +92,6 @@ namespace Logique {
 		Board _board;
 		boost::chrono::duration<double> _baseTime;
 		EntityPtrSet _entityList;
-		boost::mutex _listMtx;
-		boost::mutex _attriMtx;
 		ActionList _actionList;
 		ActionTmpStack _actionTmpStack;
 		boost::object_pool<Sheep> _sheepPool;
