@@ -65,6 +65,10 @@ namespace Logique {
 			return _entityIn[value];
 		}
 
+		inline ptrdiff_t getId(const EntityContain& value) {
+			return reinterpret_cast<ptrdiff_t>(_entityIn[value]);
+		}
+
 		inline bool hasGrass() const  {
 			return _grass_value >= GRASS_MIN;
 		}
