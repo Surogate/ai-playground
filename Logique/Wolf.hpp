@@ -27,7 +27,6 @@ namespace Logique {
 		void eat(Board& board);
 		void reproduce(Board& board);
 
-		//static void initExp();
 		void sendXp(float power);
 		void sendXpNot(float power);
 
