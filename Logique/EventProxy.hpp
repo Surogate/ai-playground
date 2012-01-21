@@ -90,8 +90,8 @@ namespace Logique {
 		}
 
 	private:
-		deque_type* _stack;
-		boost::mutex* _mut;
+		mutable deque_type* _stack;
+		mutable boost::mutex* _mut;
 
 		DequeProxy& operator=(const DequeProxy& ) { return *this; }
 	};
