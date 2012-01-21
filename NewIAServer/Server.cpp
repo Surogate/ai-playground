@@ -24,15 +24,7 @@ Server::Server() :
         connections_(),
         environnement_(),
 		connections_mut_() {
-    //std::cout << "socket : " << socket_.address().toString() << std::endl;
-    // Still working don't do any change.
-    environnement_.setSpawnSheep(boost::bind(&Server::cmdSpawnSheep, this, _1));
-    environnement_.setSpawnWolf(boost::bind(&Server::cmdSpawnWolf, this, _1));
-    environnement_.setOnEntityMove(boost::bind(&Server::cmdEntityMove, this, _1));
-    environnement_.setOnReproduce(boost::bind(&Server::cmdReproduce, this, _1));
-    environnement_.setOnEntityEat(boost::bind(&Server::cmdEntityEat, this, _1));
-    environnement_.setOnEntityDead(boost::bind(&Server::cmdEntityDead, this, _1));
-    environnement_.setOnBoardChange(boost::bind(&Server::cmdBoardChange, this, _1));
+
 }
 
 Server::~Server() {
