@@ -59,13 +59,13 @@ namespace Logique {
 		#endif
 	}
 
-	Callback_Environnement::EventProxy Callback_Environnement::getEventProxy() {
-		return EventProxy(_eventQueue, _mut);
+	DequeProxy<Callback_Environnement::EventDeque> Callback_Environnement::getEventProxy() {
+		return DequeProxy<EventDeque>(_eventQueue, _mut);
 	}
 
-	Callback_Environnement::MetricProxy Callback_Environnement::getMetricProxy()
+	DequeProxy<Callback_Environnement::MetricDeque> Callback_Environnement::getMetricProxy()
 	{
-		return MetricProxy(_metricQueue, _metricMut);
+		return DequeProxy<MetricDeque>(_metricQueue, _metricMut);
 	}
 
 	void Callback_Environnement::debugEvent(const Environnement_Event& ev) 

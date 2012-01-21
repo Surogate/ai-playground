@@ -23,7 +23,7 @@ namespace Logique {
 			_mut->lock();
 		}
 
-		DequeProxy(DequeProxy& orig)
+		DequeProxy(const DequeProxy& orig)
 			: _mut(orig._mut), _stack(orig._stack)
 		{
 			orig._mut->unlock();
