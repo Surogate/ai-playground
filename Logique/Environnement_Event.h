@@ -23,7 +23,7 @@ namespace Logique {
 		};
 
 		Type _type;
-		int _entityId;
+		unsigned int _entityId;
 		int _entityType;
 		Coord _pos;
 		Coord _newPos;
