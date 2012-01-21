@@ -3,6 +3,7 @@
 
 #include <boost/foreach.hpp>
 
+#include "Callback_Environnement.hpp"
 #include "Environnement.hpp"
 #include "Logger.hpp"
 #include "Sheep.hpp"

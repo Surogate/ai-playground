@@ -6,6 +6,7 @@
 
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
+#include <boost/foreach.hpp>
 
 #include "Environnement_Event.h"
 

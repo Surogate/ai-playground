@@ -18,7 +18,7 @@
 #include <boost/pool/object_pool.hpp>
 #include <boost/unordered_map.hpp>
 
-#include "Callback_Environnement.hpp"
+
 #include "Square.hpp"
 #include "Action.hpp"
 #include "Entity.hpp"
