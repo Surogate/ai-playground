@@ -9,7 +9,7 @@ struct Coord {
 	int y;
 
 	Coord();
-	Coord(unsigned int _x_, unsigned int _y_);
+	Coord(int _x_, int _y_);
 	Coord& operator=(const Coord& pos);
 	void operator+=(const Coord& pos);
 	void operator-=(const Coord& pos);

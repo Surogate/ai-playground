@@ -108,6 +108,8 @@ namespace Logique  {
 
 	private:
 		bool moveToThisLocation(Board& board, const Coord& newLoc);
+
+		Entity& operator=(const Entity&) { return *this; }
 	};
 
 }

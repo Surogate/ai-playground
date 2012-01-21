@@ -27,7 +27,7 @@ namespace Logique {
 
 	EntityAction DecisionTree::getValue(const ReturnValue& ret) 
 	{
-		std::size_t best;
+		std::size_t best = 0;
 		float val = ret[0];
 		std::size_t i = 0;
 		bool notClearAnswer = true;
