@@ -9,7 +9,7 @@ const Coord Coord::LEFT = Coord(0, -1);
 Coord::Coord() : x(), y() 
 {}
 
-Coord::Coord(unsigned int _x_, unsigned int _y_) : x(_x_), y(_y_)
+Coord::Coord(int _x_, int _y_) : x(_x_), y(_y_)
 {}
 
 Coord& Coord::operator=(const Coord& pos) {

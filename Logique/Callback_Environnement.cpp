@@ -11,7 +11,7 @@ namespace Logique {
 
 	Callback_Environnement::~Callback_Environnement() {}
 
-	Callback_Environnement::Callback_Environnement(const Callback_Environnement& orig) {}
+	Callback_Environnement::Callback_Environnement(const Callback_Environnement&) {}
 
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos)
 	{

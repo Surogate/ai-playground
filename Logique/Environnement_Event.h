@@ -29,7 +29,7 @@ namespace Logique {
 		Coord _newPos;
 
 		Environnement_Event(Type type, Entity& id, Square::EntityContain value, Coord pos, Coord newpos)
-			: _type(type), _entityId(reinterpret_cast<int>(&id)), _entityType(value), _pos(pos), _newPos(newpos)
+			: _type(type), _entityId(reinterpret_cast<unsigned int>(&id)), _entityType(value), _pos(pos), _newPos(newpos)
 		{}
 
 		Environnement_Event()
@@ -37,7 +37,7 @@ namespace Logique {
 		{}
 
 		Environnement_Event(Type type, Entity& id, Square::EntityContain value, Coord pos)
-			: _type(type), _entityId(reinterpret_cast<int>(&id)), _entityType(value), _pos(pos), _newPos(pos)
+			: _type(type), _entityId(reinterpret_cast<unsigned int>(&id)), _entityType(value), _pos(pos), _newPos(pos)
 		{}
 
 		Environnement_Event(Type type, Coord pos)

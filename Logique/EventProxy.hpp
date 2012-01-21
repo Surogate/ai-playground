@@ -17,7 +17,7 @@ namespace Logique {
 	public:
 		typedef typename deque_type::value_type value_type;
 
-		DequeProxy(deque_type & stack, boost::mutex& mut)
+		DequeProxy(deque_type& stack, boost::mutex& mut)
 		: _stack(&stack), _mut(&mut)
 		{
 			_mut->lock();
