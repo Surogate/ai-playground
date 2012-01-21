@@ -22,6 +22,14 @@ namespace Logique {
 			_mut->lock();
 		}
 
+		DequeProxy(DequeProxy& orig)
+			: _mut(orig._mut), _stack(orig._stack)
+		{
+			orig._mut = 0;
+			orig._stack = 0;
+			_mut->lock();
+		}
+
 		~DequeProxy()
 		{
 			if (_mut > 0)
@@ -66,16 +74,24 @@ namespace Logique {
 			return _stack.size();
 		}
 
+		void eraseFromFront(typename deque_type::iterator last)
+		{
+			if (last != _stack.begin())
+				_stack.erase(_stack.begin(), last);
+		}
+
+		value_type popFromFront()
+		{
+			value_type poped = _stack.front();
+			_stack.pop_front();
+			return poped;
+		}
+
 	private:
 		deque_type* _stack;
 		boost::mutex* _mut;
 
 		DequeProxy& operator=(const DequeProxy& ) { return *this; }
-		DequeProxy(const DequeProxy& orig)
-		{
-			_stack = orig._stack;
-			_mut = 0;
-		}
 	};
 }
 

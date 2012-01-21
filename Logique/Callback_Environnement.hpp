@@ -30,8 +30,14 @@ namespace Logique {
 		void addAction(Environnement_Event::Type value, Coord pos);
 		void addMetric(const Metric& value);
 
-		EventProxy&& getEventProxy();
-		MetricProxy&& getMetricProxy();
+		EventProxy getEventProxy();
+		MetricProxy getMetricProxy();
+
+		std::size_t getEventSize();
+		std::size_t getMetricSize();
+
+		Environnement_Event popEventFromFront();
+		Metric popMetricFromFront();
 
 		void debugEvent(const Environnement_Event& ev);
 		void debugMetric(const Metric& ev);

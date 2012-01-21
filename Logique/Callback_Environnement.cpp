@@ -59,11 +59,11 @@ namespace Logique {
 		#endif
 	}
 
-	Callback_Environnement::EventProxy&& Callback_Environnement::getEventProxy() {
+	Callback_Environnement::EventProxy Callback_Environnement::getEventProxy() {
 		return EventProxy(_eventQueue, _mut);
 	}
 
-	Callback_Environnement::MetricProxy&& Callback_Environnement::getMetricProxy()
+	Callback_Environnement::MetricProxy Callback_Environnement::getMetricProxy()
 	{
 		return MetricProxy(_metricQueue, _metricMut);
 	}
@@ -121,5 +121,37 @@ namespace Logique {
 	{
 		_entityTypeString[Square::SHEEP] = "SHEEP";
 		_entityTypeString[Square::WOLF] = "WOLF";
+	}
+
+	std::size_t Callback_Environnement::getEventSize()
+	{
+		_mut.lock();
+		std::size_t val = _eventQueue.size();
+		_mut.unlock();
+		return val;
+	}
+
+	std::size_t Callback_Environnement::getMetricSize()
+	{
+		_metricMut.lock();
+		std::size_t val = _metricQueue.size();
+		_metricMut.unlock();
+		return val;
+	}
+
+	Environnement_Event Callback_Environnement::popEventFromFront()
+	{
+		_mut.lock();
+		Environnement_Event val = _eventQueue.front();
+		_mut.unlock();
+		return val;
+	}
+
+	Metric Callback_Environnement::popMetricFromFront()
+	{
+		_metricMut.lock();
+		Metric val = _metricQueue.front();
+		_metricMut.unlock();
+		return val;
 	}
 }
