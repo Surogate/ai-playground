@@ -10,26 +10,20 @@
 
 #include <Poco/Net/TCPServer.h>
 #include <Poco/Net/ServerSocket.h>
+#include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/thread/mutex.hpp>
 #include <map>
 #include <stdint.h>
 #include "Packet.hpp"
 #include "Connection.hpp"
+#include "Callback_Environnement.hpp"
 #include "Environnement.hpp"
 #include "Singleton.hpp"
 
 class Server : public Logique::Singleton<Server> {
     friend class Logique::Singleton<Server>;
 
-    static const uint8_t SPAWN;
-    static const uint8_t MOVE;
-    static const uint8_t EAT;
-    static const uint8_t DIE;
-    static const uint8_t REPRODUCE;
-    static const uint8_t BOARD_BEG;
-    static const uint8_t BOARD;
-    static const uint8_t BOARD_END;
-    
 public:
     void Start();
     void SendPacket(Packet & packet);
@@ -41,19 +35,22 @@ private:
     Server();
     virtual ~Server();
 
-    Poco::Net::ServerSocket socket_;
-    Poco::Net::TCPServer server_;
-    std::map<std::size_t, Connection*> connections_;
-    Logique::Environnement         environnement_;
-    boost::mutex				   connections_mut_;
+    Poco::Net::ServerSocket				socket_;
+    Poco::Net::TCPServer				server_;
+    std::map<ptrdiff_t, Connection*>	connections_;
+    Logique::Environnement				environnement_;
+    boost::mutex						connections_mut_;
+	boost::function<void (Packet &, Logique::Environnement_Event &)>	forge_[Logique::Environnement_Event::Type::TYPE_SIZE];
 
-    void cmdSpawnSheep(Logique::Entity const &);
-    void cmdSpawnWolf(Logique::Entity const &);
-    void cmdEntityMove(Logique::Entity const &);
-    void cmdEntityEat(Logique::Entity const &);
-    void cmdEntityDead(Logique::Entity const &);
-    void cmdReproduce(Logique::Entity const &);
-    void cmdBoardChange(Logique::Board const &);
+	Packet * forgePacket(Logique::Environnement_Event & e);
+	void spawnForge(Packet & output, Logique::Environnement_Event & e);
+	void moveForge(Packet & output, Logique::Environnement_Event & e);
+	void eatForge(Packet & output, Logique::Environnement_Event & e);
+	void dieForge(Packet & output, Logique::Environnement_Event & e);
+	void reproduceForge(Packet & output, Logique::Environnement_Event & e);
+	void grassUpForge(Packet & output, Logique::Environnement_Event & e);
+	void grassDownForge(Packet & output, Logique::Environnement_Event & e);
+	void run();
 };
 
 #endif	/* SERVER_HPP */
