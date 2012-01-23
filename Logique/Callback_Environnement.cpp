@@ -17,7 +17,7 @@ namespace Logique {
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos)
 	{
 		#ifdef LOGONOUT
-		//debugEvent(value, type, pos, newPos);
+		debugEvent(value, type, pos, newPos);
 		#else
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, id, type, pos, newPos));
@@ -28,7 +28,7 @@ namespace Logique {
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos)
 	{
 		#ifdef LOGONOUT
-		//debugEvent(value, type, pos);
+		debugEvent(value, type, pos);
 		#else
 
 		_mut.lock();
@@ -41,7 +41,7 @@ namespace Logique {
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Coord pos)
 	{
 		#ifdef LOGONOUT
-		//debugEvent(value, pos);
+		debugEvent(value, pos);
 		#else
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, pos));

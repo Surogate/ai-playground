@@ -45,11 +45,13 @@ namespace Logique {
 		void run();
 		void test(int x, int y) {
 			popOdour(Coord(x, y), 3);
-			_board.dump();
+			_board.dumpOdour();
 		}
 
 		void setBaseTime(const boost::chrono::duration<double>& time);
+		void getBoard(Board& out_board);
 
+	private:
 		//spawn Entity function
 		bool addSheep(const Coord& loc);
 		bool popSheepNear(const Coord& loc);
@@ -65,9 +67,6 @@ namespace Logique {
 
 		bool validPerf(const float& value, Square::EntityContain type);
 
-		void getBoard(Board& out_board);
-
-	private:
 		void addAction(const Action& value);
 
 		void unsafeInsertAction(const Action& value);
