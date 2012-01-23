@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="ClientXNA.Views.ControlBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="43" Width="1024">
+    <Grid>
+    	<Button x:Name="Connect" Content="Connect" Margin="227.641,11.5,0,0" HorizontalAlignment="Left" Width="88" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
+    	<TextBox x:Name="Address" Margin="25.325,11.5,0,0" TextWrapping="Wrap" Text="127.0.0.1" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height" HorizontalAlignment="Left" Width="90"/>
+    	<TextBox x:Name="Port" Margin="150.649,11.5,0,0" TextWrapping="Wrap" Text="16000" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="65" d:LayoutOverrides="HorizontalAlignment"/>
+    	<Label Content="IP" HorizontalAlignment="Left" Margin="3.333,9.5,0,10" Width="34.667"/>
+    	<Label Content="Port" HorizontalAlignment="Left" Margin="117.735,9.5,0,10" Width="48.25"/>
+    	<Button x:Name="ChartPopW" Content="Pop W" Margin="325.641,11.5,0,0" HorizontalAlignment="Left" Width="88" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
+    	<Button x:Name="ChartPopS" Content="Pop S" Margin="417.641,11.5,0,0" HorizontalAlignment="Left" Width="88" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
+        <Button x:Name="CloseChart" Content="Close Chart" Margin="0,11.5,421,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="88" d:LayoutOverrides="Height"/>
+        <Button x:Name="Reset" Content="Reset Cam" Margin="0,11.5,322,0" Height="20" VerticalAlignment="Top" d:LayoutOverrides="Height" HorizontalAlignment="Right" Width="88"/>
+            
+    </Grid>
+</UserControl>
