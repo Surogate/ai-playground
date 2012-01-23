@@ -69,7 +69,7 @@ namespace Logique {
 			return _entityIn[value];
 		}
 
-		inline ptrdiff_t getId(const EntityContain& value) {
+		inline ptrdiff_t getId(const EntityContain& value) const {
 			return reinterpret_cast<ptrdiff_t>(_entityIn[value]);
 		}
 
