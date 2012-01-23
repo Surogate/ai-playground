@@ -10,6 +10,7 @@
 
 #include <Poco/Net/TCPServerConnection.h>
 #include <boost/thread.hpp>
+#include <boost/pool/pool_alloc.hpp>
 #include <deque>
 #include "Packet.hpp"
 
@@ -26,7 +27,7 @@ public:
 
 private:
 
-    std::deque<Packet> packets_;
+    std::deque<Packet, boost::pool_allocator<Packet> > packets_;
     boost::mutex packet_mut_;
 };
 

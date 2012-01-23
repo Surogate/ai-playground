@@ -40,7 +40,7 @@ private:
     std::map<ptrdiff_t, Connection*>	connections_;
     Logique::Environnement				environnement_;
     boost::mutex						connections_mut_;
-	boost::function<void (Packet &, Logique::Environnement_Event &)>	forge_[Logique::Environnement_Event::Type::TYPE_SIZE];
+	boost::function<void (Packet &, Logique::Environnement_Event &)>	forge_[Logique::Environnement_Event::TYPE_SIZE];
 
 	Packet * forgePacket(Logique::Environnement_Event & e);
 	void spawnForge(Packet & output, Logique::Environnement_Event & e);

@@ -7,7 +7,7 @@
 
 #include "Packet.hpp"
 
-Packet::Packet() : data_() {
+Packet::Packet() : data_(64) {
 }
 
 Packet::Packet(const Packet& orig) {

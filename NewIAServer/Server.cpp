@@ -69,33 +69,43 @@ void Server::synchronize(Connection * connection)
 
 	boost::lock_guard<boost::mutex> lock(connections_mut_);
 	connection->Lock();
+	
+	Logique::Callback_Environnement::EventProxy lockguard = Logique::Callback_Environnement::getInstance().getEventProxy();
 	environnement_.getBoard(board);
-	board.lock();
 
 	packet << Logique::Environnement_Event::NONE << Logique::BOARD_SIZE;
 	connection->AddSynchroPacket(packet);
+
+	unsigned int numSheep = 0;
+	unsigned int numWolf = 0;
 	for (uint32_t x = 0; x < Logique::BOARD_SIZE; x++)
 	{
 		for (uint32_t y = 0; y < Logique::BOARD_SIZE; y++)
 		{
+			ptrdiff_t e = 0;
 			Packet grass;
 			Packet entity;
 			Logique::Square sq = board.get(x, y);
-			if (sq.hasEntity())
+
+			e = sq.getId(Logique::Square::SHEEP);
+			if (e != 0)
 			{
-				Logique::Entity * e = NULL;
-				if (sq.hasSheep())
-					e = reinterpret_cast<Logique::Entity*>(sq.getId(Logique::Square::SHEEP));
-				if (sq.hasWolf())
-					e = reinterpret_cast<Logique::Entity*>(sq.getId(Logique::Square::WOLF));
-				if (e != NULL)
-				{
-					std::cout << "SPAWN" << std::endl;
-					entity << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_SPAWN) << reinterpret_cast<ptrdiff_t>(e);
-					entity << e->getType() << static_cast<int32_t>(x) << static_cast<int32_t>(y);
-					connection->AddSynchroPacket(entity);
-				}
+				numSheep++;
+				entity << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_SPAWN) << e;
+				entity << Logique::Square::SHEEP << static_cast<int32_t>(x) << static_cast<int32_t>(y);
+				connection->AddSynchroPacket(entity);
 			}
+
+			e = sq.getId(Logique::Square::WOLF);
+
+			if (e != 0)
+			{
+				numWolf++;
+				entity << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_SPAWN) << e;
+				entity << Logique::Square::WOLF << static_cast<int32_t>(x) << static_cast<int32_t>(y);
+				connection->AddSynchroPacket(entity);
+			}
+
 			if (sq.hasGrass())
 			{
 				grass << static_cast<uint8_t>(Logique::Environnement_Event::GRASS_UP) << static_cast<int32_t>(x) << static_cast<int32_t>(y);
@@ -103,15 +113,16 @@ void Server::synchronize(Connection * connection)
 			}
 		}
 	}
-	board.unlock();
 	connection->Unlock();
+
+	std::cout << "numSheep:" << numSheep << " numWolf:" << numWolf << std::endl;
 	std::cout << "...end" << std::endl;
 }
 
 Packet * Server::forgePacket(Logique::Environnement_Event & e)
 {
+	
 	Packet * packet = new Packet();
-
 	if (e._type > Logique::Environnement_Event::NONE && e._type < Logique::Environnement_Event::TYPE_SIZE)
 		forge_[e._type](*packet, e);
 	return packet;
@@ -161,7 +172,6 @@ void Server::run()
 	{
 		boost::thread::sleep(xt);
 		Logique::Callback_Environnement::EventProxy proxy = Logique::Callback_Environnement::getInstance().getEventProxy();
-		//Logique::Callback_Environnement::MetricProxy mProxy = Logique::Callback_Environnement::getInstance().getMetricProxy();
 		Logique::Callback_Environnement::EventDeque::iterator it = proxy.begin();
 		Logique::Callback_Environnement::EventDeque::iterator ite = proxy.end();
 		for (;it != ite && connections_.size() > 0; ++it)
