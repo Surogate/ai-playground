@@ -10,7 +10,6 @@
 #include <iostream>
 #include <string>
 
-const uint32_t Connection::BUFF_SIZE = 64U;
 
 Connection::Connection(const Poco::Net::StreamSocket & socket) :
 Poco::Net::TCPServerConnection(socket) {
@@ -41,9 +40,7 @@ void Connection::run() {
 				boost::lock_guard<boost::mutex> lock(packet_mut_);
 				while (!packets_.empty())
 				{
-					Packet & pack = packets_.back();
-					//while (pack.GetSize() < Connection::BUFF_SIZE)
-					//	pack << (uint8_t)0;
+					Packet & pack = packets_.front();
 					std::size_t size = pack.Endianl(pack.GetSize());
 					socket().sendBytes(reinterpret_cast<const void*>(&size), sizeof(size));
 					std::size_t send = 0;
@@ -51,7 +48,7 @@ void Connection::run() {
 					{
 						send = socket().sendBytes(pack.GetData() + send, pack.GetSize() - send, 0);
 					}
-					packets_.pop_back();
+					packets_.pop_front();
 				}
 			}
 		}
@@ -68,3 +65,17 @@ void Connection::AddPacket(Packet & packet)
     packets_.push_back(packet);
 }
 
+void Connection::AddSynchroPacket(Packet & packet)
+{
+	packets_.push_back(packet);
+}
+
+void Connection::Lock()
+{
+	packet_mut_.lock();
+}
+
+void Connection::Unlock()
+{
+	packet_mut_.unlock();
+}
