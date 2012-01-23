@@ -6,25 +6,24 @@
  */
 
 #include "Server.hpp"
+#include "Callback_Environnement.hpp"
+#include <boost/chrono.hpp>
 #include <iostream>
 
-const uint8_t Server::SPAWN     = 0;
-const uint8_t Server::MOVE      = 1;
-const uint8_t Server::EAT       = 2;
-const uint8_t Server::DIE       = 3;
-const uint8_t Server::REPRODUCE = 4;
-const uint8_t Server::BOARD_BEG = 5;
-const uint8_t Server::BOARD     = 6;
-const uint8_t Server::BOARD_END = 7;
-
 Server::Server() :
-        socket_(16000),
-        server_(new Poco::Net::TCPServerConnectionFactoryImpl<Connection>(),
-        socket_),
-        connections_(),
-        environnement_(),
-		connections_mut_() {
-
+	socket_(16000),
+	server_(new Poco::Net::TCPServerConnectionFactoryImpl<Connection>(),
+	socket_),
+	connections_(),
+	environnement_(),
+	connections_mut_() {
+		forge_[Logique::Environnement_Event::ENTITY_SPAWN] = boost::bind(&Server::spawnForge, this, _1, _2);
+		forge_[Logique::Environnement_Event::ENTITY_MOVE] = boost::bind(&Server::moveForge, this, _1, _2);
+		forge_[Logique::Environnement_Event::ENTITY_EAT] = boost::bind(&Server::eatForge, this, _1, _2);
+		forge_[Logique::Environnement_Event::ENTITY_DEATH] = boost::bind(&Server::dieForge, this, _1, _2);
+		forge_[Logique::Environnement_Event::ENTITY_REPRODUCE] = boost::bind(&Server::reproduceForge, this, _1, _2);
+		forge_[Logique::Environnement_Event::GRASS_UP] = boost::bind(&Server::grassUpForge, this, _1, _2);
+		forge_[Logique::Environnement_Event::GRASS_DOWN] = boost::bind(&Server::grassDownForge, this, _1, _2);
 }
 
 Server::~Server() {
@@ -35,28 +34,28 @@ void Server::Start()
 {
     std::cout << "server start" << std::endl;
     server_.start();
+	boost::thread thr(boost::bind(&Server::run, this));
     environnement_.run();
 }
 
 void Server::AddConnection(Connection* connection)
 {
 	boost::lock_guard<boost::mutex> lock(connections_mut_);
-    connections_[(std::size_t)connection] = connection; 
-	//synchronize(connection);
+    connections_[reinterpret_cast<ptrdiff_t>(connection)] = connection; 
 }
 
 void Server::RemoveConnection(Connection* connection)
 {
 	boost::lock_guard<boost::mutex> lock(connections_mut_);
-    if (connections_.find((std::size_t)connection) != connections_.end())
-        connections_.erase((std::size_t)connection);
+    if (connections_.find(reinterpret_cast<ptrdiff_t>(connection)) != connections_.end())
+        connections_.erase(reinterpret_cast<ptrdiff_t>(connection));
 }
 
 void Server::SendPacket(Packet& packet)
 {
 	boost::lock_guard<boost::mutex> lock(connections_mut_);
-    std::map<std::size_t, Connection*>::iterator it = connections_.begin();
-    std::map<std::size_t, Connection*>::iterator ite = connections_.end();
+    std::map<ptrdiff_t, Connection*>::iterator it = connections_.begin();
+    std::map<ptrdiff_t, Connection*>::iterator ite= connections_.end();
     
     for (; it != ite; ++it)
         it->second->AddPacket(packet);
@@ -64,90 +63,115 @@ void Server::SendPacket(Packet& packet)
 
 void Server::synchronize(Connection * connection)
 {
+	std::cout << "Synchronize..." << std::endl;
+	Packet packet;
+	Logique::Board board;
+
 	boost::lock_guard<boost::mutex> lock(connections_mut_);
-    std::clog << "[Log] synchronize... entity..." << std::endl;
-	environnement_.lock();
-	Logique::Environnement::EntityPtrSet::const_iterator it = environnement_.getEntityList().begin();
-	Logique::Environnement::EntityPtrSet::const_iterator ite = environnement_.getEntityList().end();
-	for (; it != ite; ++it)
+	connection->Lock();
+	environnement_.getBoard(board);
+	board.lock();
+
+	packet << Logique::Environnement_Event::NONE << Logique::BOARD_SIZE;
+	connection->AddSynchroPacket(packet);
+	for (uint32_t x = 0; x < Logique::BOARD_SIZE; x++)
 	{
-		Packet packet;
-		packet << Server::SPAWN << (std::size_t) it->first << (uint8_t)it->first->getType() << (int32_t)it->first->getLocation().x << (int32_t)it->first->getLocation().y;
-		connection->AddPacket(packet);
-	}
-	environnement_.unlock();
-	std::clog << "[Log] synchronize finished..." << std::endl;
-}
-
-void Server::cmdSpawnSheep(Logique::Entity const &e)
-{
-    Packet packet;
-
-    packet << Server::SPAWN << (std::size_t) &e << (uint8_t)e.getType() << (int32_t)e.getLocation().x << (int32_t)e.getLocation().y;
-    SendPacket(packet);
-}
-
-void Server::cmdSpawnWolf(Logique::Entity const &e)
-{
-    Packet packet;
-    
-    packet << Server::SPAWN << (std::size_t) &e << (uint8_t)e.getType() << (int32_t)e.getLocation().x << (int32_t)e.getLocation().y;
-    SendPacket(packet);
-}
-
-void Server::cmdEntityMove(Logique::Entity const &e)
-{
-     Packet packet;
-
-    packet << Server::MOVE << (std::size_t) &e << (uint8_t)e.getLastAction() << (int32_t)e.getLocation().x << (int32_t)e.getLocation().y;
-    SendPacket(packet);
-}
-
-void Server::cmdEntityEat(Logique::Entity const &e)
-{
-    Packet packet;
-
-    packet << Server::EAT << (int32_t)e.getLocation().x << (int32_t)e.getLocation().y;
-    SendPacket(packet);
-}
-
-void Server::cmdEntityDead(Logique::Entity const &e)
-{
-    Packet packet;
-
-    packet << Server::DIE << (std::size_t) &e;
-    SendPacket(packet);
-}
-
-void Server::cmdReproduce(Logique::Entity const &e)
-{
-    Packet packet;
-
-    packet << Server::REPRODUCE << (std::size_t) &e;
-    SendPacket(packet);
-}
-
-void Server::cmdBoardChange(Logique::Board const &board)
-{
-	const_cast<Logique::Board&>(board).lock();
-
-	Packet pBegin;
-
-	pBegin << Server::BOARD_BEG << (uint32_t)board.size();
-	SendPacket(pBegin);
-	for (uint32_t x = 0; x < board.size(); x++)
-	{
-		for (uint32_t y = 0; y < board.size(); y++)
+		for (uint32_t y = 0; y < Logique::BOARD_SIZE; y++)
 		{
-			Packet pBoard;
-
-			pBoard << Server::BOARD << x << y << (uint8_t)board.get(Coord(x, y)).hasGrass() << (uint32_t)board.get(Coord(x, y)).odour();
-			SendPacket(pBoard);
+			Packet grass;
+			Packet entity;
+			Logique::Square sq = board.get(x, y);
+			if (sq.hasEntity())
+			{
+				Logique::Entity * e = NULL;
+				if (sq.hasSheep())
+					e = reinterpret_cast<Logique::Entity*>(sq.getId(Logique::Square::SHEEP));
+				if (sq.hasWolf())
+					e = reinterpret_cast<Logique::Entity*>(sq.getId(Logique::Square::WOLF));
+				if (e != NULL)
+				{
+					std::cout << "SPAWN" << std::endl;
+					entity << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_SPAWN) << reinterpret_cast<ptrdiff_t>(e);
+					entity << e->getType() << static_cast<int32_t>(x) << static_cast<int32_t>(y);
+					connection->AddSynchroPacket(entity);
+				}
+			}
+			if (sq.hasGrass())
+			{
+				grass << static_cast<uint8_t>(Logique::Environnement_Event::GRASS_UP) << static_cast<int32_t>(x) << static_cast<int32_t>(y);
+				connection->AddSynchroPacket(grass);
+			}
 		}
 	}
-	Packet pEnd;
+	board.unlock();
+	connection->Unlock();
+	std::cout << "...end" << std::endl;
+}
 
-	pEnd << Server::BOARD_END;
-	SendPacket(pEnd);
-	const_cast<Logique::Board&>(board).unlock();
+Packet * Server::forgePacket(Logique::Environnement_Event & e)
+{
+	Packet * packet = new Packet();
+
+	if (e._type > Logique::Environnement_Event::NONE && e._type < Logique::Environnement_Event::TYPE_SIZE)
+		forge_[e._type](*packet, e);
+	return packet;
+}
+
+void Server::spawnForge(Packet & output, Logique::Environnement_Event &e)
+{
+	output << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_SPAWN) << e._entityId << e._entityType << e._pos.x << e._pos.y;
+}
+
+void Server::moveForge(Packet & output, Logique::Environnement_Event &e)
+{
+	output << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_MOVE) << e._entityId << e._newPos.x << e._newPos.y;
+}
+
+void Server::eatForge(Packet & output, Logique::Environnement_Event &e)
+{
+	output << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_EAT) << e._entityId;
+}
+
+void Server::dieForge(Packet & output, Logique::Environnement_Event &e)
+{
+	output << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_DEATH) << e._entityId;
+}
+
+void Server::reproduceForge(Packet & output, Logique::Environnement_Event &e)
+{
+	output << static_cast<uint8_t>(Logique::Environnement_Event::ENTITY_REPRODUCE) << e._entityId;
+}
+
+void Server::grassUpForge(Packet & output, Logique::Environnement_Event &e)
+{
+	output << static_cast<uint8_t>(Logique::Environnement_Event::GRASS_UP) << e._pos.x << e._pos.y;
+}
+
+void Server::grassDownForge(Packet & output, Logique::Environnement_Event &e)
+{
+	output << static_cast<uint8_t>(Logique::Environnement_Event::GRASS_DOWN) << e._pos.x << e._pos.y;
+}
+
+void Server::run()
+{
+	boost::xtime xt;
+	boost::xtime_get(&xt, boost::TIME_UTC);
+	xt.sec += 5;
+	while (true)
+	{
+		boost::thread::sleep(xt);
+		Logique::Callback_Environnement::EventProxy proxy = Logique::Callback_Environnement::getInstance().getEventProxy();
+		//Logique::Callback_Environnement::MetricProxy mProxy = Logique::Callback_Environnement::getInstance().getMetricProxy();
+		Logique::Callback_Environnement::EventDeque::iterator it = proxy.begin();
+		Logique::Callback_Environnement::EventDeque::iterator ite = proxy.end();
+		for (;it != ite && connections_.size() > 0; ++it)
+		{
+			Packet * packet = forgePacket((*it));
+			SendPacket(*packet);
+			delete packet;
+		}
+		proxy.clear();
+		//mProxy.clear();
+		xt.sec += 2;
+	}
 }

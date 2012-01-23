@@ -17,16 +17,17 @@ class Connection : public Poco::Net::TCPServerConnection {
 public:
     Connection(const Poco::Net::StreamSocket & socket);
     virtual ~Connection();
-    
-    void run();
+
+	void run();
+	void Lock();
+	void AddSynchroPacket(Packet & packet);
+	void Unlock();
     void AddPacket(Packet & packet);
 
 private:
 
-	static const uint32_t BUFF_SIZE;
     std::deque<Packet> packets_;
     boost::mutex packet_mut_;
-    
 };
 
 #endif	/* CONNECTION_HPP */
