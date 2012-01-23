@@ -39,8 +39,10 @@ namespace Logique {
 		Coord getValidValue(int x, int y) const;
 		int getValidValue(int val) const;
 
-		void dump() const;
+		void dumpOdour() const;
 		void dumpSheep() const;
+		void dumpWolf() const;
+		void dumpGrass() const;
 
 		static bool coordValid(const Coord& pos);
 		static bool coordValid(int x, int y);
