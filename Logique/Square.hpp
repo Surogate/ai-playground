@@ -43,7 +43,7 @@ namespace Logique {
 			}
 		}
 
-		inline bool hasEntity()
+		inline bool hasEntity() const
 		{
 			unsigned int i = 0;
 			while (i < ENTITY_CONTAINER_SIZE && _entityIn[i] != 0)
@@ -52,13 +52,17 @@ namespace Logique {
 			return i == ENTITY_CONTAINER_SIZE;
 		}
 
-		inline bool hasEntity(const EntityContain& value) {
+		inline bool hasEntity(const EntityContain& value) const {
 			return _entityIn[value] != 0;
 		}
 
 		inline bool hasEntity(const EntityContain& value, Entity* set) {
 			_entityIn[value] = set;
 			return _entityIn[value] != 0;
+		}
+
+		inline const Entity* getEntity(const EntityContain& value) const {
+			return _entityIn[value];
 		}
 
 		inline Entity* getEntity(const EntityContain& value) {
@@ -98,11 +102,11 @@ namespace Logique {
 		}
 
 		inline bool hasSheep() const  {
-			return _entityIn[SHEEP] != 0;
+			return hasEntity(SHEEP);
 		}
 
 		inline bool hasWolf() const {
-			return _entityIn[WOLF] != 0;
+			return hasEntity(WOLF);
 		}
 
 		inline operator int() const {
@@ -160,17 +164,32 @@ namespace Logique {
 			return _odour;
 		}
 
-		inline void dump() const {
+		inline void dumpOdour() const {
 			std::cout << _odour;
 		}
 
 		inline void dumpSheep() const {
 			if (hasSheep()) {
-				std::cout << "M";
+				std::cout << "S";
 			} else {
 				std::cout << "O";
 			}
+		}
 
+		inline void dumpWolf() const {
+			if (hasWolf()) {
+				std::cout << "W";
+			} else {
+				std::cout << "O";
+			}
+		}
+
+		inline void dumpGrass() const {
+			if (hasGrass()) {
+				std::cout << "G";
+			} else {
+				std::cout << "O";
+			}
 		}
 
 	private:
