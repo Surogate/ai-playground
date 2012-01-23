@@ -76,10 +76,10 @@ namespace Logique {
 		return get(x, y);
 	}
 
-	void Board::dump() const {
+	void Board::dumpOdour() const {
 		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
 			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
-				at(x)[y].dump();
+				at(x)[y].dumpOdour();
 				std::cout << " ";
 			}
 			std::cout << std::endl;
@@ -90,6 +90,26 @@ namespace Logique {
 		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
 			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
 				at(x)[y].dumpSheep();
+				std::cout << " ";
+			}
+			std::cout << std::endl;
+		}
+	}
+
+	void Board::dumpWolf() const {
+		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
+			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
+				at(x)[y].dumpWolf();
+				std::cout << " ";
+			}
+			std::cout << std::endl;
+		}
+	}
+
+	void Board::dumpGrass() const {
+		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
+			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
+				at(x)[y].dumpGrass();
 				std::cout << " ";
 			}
 			std::cout << std::endl;
