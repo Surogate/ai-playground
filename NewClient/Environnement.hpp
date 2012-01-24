@@ -11,15 +11,27 @@
 #include "Board.hpp"
 #include "Entity.hpp"
 
+#include <map>
+
 class Environnement {
 public:
+    typedef std::map<uint32_t, Entity> EntityMap;
+    
     Environnement();
     virtual ~Environnement();
+
+    void SetBoard(Board const &);
+    Board & GetBoard();
+    void AddEntity(uint32_t const &, Entity const &);
+    Entity & GetEntity(uint32_t const &);
+    void RmEntity(uint32_t const &);
+
+    void Draw(sf::RenderTarget &);
+    
 private:
     
     Board board_;
-
-    Board & GetBoard();
+    EntityMap entities_;
 };
 
 #endif	/* ENVIRONNEMENT_HPP */
