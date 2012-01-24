@@ -19,6 +19,8 @@
  */
 int main(int argc, char** argv) {
 
+    if (argc < 2)
+        return EXIT_FAILURE;
     sf::RenderWindow app(sf::VideoMode(1024, 780, 32), "IA");
     ResourceManager::getInstance().AddTexture("grass", "resources/grass.png");
     ResourceManager::getInstance().AddTexture("animals", "resources/animals.png");
@@ -33,7 +35,7 @@ int main(int argc, char** argv) {
 
     def = app.GetDefaultView();
     cam = app.GetView();
-    if (socket.Connect(sf::IpAddress("192.168.0.102"), 16000) == sf::Socket::Disconnected)
+    if (socket.Connect(sf::IpAddress(argv[1]), 16000) == sf::Socket::Disconnected)
     {
         std::cout << "Connection fail." << std::endl;
         return EXIT_FAILURE;
