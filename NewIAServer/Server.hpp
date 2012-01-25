@@ -42,7 +42,7 @@ private:
     boost::mutex						connections_mut_;
 	boost::function<void (Packet &, Logique::Environnement_Event &)>	forge_[Logique::Environnement_Event::TYPE_SIZE];
 
-	Packet * forgePacket(Logique::Environnement_Event & e);
+	void forgePacket(Packet & packet, Logique::Environnement_Event & e);
 	void spawnForge(Packet & output, Logique::Environnement_Event & e);
 	void moveForge(Packet & output, Logique::Environnement_Event & e);
 	void eatForge(Packet & output, Logique::Environnement_Event & e);

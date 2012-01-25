@@ -9,8 +9,10 @@
 #define	PACKET_HPP
 
 #include <stdint.h>
-#include <vector>
+#include <boost/array.hpp>
 #include <string>
+
+#define ARRAY_BUFF_SIZE 256
 
 class Packet {
 public:
@@ -52,9 +54,10 @@ public:
     uint16_t Endians(uint16_t value);
 
 private:
-    std::vector<char> data_;
+	boost::array<char, ARRAY_BUFF_SIZE> data_;
+    //std::vector<char> data_;
     uint32_t reading_pos_;
-    
+    uint32_t size_;
 
     bool     CheckSize(uint32_t size);
 };

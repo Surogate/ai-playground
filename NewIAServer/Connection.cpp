@@ -45,9 +45,7 @@ void Connection::run() {
 					socket().sendBytes(reinterpret_cast<const void*>(&size), sizeof(size));
 					std::size_t send = 0;
 					for (; send < pack.GetSize(); )
-					{
 						send = socket().sendBytes(pack.GetData() + send, pack.GetSize() - send, 0);
-					}
 					packets_.pop_front();
 				}
 			}

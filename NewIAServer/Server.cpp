@@ -73,7 +73,7 @@ void Server::synchronize(Connection * connection)
 	Logique::Callback_Environnement::EventProxy lockguard = Logique::Callback_Environnement::getInstance().getEventProxy();
 	environnement_.getBoard(board);
 
-	packet << Logique::Environnement_Event::NONE << Logique::BOARD_SIZE;
+	packet << static_cast<uint8_t>(Logique::Environnement_Event::NONE) << static_cast<uint32_t>(Logique::BOARD_SIZE);
 	connection->AddSynchroPacket(packet);
 
 	unsigned int numSheep = 0;
@@ -119,13 +119,10 @@ void Server::synchronize(Connection * connection)
 	std::cout << "...end" << std::endl;
 }
 
-Packet * Server::forgePacket(Logique::Environnement_Event & e)
+void Server::forgePacket(Packet & packet, Logique::Environnement_Event & e)
 {
-	
-	Packet * packet = new Packet();
 	if (e._type > Logique::Environnement_Event::NONE && e._type < Logique::Environnement_Event::TYPE_SIZE)
-		forge_[e._type](*packet, e);
-	return packet;
+		forge_[e._type](packet, e);
 }
 
 void Server::spawnForge(Packet & output, Logique::Environnement_Event &e)
@@ -165,23 +162,22 @@ void Server::grassDownForge(Packet & output, Logique::Environnement_Event &e)
 
 void Server::run()
 {
-	boost::xtime xt;
-	boost::xtime_get(&xt, boost::TIME_UTC);
-	xt.sec += 5;
+	//boost::xtime xt;
+	//boost::xtime_get(&xt, boost::TIME_UTC);
+	//xt.sec += 5;
 	while (true)
 	{
-		boost::thread::sleep(xt);
+		//boost::thread::sleep(xt);
 		Logique::Callback_Environnement::EventProxy proxy = Logique::Callback_Environnement::getInstance().getEventProxy();
 		Logique::Callback_Environnement::EventDeque::iterator it = proxy.begin();
 		Logique::Callback_Environnement::EventDeque::iterator ite = proxy.end();
 		for (;it != ite && connections_.size() > 0; ++it)
 		{
-			Packet * packet = forgePacket((*it));
-			SendPacket(*packet);
-			delete packet;
+			Packet packet;
+			forgePacket(packet, (*it));
+			SendPacket(packet);
 		}
 		proxy.clear();
-		//mProxy.clear();
-		xt.sec += 2;
+		//xt.sec += 2;
 	}
 }

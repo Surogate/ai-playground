@@ -7,13 +7,20 @@
 
 #include "Packet.hpp"
 
-Packet::Packet() : data_(64) {
+Packet::Packet()
+{
+	std::memset(&data_, 0, ARRAY_BUFF_SIZE);
+	size_ = 0U;
+	reading_pos_ = 0U;
 }
 
 Packet::Packet(const Packet& orig) {
     if (this != &orig)
     {
+		this->size_ = orig.size_;
+		this->reading_pos_ = orig.reading_pos_;
         this->data_ = orig.data_;
+		//std::memcpy(&data_, &orig.data_, orig.GetSize());
     }
 }
 
@@ -22,11 +29,12 @@ Packet::~Packet() {
 
 void Packet::Append(const void* data, std::size_t size)
 {
-    if (data != NULL && size > 0)
+    if (data != NULL && size > 0 && size < ARRAY_BUFF_SIZE)
     {
-        std::size_t dSize = data_.size();
-        data_.resize(dSize + size);
+        std::size_t dSize = GetSize();
+        //data_.resize(dSize + size);
         std::memcpy(&data_[dSize], data, size);
+		size_ += size;
     }
 }
 
@@ -37,8 +45,10 @@ const char * Packet::GetData() const
 
 void Packet::Clear()
 {
-    data_.clear();
+	std::memset(&data_, 0, ARRAY_BUFF_SIZE);
+    //data_.clear();
     reading_pos_ = 0U;
+	size_ = 0U;
 }
 
 uint32_t Packet::Endianl(uint32_t value)
@@ -55,7 +65,7 @@ uint16_t Packet::Endians(uint16_t value)
 
 std::size_t Packet::GetSize() const
 {
-    return (data_.size());
+    return (size_);
 }
 
 Packet & Packet::operator <<(uint8_t value)
