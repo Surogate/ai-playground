@@ -30,7 +30,8 @@ namespace Logique  {
 		typedef boost::function< bool (const Coord&) > PopEntityFunctor;
 		typedef boost::function< bool (const float&) > ValidScoreFunctor;
 
-		Entity(const Square::EntityContain& type);
+		Entity(const Square::EntityContain& type, DecisionTree& tree);
+		Entity(const Entity& orig);
 		virtual ~Entity();
 
 		void cleanVtable();
@@ -51,10 +52,14 @@ namespace Logique  {
 		void decreaseFood(unsigned int value);
 		Square::EntityContain getType() const;
 
-		virtual void getNewAction(unsigned int actionStart) = 0;
+		void getNewAction(unsigned int actionStart);
+		EntityAction computeAction();
+		void sendXp(float power);
+		void sendXpNot(float power);
+		
 		virtual void eat(Board& board) = 0;
 		virtual void reproduce(Board& board) = 0;
-
+		virtual void genXp() = 0;
 		virtual void initActionArray(Board& board);
 
 		void goUp(Board& board);
@@ -105,6 +110,8 @@ namespace Logique  {
 		EntityAction _lastAction;
 		DecisionTree::ReturnValue _lastCompute;
 		Action _newAction;
+
+		DecisionTree& _tree;
 
 	private:
 		bool moveToThisLocation(Board& board, const Coord& newLoc);

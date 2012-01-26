@@ -38,6 +38,9 @@ namespace Logique {
 		std::size_t getEventSize();
 		std::size_t getMetricSize();
 
+		void setEventSizeLimit(std::size_t limit);
+		void setMetricSizeLimit(std::size_t limit);
+
 		Environnement_Event popEventFromFront();
 		Metric popMetricFromFront();
 
@@ -49,6 +52,8 @@ namespace Logique {
 		MetricDeque _metricQueue;
 		boost::mutex _mut;
 		boost::mutex _metricMut;
+		std::size_t _eventLimit;
+		std::size_t _metricLimit;
 		
 		boost::array< const char *, Environnement_Event::TYPE_SIZE > _eventTypeString;
 		boost::array< const char *, Square::ENTITY_CONTAINER_SIZE > _entityTypeString;

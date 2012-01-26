@@ -31,7 +31,12 @@ namespace Logique {
 	class Environnement {
 	public:
 		enum {
-			ODOURONDEATH = 3
+			ODOURONDEATH = 3,
+			BASE_TIME_MILISEC = 100,
+			STARTING_ZONE_MIN = 0,
+			STARTING_ZONE_MAX = 15,
+			LOG_TIME = 30,
+			BOARD_TIME = 5
 		};
 
 		typedef std::list< Action, boost::pool_allocator<Action> > ActionList;
@@ -72,10 +77,10 @@ namespace Logique {
 		void unsafeInsertAction(const Action& value);
 		void insertActionStack();
 		void preRun();
-		Action createBoardPlay();
-		Action createLog();
-		void boardPlay();
-		void doLog();
+		Action createBoardPlay(unsigned int start_tick);
+		Action createLog(unsigned int start_tick);
+		void boardPlay(unsigned int tick_start);
+		void doLog(unsigned int tick_start);
 		void initEntity(boost::shared_ptr<Entity> value, const Coord& loc);
 		void spawnSheep();
 		void onEntityDeath(Entity& value);
@@ -95,6 +100,8 @@ namespace Logique {
 		ActionTmpStack _actionTmpStack;
 		boost::object_pool<Sheep> _sheepPool;
 		boost::object_pool<Wolf> _wolfPool;
+		DecisionTree _sheepTree;
+		DecisionTree _wolfTree;
 
 		boost::random::random_device _randomD;
 		boost::random::mt19937 _gen;

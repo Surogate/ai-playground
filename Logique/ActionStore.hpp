@@ -3,10 +3,12 @@
 #define ACTIONSTORE
 
 #include <boost/function.hpp>
+#include <vector>
 
 #include "DecisionTree.hpp"
 #include "Coord.hpp"
 #include "Square.hpp"
+#include "FixedVector.hpp"
 
 namespace Logique {
 
@@ -22,7 +24,7 @@ namespace Logique {
 		Square left;
 		Square down;
 		Square right;
-		std::vector< int > _case;
+		FixedVector< int, 128 > _case;
 
 		DecisionTree::ReturnValue result;
 		DecisionTree::ReturnValue last;

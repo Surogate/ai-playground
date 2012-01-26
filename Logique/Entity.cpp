@@ -7,12 +7,19 @@
 
 namespace Logique {
 
-	Entity::Entity(const Square::EntityContain& type)
-		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _rep_limit(0), _foodCount(0), _lastMoy(0), _lastAction(WAIT)
+	Entity::Entity(const Square::EntityContain& type, DecisionTree& tree)
+		: _type(type), _loc(), _add_action(), _numberEat(0), _numberRep(0), _actual(0), _numberTot(0), _rep_limit(0), _foodCount(0), _lastMoy(0), _lastAction(WAIT), _tree(tree)
 	{}
 
 	Entity::~Entity() 
 	{}
+
+	Entity::Entity(const Entity& orig)
+		: _type(orig._type), _loc(orig._loc), _add_action(orig._add_action), _numberEat(orig._numberEat), _numberRep(orig._numberRep)
+		, _actual(orig._actual), _numberTot(orig._numberTot), _rep_limit(orig._rep_limit), _foodCount(orig._foodCount), _lastMoy(orig._lastMoy),
+		_lastAction(orig._lastAction), _tree(orig._tree)
+	{
+	}
 
 	void Entity::cleanVtable() {
 		_newAction = Action();
@@ -93,6 +100,48 @@ namespace Logique {
 		return _type;
 	}
 
+	EntityAction Entity::computeAction()
+	{
+		_actionStack.push(ActionStore(_foodCount, _lastCompute, _loc, _getSquare));
+
+		DecisionTree::ReturnValue result = _tree.computeAction(_actionStack.top());
+		_lastCompute = result;
+		_actionStack.top().result = result;
+		_actual++;
+		return _tree.getValue(result);
+	}
+
+	void Entity::getNewAction(unsigned int actionStart)
+	{
+		EntityAction act = computeAction();
+
+		if (isAlive()) {
+			_actionArray[act]();
+			_newAction._tickStart = actionStart;
+			_newAction._tickBeforeAction = _timeArray[act];
+			_add_action(_newAction);
+		}
+
+		genXp();
+	}
+
+	void Entity::sendXp(float power)
+	{
+		while (_actionStack.size()) {
+			_tree.train(_actionStack.top(), power);
+			_actionStack.pop();
+		}
+		_tree.generateTree();
+	}
+
+	void Entity::sendXpNot(float power) 
+	{
+		while (_actionStack.size()) {
+			_tree.trainNot(_actionStack.top(), power);
+			_actionStack.pop();
+		}
+	}
+
 	void Entity::initActionArray(Board& board) {
 		_actionArray[WAIT] = boost::bind(&Entity::wait, this);
 		_timeArray[WAIT] = WAIT_TIME;
@@ -104,6 +153,8 @@ namespace Logique {
 		_timeArray[MOVE_LEFT] = MOVE_TIME;
 		_actionArray[MOVE_RIGHT] = boost::bind(&Entity::goRight, this, boost::ref(board));
 		_timeArray[MOVE_RIGHT] = MOVE_TIME;
+
+		_newAction = Action(0, 0, boost::bind(&Entity::getNewAction, shared_from_this(), _1));
 	}
 
 	void Entity::wait() {

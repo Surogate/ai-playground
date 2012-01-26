@@ -65,7 +65,7 @@ namespace Logique {
 
 		void foreach(const boost::function< void (const value_type&) >& func)
 		{
-			BOOST_FOREACH(Environnement_Event ev, *_stack)
+			BOOST_FOREACH(Environnement_Event& ev, *_stack)
 			{
 				func(ev);
 			}

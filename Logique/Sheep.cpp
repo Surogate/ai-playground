@@ -9,9 +9,7 @@
 
 namespace Logique {
 
-	DecisionTree Sheep::_tree;
-
-	Sheep::Sheep() : Entity(Square::SHEEP)
+	Sheep::Sheep(DecisionTree& tree) : Entity(Square::SHEEP, tree)
 	{}
 
 	Sheep::~Sheep()
@@ -26,55 +24,14 @@ namespace Logique {
 
 	void Sheep::initActionArray(Board& board) {
 		Entity::initActionArray(board);
-		_newAction = Action(0, 0, boost::bind(&Entity::getNewAction, shared_from_this(), _1));
+		
 		_actionArray[EAT] = boost::bind(&Sheep::eat, this, boost::ref(board));
 		_timeArray[EAT] = EAT_TIME;
 		_actionArray[REPRODUCE] = boost::bind(&Sheep::reproduce, this, boost::ref(board));
 		_timeArray[REPRODUCE] = REPRODUCE_TIME;
 	}
 
-	EntityAction Sheep::computeAction() 
-	{
-		_actionStack.push(ActionStore(_foodCount, _lastCompute, _loc, _getSquare));
-		DecisionTree::ReturnValue result = _tree.computeAction(_actionStack.top());
-		_lastCompute = result;
-		_actionStack.top().result = result;
-		_actual++;
-		return _tree.getValue(result);
-	}
-
-	void Sheep::sendXp(float power) 
-	{
-		while (_actionStack.size()) {
-			_tree.train(_actionStack.top(), power);		
-			_actionStack.pop();
-		}
-
-		_tree.generateTree();
-	}
-
-	void Sheep::sendXpNot(float power) 
-	{
-		while (_actionStack.size()) {
-			_tree.trainNot(_actionStack.top(), power);
-			_actionStack.pop();
-		}
-
-		_tree.generateTree();
-	}
-
-	void Sheep::getNewAction(unsigned int actionStart) 
-	{
-		EntityAction act = computeAction();
-
-		if (isAlive()) {
-			_actionArray[act]();
-			_newAction._tickStart = 0;
-			_newAction._tickBeforeAction = _timeArray[act];
-			if (!_newAction.increment(actionStart))
-				_add_action(_newAction);
-		}
-
+	void Sheep::genXp() {
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 
