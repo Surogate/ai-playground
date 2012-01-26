@@ -16,25 +16,19 @@ namespace Logique {
 			REPRODUCE_COUNTER = 15
 		};
 
-		Wolf();
+		Wolf(DecisionTree& tree);
 		~Wolf();
 
 		void onDeath();
 
 		void initActionArray(Board& board);
 
-		void getNewAction(unsigned int actionStart);
 		void eat(Board& board);
 		void reproduce(Board& board);
+		void genXp();
 
-		void sendXp(float power);
-		void sendXpNot(float power);
-
-		EntityAction computeAction();
 		bool hasWolfNext();
 		unsigned int evaluate() const;
-
-		static DecisionTree _tree;
 	};
 
 }

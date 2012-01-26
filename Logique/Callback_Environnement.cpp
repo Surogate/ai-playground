@@ -4,7 +4,10 @@
 
 namespace Logique {
 
-	Callback_Environnement::Callback_Environnement() 
+	Callback_Environnement::Callback_Environnement()
+		: _eventQueue(), _metricQueue()
+		, _mut(), _metricMut()
+		, _eventLimit(0), _metricLimit(0)
 	{
 		initEventTypeString();
 		initEntityTypeString();
@@ -16,23 +19,27 @@ namespace Logique {
 
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos)
 	{
-		#ifdef LOGONOUT
+		#ifdef ACTIONONCOUT
 		debugEvent(value, type, pos, newPos);
 		#else
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, id, type, pos, newPos));
+		if (_eventLimit && _eventQueue.size() > _eventLimit)
+			_eventQueue.pop_front();
 		_mut.unlock();
 		#endif
 	}
 
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos)
 	{
-		#ifdef LOGONOUT
+		#ifdef ACTIONONCOUT
 		debugEvent(value, type, pos);
 		#else
 
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, id, type, pos));
+		if (_eventLimit && _eventQueue.size() > _eventLimit)
+			_eventQueue.pop_front();
 		_mut.unlock();
 
 		#endif
@@ -40,22 +47,26 @@ namespace Logique {
 	
 	void Callback_Environnement::addAction(Environnement_Event::Type value, Coord pos)
 	{
-		#ifdef LOGONOUT
+		#ifdef ACTIONONCOUT
 		debugEvent(value, pos);
 		#else
 		_mut.lock();
 		_eventQueue.push_back(Environnement_Event(value, pos));
+		if (_eventLimit && _eventQueue.size() > _eventLimit)
+			_eventQueue.pop_front();
 		_mut.unlock();
 		#endif
 	}
 
 	void Callback_Environnement::addMetric(const Metric& value)
 	{
-		#ifdef LOGONOUT
+		#ifdef METRICONCOUT
 		debugMetric(value);
 		#else
 		_metricMut.lock();
 		_metricQueue.push_back(value);
+		if (_metricLimit && _metricLimit.size() > _metricLimit)
+			_metricLimit.pop_front();
 		_metricMut.unlock();
 		#endif
 	}
@@ -138,6 +149,16 @@ namespace Logique {
 		std::size_t val = _metricQueue.size();
 		_metricMut.unlock();
 		return val;
+	}
+
+	void Callback_Environnement::setEventSizeLimit(std::size_t limit)
+	{
+		_eventLimit = limit;
+	}
+
+	void Callback_Environnement::setMetricSizeLimit(std::size_t limit)
+	{
+		_metricLimit = limit;
 	}
 
 	Environnement_Event Callback_Environnement::popEventFromFront()

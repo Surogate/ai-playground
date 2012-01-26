@@ -5,11 +5,8 @@
 #include "Logger.hpp"
 
 namespace Logique {
-
-	DecisionTree Wolf::_tree;
-
-	Wolf::Wolf() 
-		: Entity(Square::WOLF)
+	Wolf::Wolf(DecisionTree& tree) 
+		: Entity(Square::WOLF, tree)
 	{}
 
 	Wolf::~Wolf() 
@@ -25,51 +22,14 @@ namespace Logique {
 	void Wolf::initActionArray(Board& board) 
 	{
 		Entity::initActionArray(board);
-		_newAction = Action(0, 0, boost::bind(&Entity::getNewAction, shared_from_this(), _1));
+
 		_actionArray[EAT] = boost::bind(&Wolf::eat, this, boost::ref(board));
 		_timeArray[EAT] = EAT_TIME;
 		_actionArray[REPRODUCE] = boost::bind(&Wolf::reproduce, this, boost::ref(board));
 		_timeArray[REPRODUCE] = REPRODUCE_TIME;
 	}
 
-	EntityAction Wolf::computeAction() 
-	{
-		_actionStack.push(ActionStore(_foodCount, _lastCompute, _loc, _getSquare));
-		DecisionTree::ReturnValue result = _tree.computeAction(_actionStack.top());
-		_lastCompute = result;
-		_actionStack.top().result = result;
-		_actual++;
-		return _tree.getValue(result);
-	}
-
-	void Wolf::sendXp(float power) 
-	{
-		while (_actionStack.size()) {
-			_tree.train(_actionStack.top(), power);
-			_actionStack.pop();
-		}
-		_tree.generateTree();
-	}
-
-	void Wolf::sendXpNot(float power) {
-		while (_actionStack.size()) {
-			_tree.trainNot(_actionStack.top(), power);
-			_actionStack.pop();
-		}
-	}
-
-	void Wolf::getNewAction(unsigned int actionStart) 
-	{
-		EntityAction act = computeAction();
-		
-		if (isAlive()) {
-			_actionArray[act]();
-			_newAction._tickStart = 0;
-			_newAction._tickBeforeAction = _timeArray[act];
-			if (!_newAction.increment(actionStart))
-				_add_action(_newAction);
-		}
-
+	void Wolf::genXp() {
 		if (_actual && _actual >= _numberTot) {
 			float moy = computeMoy();
 

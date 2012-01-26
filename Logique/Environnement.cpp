@@ -12,14 +12,14 @@
 namespace Logique {
 
 	Environnement::Environnement()
-		: _board(), _baseTime(), _entityList(), _actionList(), _actionTmpStack()
-		, _randomD(), _gen(_randomD), _distri(0, 15)
+		: _entityNum(), _board(), _baseTime(boost::chrono::milliseconds(BASE_TIME_MILISEC))
+		, _entityList(), _actionList(), _sheepPool(), _wolfPool(), _sheepTree(), _wolfTree()
+		, _randomD(), _gen(_randomD), _distri(STARTING_ZONE_MIN, STARTING_ZONE_MAX)
 	{
 		_entityNum[Square::SHEEP] = 0;
 		_entityNum[Square::WOLF] = 0;
-		_baseTime = boost::chrono::milliseconds(100);
-		addAction(createBoardPlay());
-		addAction(createLog());
+		addAction(createBoardPlay(0));
+		addAction(createLog(0));
 	}
 
 	Environnement::~Environnement() {}
@@ -27,8 +27,6 @@ namespace Logique {
 	void Environnement::preRun() {
 		addSheep(20);
 		addWolf(10);
-
-		insertActionStack();
 
 		if (_actionList.empty()) {
 			std::cout << "no action" << std::endl;
@@ -41,10 +39,6 @@ namespace Logique {
 		boost::chrono::system_clock::time_point start;
 		boost::chrono::duration<double> total_time;
 
-		ActionList::iterator executor;
-		ActionList::iterator toDeleteEnd;
-		ActionList::iterator end;
-
 		std::cout << "simulation start" << std::endl;
 		while (!_actionList.empty()) {
 			start = boost::chrono::system_clock::now();
@@ -56,26 +50,15 @@ namespace Logique {
 			} else {
 				total_time -= (tick_passed * _baseTime);
 
-				executor = _actionList.begin();
-				end = _actionList.end();
-
-				while (executor != end && executor->increment(tick_passed)) {
-					++executor;
+				BOOST_FOREACH(Action& act, _actionList)
+				{
+					act._tickStart += tick_passed;
 				}
 
-				toDeleteEnd = executor;
-				if (executor != end) {
-					executor++;
-
-					while (executor != end)
-					{
-						executor->increment(tick_passed);
-						executor++;
-					}
+				// on fait les nouvelle action qui reste a faire
+				while (!_actionList.empty() && _actionList.begin()->execute()) {
+					_actionList.pop_front();
 				}
-
-				if (toDeleteEnd != _actionList.begin())
-					_actionList.erase(_actionList.begin(), toDeleteEnd);
 
 				if (getSheepNum() <= 3) {
 					addSheep(20);
@@ -84,14 +67,39 @@ namespace Logique {
 				if (getWolfNum() <= 3) {
 					addWolf(10);
 				}
-
-				insertActionStack();
 			}
 
 			total_time += boost::chrono::system_clock::now() - start;
 
 		}
 		std::cout << "Simulation end" << std::endl;
+	}
+
+	void Environnement::addAction(const Action& value) 
+	{
+		unsafeInsertAction(value);
+	}
+
+	void Environnement::unsafeInsertAction(const Action& value) 
+	{
+		ActionList::iterator it = _actionList.begin();
+		ActionList::iterator ite = _actionList.end();
+
+		while (it != ite && it->tickBefore() < value.tickBefore()) {
+			++it;
+		}
+		if (it != ite) {
+			_actionList.insert(it, value);
+		} else {
+			_actionList.push_back(value);
+		}
+	}
+
+	void Environnement::insertActionStack() {
+		while (!_actionTmpStack.empty()) {
+			unsafeInsertAction(_actionTmpStack.top());
+			_actionTmpStack.pop();
+		}
 	}
 
 	void Environnement::setBaseTime(const boost::chrono::duration<double>& time) 
@@ -103,7 +111,7 @@ namespace Logique {
 	bool Environnement::addSheep(const Coord& loc) 
 	{
 		if (!_board(loc).hasSheep()) {
-			boost::shared_ptr<Sheep> sheepPtr(_sheepPool.construct(), boost::bind(&Environnement::destroySheep, this, _1));
+			boost::shared_ptr<Sheep> sheepPtr(_sheepPool.construct(boost::ref(_sheepTree)), boost::bind(&Environnement::destroySheep, this, _1));
 			sheepPtr->addFood(Logique::FOOD_START);
 			sheepPtr->initActionArray(_board);
 
@@ -120,7 +128,7 @@ namespace Logique {
 	bool Environnement::addWolf(const Coord& loc) 
 	{
 		if (!_board(loc).hasWolf()) {
-			boost::shared_ptr<Wolf> wolfPtr(_wolfPool.construct(), boost::bind(&Environnement::destroyWolf, this, _1));
+			boost::shared_ptr<Wolf> wolfPtr(_wolfPool.construct(boost::ref(_wolfTree)), boost::bind(&Environnement::destroyWolf, this, _1));
 			wolfPtr->addFood(Logique::FOOD_START);
 			wolfPtr->initActionArray(_board);
 
@@ -240,26 +248,6 @@ namespace Logique {
 		return  value && (value >= moy);
 	}
 
-	void Environnement::addAction(const Action& value) 
-	{
-		_actionTmpStack.push(value);
-	}
-
-	void Environnement::unsafeInsertAction(const Action& value) 
-	{
-		ActionList::iterator it = _actionList.begin();
-		ActionList::iterator ite = _actionList.end();
-
-		while (it != ite && it->tickBefore() < value.tickBefore()) {
-			++it;
-		}
-		if (it != ite) {
-			_actionList.insert(it, value);
-		} else {
-			_actionList.push_back(value);
-		}
-	}
-
 	void Environnement::debugActionList() {
 		ActionList::iterator it = _actionList.begin();
 		ActionList::iterator ite = _actionList.end();
@@ -272,34 +260,27 @@ namespace Logique {
 		std::cout << "##" << std::endl;
 	}
 
-	void Environnement::insertActionStack() 
-	{
-		while (_actionTmpStack.size()) {
-			unsafeInsertAction(_actionTmpStack.top());
-			_actionTmpStack.pop();
-		}
-	}
-
-	Action Environnement::createBoardPlay() 
+	Action Environnement::createBoardPlay(unsigned int start_tick) 
 	{
 		Action act;
 
-		act._action = boost::bind(&Environnement::boardPlay, this);
-		act._tickBeforeAction = 1;
+		act._action = boost::bind(&Environnement::boardPlay, this, _1);
+		act._tickStart = start_tick;
+		act._tickBeforeAction = BOARD_TIME;
 		return act;
 	}
 
-	Action Environnement::createLog()
+	Action Environnement::createLog(unsigned int start_tick)
 	{
 		Action act;
 
-		act._action = boost::bind(&Environnement::doLog, this);
-		act._tickStart = 0;
-		act._tickBeforeAction = 30;
+		act._action = boost::bind(&Environnement::doLog, this, _1);
+		act._tickStart = start_tick;
+		act._tickBeforeAction = LOG_TIME;
 		return act;
 	}
 
-	void Environnement::doLog()
+	void Environnement::doLog(unsigned int tick_start)
 	{
 		float totalSheep = 0;
 		float totalWolf = 0;
@@ -330,15 +311,15 @@ namespace Logique {
 		Callback_Environnement::getInstance().addMetric(
 			Metric(_entityNum[Square::SHEEP], _entityNum[Square::WOLF],
 			totalSheep, totalWolf,
-			Sheep::_tree.getActionNum(), Sheep::_tree.getActionNeural(),
-			Wolf::_tree.getActionNum(), Wolf::_tree.getActionNeural())
+			_sheepTree.getActionNum(), _sheepTree.getActionNeural(),
+			_wolfTree.getActionNum(), _wolfTree.getActionNeural())
 			);
-		Sheep::_tree.clear();
-		Wolf::_tree.clear();
-		addAction(createLog());
+		_sheepTree.clear();
+		_wolfTree.clear();
+		addAction(createLog(tick_start));
 	}
 
-	void Environnement::boardPlay() {
+	void Environnement::boardPlay(unsigned int tick_start) {
 		_board.lock();
 		for (unsigned int x = 0; x < BOARD_SIZE; ++x) {
 			for (unsigned int y = 0; y < BOARD_SIZE; ++y) {
@@ -353,7 +334,7 @@ namespace Logique {
 		}
 		_board.unlock();
 
-		addAction(createBoardPlay());
+		addAction(createBoardPlay(tick_start));
 	}
 
 	void Environnement::initEntity(boost::shared_ptr<Entity> value, const Coord& loc) {

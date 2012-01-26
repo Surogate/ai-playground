@@ -10,7 +10,9 @@ namespace Logique {
 	struct Action {
 		typedef boost::function< void (unsigned int startTick) > Functor;
 
-		Action() : _tickStart(0), _tickBeforeAction(0), _action() 
+		Action() 
+			: _incremented(false)
+			, _tickStart(0), _tickBeforeAction(0), _action() 
 		{}
 
 		Action(unsigned int time_start, unsigned int time_before, const Functor& func) 
@@ -31,8 +33,7 @@ namespace Logique {
 			return *this;
 		}
 
-		bool increment(unsigned int tick_passed) {
-			_tickStart += tick_passed;
+		bool execute() {
 			if (_tickStart >= _tickBeforeAction) {
 				_action(_tickStart - _tickBeforeAction);
 				return true;
@@ -45,6 +46,7 @@ namespace Logique {
 			return _tickBeforeAction - _tickStart;
 		}
 
+		bool _incremented;
 		unsigned int _tickStart;
 		unsigned int _tickBeforeAction;
 		Functor _action;

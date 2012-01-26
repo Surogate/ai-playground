@@ -28,9 +28,9 @@ namespace Logique {
 			LAYERNUM = 4
 		};
 
-		static const float LEARNINGRATE;
-		static const float DECISIONSTEP;
-		static const float TRAINSTEP;
+		const float LEARNINGRATE;
+		const float DECISIONSTEP;
+		const float TRAINSTEP;
 
 		typedef boost::array<float, OUTPUTSIZE> OutputArray;
 		typedef boost::array<float, INPUTSIZE> InputArray;
@@ -42,7 +42,6 @@ namespace Logique {
 		void train(const ActionStore& value, float power);
 		void trainNot(const ActionStore& value, float power);
 		void generateTree();
-		EntityAction randomAction();
 		EntityAction getValue(const ReturnValue& ret);
 		unsigned int getActionNum();
 		unsigned int getActionNeural();
@@ -53,6 +52,7 @@ namespace Logique {
 		OutputArray _output;
 		InputArray _input;
 
+		unsigned int randomAction();
 		unsigned int _numTotal;
 		unsigned int _numNeural;
 		boost::random::random_device _randomD;

@@ -16,26 +16,19 @@ namespace Logique {
 			REPRODUCE_COUNTER = 15
 		};
 
-		Sheep();
+		Sheep(DecisionTree& tree);
 		~Sheep();
 
 		void onDeath();
 
 		void initActionArray(Board& board);
 
-		void getNewAction(unsigned int actionStart);
 		void eat(Board& board);
 		void reproduce(Board& board);
+		void genXp();
 
-		//static void initExp();
-		void sendXp(float power);
-		void sendXpNot(float power);
-
-		EntityAction computeAction();
 		bool hasSheepNext();
 		unsigned int evaluate() const;
-
-		static DecisionTree _tree;
 	};
 
 }
