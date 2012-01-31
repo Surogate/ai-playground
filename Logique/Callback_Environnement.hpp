@@ -18,18 +18,20 @@ class Environnement;
 
 namespace Logique {
 
-	class Callback_Environnement : public Singleton< Callback_Environnement > {
-		SINGLETON_CLASS(Callback_Environnement);
+	class Callback_Environnement {
 	public:
-
 		typedef std::deque< Environnement_Event, boost::pool_allocator<Environnement_Event> > EventDeque;
 		typedef std::deque< Metric, boost::pool_allocator<Metric> > MetricDeque;
 		typedef DequeProxy< EventDeque > EventProxy;
 		typedef DequeProxy< MetricDeque > MetricProxy;
 
-		void addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos);
-		void addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos);
-		void addAction(Environnement_Event::Type value, Coord pos);
+		Callback_Environnement();
+		~Callback_Environnement();
+		Callback_Environnement(const Callback_Environnement& value);
+
+		void addEvent(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos);
+		void addEvent(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos);
+		void addEvent(Environnement_Event::Type value, Coord pos);
 		void addMetric(const Metric& value);
 
 		EventProxy getEventProxy();
@@ -46,7 +48,6 @@ namespace Logique {
 
 		void debugEvent(const Environnement_Event& ev);
 		void debugMetric(const Metric& ev);
-
 	private:
 		EventDeque _eventQueue;
 		MetricDeque _metricQueue;
@@ -57,10 +58,6 @@ namespace Logique {
 		
 		boost::array< const char *, Environnement_Event::TYPE_SIZE > _eventTypeString;
 		boost::array< const char *, Square::ENTITY_CONTAINER_SIZE > _entityTypeString;
-
-		Callback_Environnement();
-		~Callback_Environnement();
-		Callback_Environnement(const Callback_Environnement& value);
 
 		void initEventTypeString();
 		void initEntityTypeString();

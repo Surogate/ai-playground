@@ -8,12 +8,61 @@ namespace Logique {
 	DecisionTree::DecisionTree() 
 		: _ann(), _numTotal(0), _numNeural(0)
 		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
-		, DECISIONSTEP(0.1f), TRAINSTEP(0.05f), LEARNINGRATE(0.7f)
+		, DECISIONSTEP(0.15f), TRAINSTEP(0.05f), LEARNINGRATE(0.7f)
+		, LAYERNUM(2), HIDDENSIZE(INPUTSIZE), ACTIVATIONFUNC(FANN::GAUSSIAN)
 	{
-		_ann.create_standard(LAYERNUM, INPUTSIZE, HIDDENSIZE, HIDDENSIZE_2, OUTPUTSIZE);
-		_ann.set_activation_function_hidden(FANN::SIGMOID_SYMMETRIC);
-		_ann.set_activation_function_output(FANN::SIGMOID_SYMMETRIC);
+		createNeuralNet();
+		_ann.set_activation_function_hidden(ACTIVATIONFUNC);
+		_ann.set_activation_function_output(ACTIVATIONFUNC);
 		_ann.set_learning_rate(LEARNINGRATE);
+	}
+
+	DecisionTree::DecisionTree(const EnvironnementGenetic::DecisionTreeGen& value) 
+		: _ann(), _numTotal(0), _numNeural(0)
+		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
+		, DECISIONSTEP(value._decisionStep), TRAINSTEP(value._trainStep), LEARNINGRATE(value._learningRate)
+		, LAYERNUM(value._layerNum), HIDDENSIZE(value._layerSize), ACTIVATIONFUNC(value._activation)
+	{
+		createNeuralNet();
+		_ann.set_activation_function_hidden(ACTIVATIONFUNC);
+		_ann.set_activation_function_output(ACTIVATIONFUNC);
+		_ann.set_learning_rate(LEARNINGRATE);
+	}
+
+	void DecisionTree::createNeuralNet() 
+	{
+		if (LAYERNUM == 1)
+		{
+			_ann.create_standard(LAYERNUM + 2, INPUTSIZE, HIDDENSIZE, OUTPUTSIZE);
+		}
+		if (LAYERNUM == 2)
+		{
+			_ann.create_standard(LAYERNUM + 2, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
+		}
+		if (LAYERNUM == 3)
+		{
+			_ann.create_standard(LAYERNUM + 2, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
+		}
+		if (LAYERNUM == 4)
+		{
+			_ann.create_standard(LAYERNUM + 2, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
+		}
+		if (LAYERNUM == 5)
+		{
+			_ann.create_standard(LAYERNUM + 2, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
+		}
+		if (LAYERNUM == 6)
+		{
+			_ann.create_standard(LAYERNUM + 2, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
+		}
+		if (LAYERNUM == 7)
+		{
+			_ann.create_standard(LAYERNUM + 2, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
+		}
+		if (LAYERNUM == 8)
+		{
+			_ann.create_standard(LAYERNUM + 2, INPUTSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, HIDDENSIZE, OUTPUTSIZE);
+		}
 	}
 
 	unsigned int DecisionTree::randomAction() 
@@ -44,45 +93,34 @@ namespace Logique {
 		_numTotal++;
 		if (notClearAnswer) 
 		{
-			i = 0;
-			bool random_found = false;
-			do {
-				unsigned int rand = randomAction();
-				if (best_val - ret[rand] < DECISIONSTEP) {
-					best_pos = rand;
-					random_found = true;
-				}
-				++i;
-			} while (i < 10 && !random_found);
-		} else 
+			best_pos = randomAction();
+		} 
+		else 
 		{
 			_numNeural++;
 		}
 
-		
 		return static_cast<EntityAction>(best_pos);
 	}
 
-	DecisionTree::ReturnValue DecisionTree::computeAction(const ActionStore& actionS) 
+	DecisionTree::ReturnValue DecisionTree::computeAction() 
 	{
-		actionS.initArray(_input.c_array());
 		float* output = _ann.run(_input.c_array());
 		for (unsigned int i = 0; i < _output.size(); ++i)
 			_output[i] = output[i];
 		return _output;
 	}
 
-	void DecisionTree::train(const ActionStore& value, float power) 
+	void DecisionTree::train(const OutputArray& value, float power) 
 	{
-		value.initArray(_input.c_array());
 		unsigned int i = 0;
 		unsigned int choice = 0;
 		float maxChoice = 0;
-		_output = value.result;
-		while (i < value.result.size()) {
+		_output = value;
+		while (i < value.size()) {
 			if (_output[i] >= maxChoice) {
 				choice = i;
-				maxChoice = value.result[i];
+				maxChoice = value[i];
 			}
 			_output[i] -= TRAINSTEP * power;
 			++i;
@@ -91,28 +129,13 @@ namespace Logique {
 		_ann.train(_input.c_array(), _output.c_array());
 	}
 
-	void DecisionTree::trainNot(const ActionStore& value, float power) 
+	void DecisionTree::trainNot(const OutputArray& value, float power) 
 	{
-		value.initArray(_input.c_array());
-		unsigned int i = 0;
-		unsigned int choice = 0;
-		float maxChoice = 0;
-		_output = value.result;
-		while (i < _output .size()) {
-			if (_output[i] >= maxChoice) {
-				choice = i;
-				maxChoice = _output[i];
-			}
-			_output[i] += TRAINSTEP * power;
-			++i;
-		}
-		_output[choice] -= TRAINSTEP * 2 * power;
-		_ann.train(_input.c_array(), _output.c_array());
+		train(value, -1 * power);
 	}
 
 	void DecisionTree::generateTree() 
-	{
-	}
+	{}
 
 	unsigned int DecisionTree::getActionNum() {
 		return _numTotal;

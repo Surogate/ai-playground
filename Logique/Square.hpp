@@ -192,6 +192,14 @@ namespace Logique {
 			}
 		}
 
+		void decreaseGrass(unsigned int value) {
+			if (value <= _grass_value) {
+				_grass_value -= value;
+			} else {
+				_grass_value = 0;
+			}
+		}
+
 	private:
 		unsigned int _grass_value;
 		boost::array<Entity*, ENTITY_CONTAINER_SIZE> _entityIn;
@@ -202,15 +210,7 @@ namespace Logique {
 			if (_grass_value > GRASS_MAX) {
 				_grass_value = GRASS_MAX;
 			}
-		}
-
-		void decreaseGrass(unsigned int value) {
-			if (value <= _grass_value) {
-				_grass_value -= value;
-			} else {
-				_grass_value = 0;
-			}
-		}
+		}		
 	};
 
 }

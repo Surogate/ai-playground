@@ -3,6 +3,8 @@
 #define ENTITY_HPP
 
 #include <stack>
+#include <deque>
+#include <utility>
 
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
@@ -19,6 +21,7 @@
 namespace Logique  {
 
 	class Board;
+	class Environnement;
 
 	class Entity : public boost::enable_shared_from_this<Entity> {
 	public:
@@ -31,6 +34,8 @@ namespace Logique  {
 		typedef boost::function< bool (const float&) > ValidScoreFunctor;
 
 		Entity(const Square::EntityContain& type, DecisionTree& tree);
+		Entity(const Square::EntityContain& type, DecisionTree& tree, const EnvironnementGenetic::EntityGen& value);
+		
 		Entity(const Entity& orig);
 		virtual ~Entity();
 
@@ -57,15 +62,15 @@ namespace Logique  {
 		void sendXp(float power);
 		void sendXpNot(float power);
 		
-		virtual void eat(Board& board) = 0;
-		virtual void reproduce(Board& board) = 0;
+		virtual void eat(Board& board, Environnement& env) = 0;
+		virtual void reproduce(Board& board, Environnement& env) = 0;
 		virtual void genXp() = 0;
-		virtual void initActionArray(Board& board);
+		virtual void initActionArray(Board& board, Environnement& env);
 
-		void goUp(Board& board);
-		void goLeft(Board& board);
-		void goRight(Board& board);
-		void goDown(Board& board);
+		void goUp(Board& board, Environnement& env);
+		void goLeft(Board& board, Environnement& env);
+		void goRight(Board& board, Environnement& env);
+		void goDown(Board& board, Environnement& env);
 		void wait();
 
 		EntityAction getLastAction() const;
@@ -84,11 +89,12 @@ namespace Logique  {
 
 		float computeMoy() const;
 
-		typedef std::stack< ActionStore, std::deque<ActionStore, boost::pool_allocator<ActionStore> > > ActionStoreStack;
+		typedef std::deque< ActionStore, boost::pool_allocator< ActionStore > > ActionStoreDeque;
+		typedef std::pair< unsigned int, boost::function< void () > > ActionPair;
+		typedef boost::array< ActionPair, ACTION_CONTAINER_SIZE > ActionArray;
 
 		const Square::EntityContain _type;
-		boost::array<unsigned int, ACTION_CONTAINER_SIZE> _timeArray;
-		boost::array<boost::function< void () > , ACTION_CONTAINER_SIZE> _actionArray;
+		ActionArray _actionArray;
 		Coord _loc;
 
 		ActionFunctor _add_action;
@@ -98,7 +104,7 @@ namespace Logique  {
 		PopEntityFunctor _popEntity;
 		ValidScoreFunctor _validScore;
 
-		ActionStoreStack _actionStack;
+		ActionStoreDeque _actionStack;
 
 		float _numberEat;
 		float _numberRep;
@@ -111,10 +117,15 @@ namespace Logique  {
 		DecisionTree::ReturnValue _lastCompute;
 		Action _newAction;
 
+		float SUPERSTEP;
+		float GOODSTEP;
+		float NEUTRALSTEP;
+		float BADSTEP;
+
 		DecisionTree& _tree;
 
 	private:
-		bool moveToThisLocation(Board& board, const Coord& newLoc);
+		bool moveToThisLocation(Board& board, const Coord& newLoc, Environnement& env);
 
 		Entity& operator=(const Entity&) { return *this; }
 	};
