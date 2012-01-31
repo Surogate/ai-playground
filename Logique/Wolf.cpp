@@ -1,13 +1,18 @@
 
 #include "Wolf.hpp"
 #include "Board.hpp"
-#include "Callback_Environnement.hpp"
+#include "Environnement.hpp"
 #include "Logger.hpp"
 
 namespace Logique {
 	Wolf::Wolf(DecisionTree& tree) 
 		: Entity(Square::WOLF, tree)
-	{}
+	{
+		SUPERSTEP = 0.4f;
+		GOODSTEP = 0.3f;
+		NEUTRALSTEP = 0.03f;
+		BADSTEP = 0.1f;
+	}
 
 	Wolf::~Wolf() 
 	{
@@ -16,17 +21,15 @@ namespace Logique {
 
 	void Wolf::onDeath() 
 	{
-		sendXpNot(0.1f);
+		sendXpNot(BADSTEP);
 	}
 
-	void Wolf::initActionArray(Board& board) 
+	void Wolf::initActionArray(Board& board, Environnement& env) 
 	{
-		Entity::initActionArray(board);
+		Entity::initActionArray(board, env);
 
-		_actionArray[EAT] = boost::bind(&Wolf::eat, this, boost::ref(board));
-		_timeArray[EAT] = EAT_TIME;
-		_actionArray[REPRODUCE] = boost::bind(&Wolf::reproduce, this, boost::ref(board));
-		_timeArray[REPRODUCE] = REPRODUCE_TIME;
+		_actionArray[EAT] = ActionPair(EAT_TIME, boost::bind(&Wolf::eat, this, boost::ref(board), boost::ref(env)));
+		_actionArray[REPRODUCE] = ActionPair(REPRODUCE_TIME, boost::bind(&Wolf::reproduce, this, boost::ref(board), boost::ref(env)));
 	}
 
 	void Wolf::genXp() {
@@ -36,18 +39,18 @@ namespace Logique {
 			if (moy > 0) {
 				_lastMoy = moy;
 				if (_validScore(moy)) {
-					sendXp(0.4f);
+					sendXp(SUPERSTEP);
 				} else {
-					sendXp(0.3f);
+					sendXp(GOODSTEP);
 				}
 			} else {
-				sendXpNot(0.03f);
+				sendXpNot(NEUTRALSTEP);
 			}
 			reInitPerf();
 		}
 	}
 
-	void Wolf::eat(Board& board) 
+	void Wolf::eat(Board& board, Environnement& env) 
 	{
 		if (isAlive() && _getSquare(_loc).hasSheep()) {
 			_lastAction = EAT;
@@ -57,16 +60,16 @@ namespace Logique {
 				sheep->setFood(0);
 			}
 			addFood(FOOD_GAIN);
-			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_EAT, *this, _type, _loc);
+			env.addEvent(Environnement_Event::ENTITY_EAT, *this, _type, _loc);
 		}
 	}
 
-	void Wolf::reproduce(Board& board) {
+	void Wolf::reproduce(Board& board, Environnement& env) {
 		if (isAlive() && _rep_limit > REPRODUCE_COUNTER && hasWolfNext() && _popEntity(_loc) && _popEntity(_loc) && _popEntity(_loc)) {
 			_numberRep += 2;
 			_rep_limit = REPRODUCE_COUNTER / 2;
 			_lastAction = REPRODUCE;
-			Callback_Environnement::getInstance().addAction(Environnement_Event::ENTITY_REPRODUCE, *this, _type, _loc);			
+			env.addEvent(Environnement_Event::ENTITY_REPRODUCE, *this, _type, _loc);			
 		}
 	}
 

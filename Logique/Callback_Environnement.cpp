@@ -17,7 +17,7 @@ namespace Logique {
 
 	Callback_Environnement::Callback_Environnement(const Callback_Environnement&) {}
 
-	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos)
+	void Callback_Environnement::addEvent(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos)
 	{
 		#ifdef ACTIONONCOUT
 		debugEvent(value, type, pos, newPos);
@@ -30,7 +30,7 @@ namespace Logique {
 		#endif
 	}
 
-	void Callback_Environnement::addAction(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos)
+	void Callback_Environnement::addEvent(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos)
 	{
 		#ifdef ACTIONONCOUT
 		debugEvent(value, type, pos);
@@ -45,7 +45,7 @@ namespace Logique {
 		#endif
 	}
 	
-	void Callback_Environnement::addAction(Environnement_Event::Type value, Coord pos)
+	void Callback_Environnement::addEvent(Environnement_Event::Type value, Coord pos)
 	{
 		#ifdef ACTIONONCOUT
 		debugEvent(value, pos);
@@ -65,8 +65,8 @@ namespace Logique {
 		#else
 		_metricMut.lock();
 		_metricQueue.push_back(value);
-		if (_metricLimit && _metricLimit.size() > _metricLimit)
-			_metricLimit.pop_front();
+		if (_metricLimit && _metricQueue.size() > _metricLimit)
+			_metricQueue.pop_front();
 		_metricMut.unlock();
 		#endif
 	}

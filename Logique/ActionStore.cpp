@@ -3,10 +3,8 @@
 
 namespace Logique {
 
-	ActionStore::ActionStore(unsigned int _foodcount_,  DecisionTree::ReturnValue _last_, const Coord& start, boost::function< Square& (const Coord&) >& getSquare)
-		: foodcount(_foodcount_), 
-		present(getSquare(start)), up(getSquare(start + Coord::UP)), left(getSquare(start + Coord::LEFT)), right(getSquare(start + Coord::RIGHT)),
-		last(_last_)
+	ActionStore::ActionStore(unsigned int _foodcount_, const Coord& start, boost::function< Square& (const Coord&) >& getSquare)
+		: foodcount(_foodcount_)
 	{
 		_case.reserve(getSize());
 			
@@ -54,16 +52,9 @@ namespace Logique {
 		std::size_t i = 0;
 		_input[i] = static_cast<float>(foodcount / (Logique::FOOD_MAX));
 		i++;
-		i += initArray(&_input[i], last);
-		i += initArray(&_input[i], present);
-		i += initArray(&_input[i], up);
-		i += initArray(&_input[i], left);
-		i += initArray(&_input[i], down);
-		i += initArray(&_input[i], right);
 		for (unsigned int o = 0; o < _case.size(); ++o) {
 			i += initArray(&_input[i], _case[o]);
 		}
-
 		return i;
 	}
 

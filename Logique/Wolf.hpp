@@ -4,8 +4,11 @@
 
 #include "Entity.hpp"
 #include "DecisionTree.hpp"
+#include "EnvironnementGenetic.hpp"
 
 namespace Logique {
+
+	class Environnement;
 
 	class Wolf : public Entity {
 	public:
@@ -21,10 +24,10 @@ namespace Logique {
 
 		void onDeath();
 
-		void initActionArray(Board& board);
+		void initActionArray(Board& board, Environnement& env);
 
-		void eat(Board& board);
-		void reproduce(Board& board);
+		void eat(Board& board, Environnement& env);
+		void reproduce(Board& board, Environnement& env);
 		void genXp();
 
 		bool hasWolfNext();
