@@ -12,11 +12,16 @@
 
 Server::Server() :
 	socket_(16000),
+	socket2_(16500),
 	server_(new Poco::Net::TCPServerConnectionFactoryImpl<Connection>(),
 	socket_),
+	server2_(new Poco::Net::TCPServerConnectionFactoryImpl<Connection>(),
+	socket2_),
 	connections_(),
+	connections_info_(),
 	environnement_(),
-	connections_mut_() {
+	connections_mut_(),
+	connections_info_mut_() {
 		forge_[Logique::Environnement_Event::ENTITY_SPAWN] = boost::bind(&Server::spawnForge, this, _1, _2);
 		forge_[Logique::Environnement_Event::ENTITY_MOVE] = boost::bind(&Server::moveForge, this, _1, _2);
 		forge_[Logique::Environnement_Event::ENTITY_EAT] = boost::bind(&Server::eatForge, this, _1, _2);
@@ -34,6 +39,7 @@ void Server::Start()
 {
     std::cout << "server start" << std::endl;
     server_.start();
+	server2_.start();
 	boost::thread thr(boost::bind(&Server::run, this));
     environnement_.run();
 }
@@ -44,6 +50,12 @@ void Server::AddConnection(Connection* connection)
     connections_[reinterpret_cast<ptrdiff_t>(connection)] = connection; 
 }
 
+void Server::AddConnectionInfo(ConnectionInfo* connectionInfo)
+{
+	boost::lock_guard<boost::mutex> lock(connections_info_mut_);
+    connections_info_[reinterpret_cast<ptrdiff_t>(connectionInfo)] = connectionInfo; 
+}
+
 void Server::RemoveConnection(Connection* connection)
 {
 	boost::lock_guard<boost::mutex> lock(connections_mut_);
@@ -51,11 +63,38 @@ void Server::RemoveConnection(Connection* connection)
         connections_.erase(reinterpret_cast<ptrdiff_t>(connection));
 }
 
+void Server::RemoveConnectionInfo(ConnectionInfo* connectionInfo)
+{
+	boost::lock_guard<boost::mutex> lock(connections_info_mut_);
+    if (connections_info_.find(reinterpret_cast<ptrdiff_t>(connectionInfo)) != connections_info_.end())
+        connections_info_.erase(reinterpret_cast<ptrdiff_t>(connectionInfo));
+}
+
+
 void Server::SendPacket(Packet& packet)
 {
 	boost::lock_guard<boost::mutex> lock(connections_mut_);
     std::map<ptrdiff_t, Connection*>::iterator it = connections_.begin();
     std::map<ptrdiff_t, Connection*>::iterator ite= connections_.end();
+    
+    for (; it != ite; ++it)
+        it->second->AddPacket(packet);
+}
+
+void Server::SendMetric(Metric & metric)
+{
+	Packet packet;
+	packet << static_cast<uint32_t>(metric.wolfNum);
+	packet << metric.wolfMoy;
+	packet << static_cast<uint32_t>(metric.wolfActionNum);
+	packet << static_cast<uint32_t>(metric.wolfActionNeural);
+	packet << static_cast<uint32_t>(metric.sheepNum);
+	packet << metric.sheepMoy;
+	packet << static_cast<uint32_t>(metric.sheepActionNum);
+	packet << static_cast<uint32_t>(metric.sheepActionNeural);
+	boost::lock_guard<boost::mutex> lock(connections_info_mut_);
+    std::map<ptrdiff_t, ConnectionInfo*>::iterator it = connections_info_.begin();
+    std::map<ptrdiff_t, ConnectionInfo*>::iterator ite= connections_info_.end();
     
     for (; it != ite; ++it)
         it->second->AddPacket(packet);
@@ -70,7 +109,7 @@ void Server::synchronize(Connection * connection)
 	boost::lock_guard<boost::mutex> lock(connections_mut_);
 	connection->Lock();
 	
-	Logique::Callback_Environnement::EventProxy lockguard = Logique::Callback_Environnement::getInstance().getEventProxy();
+	Logique::Callback_Environnement::EventProxy lockguard = environnement_.getEventProxy();
 	environnement_.getBoard(board);
 
 	packet << static_cast<uint8_t>(Logique::Environnement_Event::NONE) << static_cast<uint32_t>(Logique::BOARD_SIZE);
@@ -168,7 +207,7 @@ void Server::run()
 	while (true)
 	{
 		//boost::thread::sleep(xt);
-		Logique::Callback_Environnement::EventProxy proxy = Logique::Callback_Environnement::getInstance().getEventProxy();
+		Logique::Callback_Environnement::EventProxy proxy = environnement_.getEventProxy();
 		Logique::Callback_Environnement::EventDeque::iterator it = proxy.begin();
 		Logique::Callback_Environnement::EventDeque::iterator ite = proxy.end();
 		for (;it != ite && connections_.size() > 0; ++it)
@@ -178,6 +217,14 @@ void Server::run()
 			SendPacket(packet);
 		}
 		proxy.clear();
+		Logique::Callback_Environnement::MetricProxy mProxy = environnement_.getMetricProxy();
+		Logique::Callback_Environnement::MetricDeque::iterator mit = mProxy.begin();
+		Logique::Callback_Environnement::MetricDeque::iterator mite = mProxy.end();
+		for (; mit != mite; ++mit)
+		{
+			SendMetric((*mit));
+		}
+		mProxy.clear();
 		//xt.sec += 2;
 	}
 }
