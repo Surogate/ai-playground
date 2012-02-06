@@ -14,6 +14,10 @@ namespace Logique {
 		BADSTEP = 0.1f;
 	}
 
+	Wolf::Wolf(DecisionTree& tree, const EnvironnementGenetic::EntityGen& adn) 
+		: Entity(Square::WOLF, tree, adn)
+	{}
+
 	Wolf::~Wolf() 
 	{
 		onDeath();

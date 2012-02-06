@@ -32,7 +32,8 @@ namespace Logique {
 		const float TRAINSTEP;
 		const unsigned int HIDDENSIZE;
 		const unsigned int LAYERNUM;
-		const FANN::activation_function_enum ACTIVATIONFUNC;
+		const FANN::activation_function_enum ACTIVATIONFUNCHIDDEN;
+		const FANN::activation_function_enum ACTIVATIONFUNCOUTPUT;
 
 		typedef boost::array<float, OUTPUTSIZE> OutputArray;
 		typedef boost::array<float, INPUTSIZE> InputArray;

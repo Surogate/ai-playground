@@ -14,8 +14,22 @@ namespace Logique {
 	Environnement::Environnement()
 		: Callback_Environnement(),
 		_entityNum(), _board(), _baseTime(boost::chrono::milliseconds(BASE_TIME_MILISEC))
-		, _entityList(), _actionList(), _sheepPool(), _wolfPool(), _sheepTree(), _wolfTree()
+		, _entityList(), _actionList(), _sheepPool(), _wolfPool()
 		, _randomD(), _gen(_randomD), _distri(STARTING_ZONE_MIN, STARTING_ZONE_MAX)
+		, _adn(), _genetic(false), _sheepTree(), _wolfTree(), _run(true)
+	{
+		_entityNum[Square::SHEEP] = 0;
+		_entityNum[Square::WOLF] = 0;
+		addAction(createBoardPlay(0));
+		addAction(createLog(0));
+	}
+
+	Environnement::Environnement(const EnvironnementGenetic& adn)
+		: Callback_Environnement(),
+		_entityNum(), _board(), _baseTime(boost::chrono::milliseconds(BASE_TIME_MILISEC))
+		, _entityList(), _actionList(), _sheepPool(), _wolfPool()
+		, _randomD(), _gen(_randomD), _distri(STARTING_ZONE_MIN, STARTING_ZONE_MAX)
+		, _adn(adn), _genetic(true), _sheepTree(_adn._sheepDecisionTree), _wolfTree(_adn._wolfDecisionTree), _run(true)
 	{
 		_entityNum[Square::SHEEP] = 0;
 		_entityNum[Square::WOLF] = 0;
@@ -41,7 +55,7 @@ namespace Logique {
 		boost::chrono::duration<double> total_time;
 
 		std::cout << "simulation start" << std::endl;
-		while (!_actionList.empty()) {
+		while (!_actionList.empty() && _run) {
 			start = boost::chrono::system_clock::now();
 
 			unsigned int tick_passed = std::floor(total_time.count() / _baseTime.count());
@@ -75,6 +89,12 @@ namespace Logique {
 		}
 		std::cout << "Simulation end" << std::endl;
 	}
+
+	void Environnement::stop() 
+	{ _run = false; }
+
+	void Environnement::dump(std::ostream& stream)
+	{}
 
 	void Environnement::addAction(const Action& value) 
 	{

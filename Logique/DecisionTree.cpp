@@ -9,11 +9,12 @@ namespace Logique {
 		: _ann(), _numTotal(0), _numNeural(0)
 		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
 		, DECISIONSTEP(0.15f), TRAINSTEP(0.05f), LEARNINGRATE(0.7f)
-		, LAYERNUM(2), HIDDENSIZE(INPUTSIZE), ACTIVATIONFUNC(FANN::GAUSSIAN)
+		, LAYERNUM(2), HIDDENSIZE(INPUTSIZE), ACTIVATIONFUNCHIDDEN(FANN::GAUSSIAN_STEPWISE), ACTIVATIONFUNCOUTPUT(FANN::GAUSSIAN_STEPWISE)
 	{
 		createNeuralNet();
-		_ann.set_activation_function_hidden(ACTIVATIONFUNC);
-		_ann.set_activation_function_output(ACTIVATIONFUNC);
+		_ann.set_training_algorithm(FANN::TRAIN_INCREMENTAL);
+		_ann.set_activation_function_hidden(ACTIVATIONFUNCHIDDEN);
+		_ann.set_activation_function_output(ACTIVATIONFUNCOUTPUT);
 		_ann.set_learning_rate(LEARNINGRATE);
 	}
 
@@ -21,11 +22,12 @@ namespace Logique {
 		: _ann(), _numTotal(0), _numNeural(0)
 		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
 		, DECISIONSTEP(value._decisionStep), TRAINSTEP(value._trainStep), LEARNINGRATE(value._learningRate)
-		, LAYERNUM(value._layerNum), HIDDENSIZE(value._layerSize), ACTIVATIONFUNC(value._activation)
+		, LAYERNUM(value._layerNum), HIDDENSIZE(value._layerSize), ACTIVATIONFUNCHIDDEN(value._activationHidden), ACTIVATIONFUNCOUTPUT(value._activationOutput)
 	{
 		createNeuralNet();
-		_ann.set_activation_function_hidden(ACTIVATIONFUNC);
-		_ann.set_activation_function_output(ACTIVATIONFUNC);
+		_ann.set_training_algorithm(FANN::TRAIN_INCREMENTAL);
+		_ann.set_activation_function_hidden(ACTIVATIONFUNCHIDDEN);
+		_ann.set_activation_function_output(ACTIVATIONFUNCOUTPUT);
 		_ann.set_learning_rate(LEARNINGRATE);
 	}
 

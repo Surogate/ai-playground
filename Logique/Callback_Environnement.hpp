@@ -14,8 +14,6 @@
 #include "EventProxy.hpp"
 #include "Metric.hpp"
 
-class Environnement;
-
 namespace Logique {
 
 	class Callback_Environnement {

@@ -20,6 +20,7 @@ namespace Logique {
 		};
 
 		Wolf(DecisionTree& tree);
+		Wolf(DecisionTree& tree, const EnvironnementGenetic::EntityGen& adn);
 		~Wolf();
 
 		void onDeath();

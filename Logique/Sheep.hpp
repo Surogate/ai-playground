@@ -21,6 +21,7 @@ namespace Logique {
 		};
 
 		Sheep(DecisionTree& tree);
+		Sheep(DecisionTree& tree, const EnvironnementGenetic::EntityGen& adn);
 		~Sheep();
 
 		void onDeath();
