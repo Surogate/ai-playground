@@ -40,14 +40,11 @@ EnvironnementGenetic::DecisionTreeGen EnvironnementGenetic::randomTree()
 	FANN::activation_function_enum tab[] = {
         FANN::SIGMOID,
         FANN::SIGMOID_STEPWISE,
-        FANN::SIGMOID_SYMMETRIC,
-        FANN::SIGMOID_SYMMETRIC_STEPWISE,
         FANN::GAUSSIAN,
-        FANN::GAUSSIAN_SYMMETRIC,
         FANN::GAUSSIAN_STEPWISE
 	};
 
-	boost::random::uniform_int_distribution<unsigned int> activation(0, 15);
+	boost::random::uniform_int_distribution<unsigned int> activation(0, sizeof(tab) / sizeof(int) - 1);
 	
 	result._layerNum = layerNum(_gen);
 	result._layerSize = layerSize(_gen);;

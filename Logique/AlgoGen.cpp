@@ -70,7 +70,7 @@ void AlgoGen::run()
 		
 		_envList[replaced]->stop();
 		_envList[replaced]->innerThread->join();
-		_envList.erase(std::begin(_envList) + replaced);
+		_envList.erase(_envList.begin() + replaced);
 		_envList.push_back(boost::make_shared<Environnement>(
 				EnvironnementGenetic::reproduce(_envList[pos]->getAdn(), _envList[pos_2]->getAdn())
 			)
@@ -93,7 +93,7 @@ void AlgoGen::stop()
 void AlgoGen::dump()
 {
 	std::ofstream stream;
-	stream.open(_file, std::ios::out || std::ios::trunc);
+	stream.open(_file.c_str(), std::ios::out | std::ios::trunc);
 	if (!stream.bad())
 	{
 		BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)

@@ -74,17 +74,17 @@ public:
 
 		void operator--()
 		{
-			--pos;
+			--_pos;
 		}
 
 		bool operator!=(const iterator& buddy)
 		{
-			return pos != buddy._pos;
+			return _pos != buddy._pos;
 		}
 
 		bool operator==(const iterator& buddy)
 		{
-			return pos == buddy._pos;
+			return _pos == buddy._pos;
 		}
 
 		bool operator<(const iterator& buddy)
@@ -165,17 +165,17 @@ public:
 
 		void operator--()
 		{
-			--pos;
+			--_pos;
 		}
 
 		bool operator!=(const const_iterator& buddy)
 		{
-			return pos != buddy._pos;
+			return _pos != buddy._pos;
 		}
 
 		bool operator==(const const_iterator& buddy)
 		{
-			return pos == buddy._pos;
+			return _pos == buddy._pos;
 		}
 
 		bool operator<(const const_iterator& buddy)
