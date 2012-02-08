@@ -37,23 +37,14 @@ EnvironnementGenetic::DecisionTreeGen EnvironnementGenetic::randomTree()
 	boost::random::uniform_real_distribution<float> decisionStep(0.0005f, 0.9f);
 	boost::random::uniform_real_distribution<float> trainStep(0.0005f, 0.9f);
 	
-	FANN::activation_function_enum tab[16] = {
-		FANN::LINEAR,
-        FANN::THRESHOLD,
-        FANN::THRESHOLD_SYMMETRIC,
+	FANN::activation_function_enum tab[] = {
         FANN::SIGMOID,
         FANN::SIGMOID_STEPWISE,
         FANN::SIGMOID_SYMMETRIC,
         FANN::SIGMOID_SYMMETRIC_STEPWISE,
         FANN::GAUSSIAN,
         FANN::GAUSSIAN_SYMMETRIC,
-        FANN::GAUSSIAN_STEPWISE,
-        FANN::ELLIOT,
-        FANN::ELLIOT_SYMMETRIC,
-        FANN::LINEAR_PIECE,
-        FANN::LINEAR_PIECE_SYMMETRIC,
-	    FANN::SIN_SYMMETRIC,
-	    FANN::COS_SYMMETRIC
+        FANN::GAUSSIAN_STEPWISE
 	};
 
 	boost::random::uniform_int_distribution<unsigned int> activation(0, 15);

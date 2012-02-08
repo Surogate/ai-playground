@@ -1,17 +1,41 @@
 
 #include <iostream>
 
+#include "AlgoGen.hpp"
 #include "Environnement.hpp"
-#include "Callback_Environnement.hpp"
 
 int main(void) {
-	Logique::Environnement env;
-	env.setMetricSizeLimit(10);
-	env.setEventSizeLimit(10);
+	AlgoGen gen;
 
-	env.run();
+	bool run = true;
+	bool launched = false;
+	std::string cin_buffer;
+	boost::thread algo_thread;
 
-	std::cin.get();
+	while (run)
+	{
+		std::cin >> cin_buffer;
+		if (!launched && cin_buffer == "start")
+		{
+			launched = true;
+			algo_thread = boost::thread(&AlgoGen::run, &gen);
+			std::cout << "algogen start" << std::endl;
+		}
+		if (cin_buffer == "stop")
+		{
+			gen.stop();
+			algo_thread.join();
+			std::cout << "algogen stopped" << std::endl;
+			launched = false;
+		}
+		if (cin_buffer == "exit")
+		{
+			run = false;
+			std::cout << "exiting" << std::endl;
+		}
+			
+	}	
+	
 	return 0;
 }
 
