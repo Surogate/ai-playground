@@ -50,6 +50,11 @@ namespace Logique {
 		}
 	}
 
+	void Sheep::destroyMe(Environnement& env)
+	{
+		env.destroySheep(this);
+	}
+
 	void Sheep::eat(Board& board, Environnement& env) 
 	{
 		if (board(_loc).hasGrass()) 

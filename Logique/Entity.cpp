@@ -56,7 +56,6 @@ namespace Logique {
 	}
 
 	void Entity::setGetNumberSpecies(const GetNumberSpeciesFunctor& func) {
-		_getSpecieNumber = func;
 		reInitPerf();
 	}
 

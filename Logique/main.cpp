@@ -17,15 +17,15 @@ int main(void) {
 		std::cin >> cin_buffer;
 		if (!launched && cin_buffer == "start")
 		{
-			launched = true;
-			algo_thread = boost::thread(&AlgoGen::run, &gen);
 			std::cout << "algogen start" << std::endl;
+			launched = true;
+			algo_thread = boost::thread(&AlgoGen::run, &gen);			
 		}
 		if (cin_buffer == "stop")
 		{
-			gen.stop();
-			algo_thread.join();
 			std::cout << "algogen stopped" << std::endl;
+			gen.stop();
+			algo_thread.join();			
 			launched = false;
 		}
 		if (cin_buffer == "exit")

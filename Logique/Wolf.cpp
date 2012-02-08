@@ -54,6 +54,11 @@ namespace Logique {
 		}
 	}
 
+	void Wolf::destroyMe(Environnement& env)
+	{
+		env.destroyWolf(this);
+	}
+
 	void Wolf::eat(Board& board, Environnement& env) 
 	{
 		if (isAlive() && _getSquare(_loc).hasSheep()) {
