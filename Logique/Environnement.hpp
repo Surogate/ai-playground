@@ -42,12 +42,13 @@ namespace Logique {
 
 		typedef std::deque< Action, boost::pool_allocator<Action> > ActionList;
 		typedef std::map< Entity*, Entity::Ptr, std::less< Entity* >, boost::pool_allocator< std::pair < Entity*, Entity::Ptr > > > EntityPtrSet;
-		typedef std::stack< Action, std::deque< Action, boost::pool_allocator< Action > > > ActionTmpStack;
 		typedef Square& (Board::*board_func)(const Coord&);
 
 		Environnement();
 		Environnement(const EnvironnementGenetic& adn);
 		~Environnement();
+
+		Environnement& operator=(const Environnement& orig);
 
 		void run();
 		void stop();
@@ -59,6 +60,9 @@ namespace Logique {
 
 		void setBaseTime(const boost::chrono::duration<double>& time);
 		void getBoard(Board& out_board);
+		const EnvironnementGenetic& getAdn() const;
+
+		boost::thread* innerThread;
 
 	private:
 		//spawn Entity function
@@ -101,7 +105,6 @@ namespace Logique {
 		boost::chrono::duration<double> _baseTime;
 		EntityPtrSet _entityList;
 		ActionList _actionList;
-		ActionTmpStack _actionTmpStack;
 		boost::object_pool<Sheep> _sheepPool;
 		boost::object_pool<Wolf> _wolfPool;
 

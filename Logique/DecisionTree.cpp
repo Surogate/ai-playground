@@ -31,6 +31,27 @@ namespace Logique {
 		_ann.set_learning_rate(LEARNINGRATE);
 	}
 
+	DecisionTree& DecisionTree::operator=(const DecisionTree& orig)
+	{
+		if (this != &orig)
+		{
+			LEARNINGRATE = orig.LEARNINGRATE;
+			DECISIONSTEP = orig.DECISIONSTEP;
+			TRAINSTEP = orig.TRAINSTEP;
+			HIDDENSIZE = orig.HIDDENSIZE;
+			LAYERNUM = orig.LAYERNUM;
+			ACTIVATIONFUNCHIDDEN = orig.ACTIVATIONFUNCHIDDEN;
+			ACTIVATIONFUNCOUTPUT = orig.ACTIVATIONFUNCOUTPUT;
+			_output = orig._output;
+			_input = orig._input;
+			_numTotal = orig._numTotal;
+			_numNeural = orig._numNeural;
+			_ann.destroy();
+			createNeuralNet();
+		}
+		return *this;
+	}
+
 	void DecisionTree::createNeuralNet() 
 	{
 		if (LAYERNUM == 1)
