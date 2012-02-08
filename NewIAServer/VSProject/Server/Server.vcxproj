@@ -98,6 +98,7 @@
     <ClInclude Include="..\..\..\Logique\Square.hpp" />
     <ClInclude Include="..\..\..\Logique\Wolf.hpp" />
     <ClInclude Include="..\..\Connection.hpp" />
+    <ClInclude Include="..\..\ConnectionInfo.hpp" />
     <ClInclude Include="..\..\Packet.hpp" />
     <ClInclude Include="..\..\Server.hpp" />
   </ItemGroup>
@@ -113,6 +114,7 @@
     <ClCompile Include="..\..\..\Logique\Sheep.cpp" />
     <ClCompile Include="..\..\..\Logique\Wolf.cpp" />
     <ClCompile Include="..\..\Connection.cpp" />
+    <ClCompile Include="..\..\ConnectionInfo.cpp" />
     <ClCompile Include="..\..\main.cpp" />
     <ClCompile Include="..\..\Packet.cpp" />
     <ClCompile Include="..\..\Server.cpp" />
