@@ -14,8 +14,6 @@
 #include "EventProxy.hpp"
 #include "Metric.hpp"
 
-class Environnement;
-
 namespace Logique {
 
 	class Callback_Environnement {
@@ -28,6 +26,7 @@ namespace Logique {
 		Callback_Environnement();
 		~Callback_Environnement();
 		Callback_Environnement(const Callback_Environnement& value);
+		
 
 		void addEvent(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos, Coord newPos);
 		void addEvent(Environnement_Event::Type value, Entity& id, Square::EntityContain type, Coord pos);
@@ -58,6 +57,9 @@ namespace Logique {
 		
 		boost::array< const char *, Environnement_Event::TYPE_SIZE > _eventTypeString;
 		boost::array< const char *, Square::ENTITY_CONTAINER_SIZE > _entityTypeString;
+
+		Callback_Environnement& operator=(const Callback_Environnement& value) 
+		{ return *this; }
 
 		void initEventTypeString();
 		void initEntityTypeString();

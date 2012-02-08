@@ -27,12 +27,13 @@ namespace Logique {
 			OUTPUTSIZE = ACTION_CONTAINER_SIZE,
 		};
 
-		const float LEARNINGRATE;
-		const float DECISIONSTEP;
-		const float TRAINSTEP;
-		const unsigned int HIDDENSIZE;
-		const unsigned int LAYERNUM;
-		const FANN::activation_function_enum ACTIVATIONFUNC;
+		float LEARNINGRATE;
+		float DECISIONSTEP;
+		float TRAINSTEP;
+		unsigned int HIDDENSIZE;
+		unsigned int LAYERNUM;
+		FANN::activation_function_enum ACTIVATIONFUNCHIDDEN;
+		FANN::activation_function_enum ACTIVATIONFUNCOUTPUT;
 
 		typedef boost::array<float, OUTPUTSIZE> OutputArray;
 		typedef boost::array<float, INPUTSIZE> InputArray;
@@ -40,6 +41,7 @@ namespace Logique {
 
 		DecisionTree();
 		DecisionTree(const EnvironnementGenetic::DecisionTreeGen& value);
+		DecisionTree& operator=(const DecisionTree& orig);
 
 		template <typename InputIterator>
 		void initInputArray(InputIterator start, InputIterator end)

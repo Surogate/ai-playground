@@ -8,7 +8,12 @@
 #include "Logger.hpp"
 
 namespace Logique {
-	Sheep::Sheep(DecisionTree& tree) : Entity(Square::SHEEP, tree)
+	Sheep::Sheep(DecisionTree& tree) 
+		: Entity(Square::SHEEP, tree)
+	{}
+
+	Sheep::Sheep(DecisionTree& tree, const EnvironnementGenetic::EntityGen& adn) 
+		: Entity(Square::SHEEP, tree, adn)
 	{}
 
 	Sheep::~Sheep()

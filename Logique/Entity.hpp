@@ -34,7 +34,7 @@ namespace Logique  {
 		typedef boost::function< bool (const float&) > ValidScoreFunctor;
 
 		Entity(const Square::EntityContain& type, DecisionTree& tree);
-		Entity(const Square::EntityContain& type, DecisionTree& tree, const EnvironnementGenetic::EntityGen& value);
+		Entity(const Square::EntityContain& type, DecisionTree& tree, const EnvironnementGenetic::EntityGen& adn);
 		
 		Entity(const Entity& orig);
 		virtual ~Entity();
