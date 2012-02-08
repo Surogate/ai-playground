@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <boost/foreach.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Callback_Environnement.hpp"
 #include "Environnement.hpp"
@@ -13,8 +14,8 @@ namespace Logique {
 
 	Environnement::Environnement()
 		: Callback_Environnement()
-		, _entityNum(), _board(), _baseTime(boost::chrono::milliseconds(BASE_TIME_MILISEC))
-		, _entityList(), _actionList(), _sheepPool(), _wolfPool()
+		, _entityNum(), _baseTime(boost::chrono::milliseconds(BASE_TIME_MILISEC))
+		, _entityList(), _actionList(), _board(), _sheepPool(), _wolfPool()
 		, _randomD(), _gen(_randomD), _distri(STARTING_ZONE_MIN, STARTING_ZONE_MAX)
 		, _adn(), _genetic(false), _sheepTree(), _wolfTree(), _run(true)
 	{
@@ -27,7 +28,7 @@ namespace Logique {
 	Environnement::Environnement(const EnvironnementGenetic& adn)
 		: Callback_Environnement()
 		, _entityNum(), _board(), _baseTime(boost::chrono::milliseconds(BASE_TIME_MILISEC))
-		, _entityList(), _actionList(), _sheepPool(), _wolfPool()
+		, _actionList(), _entityList(), _sheepPool(), _wolfPool()
 		, _randomD(), _gen(_randomD), _distri(STARTING_ZONE_MIN, STARTING_ZONE_MAX)
 		, _adn(adn), _genetic(true), _sheepTree(_adn._sheepDecisionTree), _wolfTree(_adn._wolfDecisionTree), _run(true)
 	{
@@ -135,7 +136,8 @@ namespace Logique {
 	bool Environnement::addSheep(const Coord& loc) 
 	{
 		if (!_board(loc).hasSheep()) {
-			boost::shared_ptr<Sheep> sheepPtr(_sheepPool.construct(boost::ref(_sheepTree)), boost::bind(&Environnement::destroySheep, this, _1));
+			boost::shared_ptr<Sheep> sheepPtr(new Sheep(_sheepTree));
+			//boost::shared_ptr<Sheep> sheepPtr(_sheepPool.construct(boost::ref(_sheepTree)), boost::bind(&Environnement::destroyEntity, this, _1));
 			sheepPtr->addFood(Logique::FOOD_START);
 			sheepPtr->initActionArray(_board, *this);
 
@@ -152,7 +154,9 @@ namespace Logique {
 	bool Environnement::addWolf(const Coord& loc) 
 	{
 		if (!_board(loc).hasWolf()) {
-			boost::shared_ptr<Wolf> wolfPtr(_wolfPool.construct(boost::ref(_wolfTree)), boost::bind(&Environnement::destroyWolf, this, _1));
+			boost::shared_ptr<Wolf> wolfPtr(new Wolf(_wolfTree));
+			//boost::shared_ptr<Wolf> wolfPtr(_wolfPool.construct(boost::ref(_wolfTree)), boost::bind(&Environnement::destroyEntity, this, _1));
+
 			wolfPtr->addFood(Logique::FOOD_START);
 			wolfPtr->initActionArray(_board, *this);
 
@@ -361,7 +365,8 @@ namespace Logique {
 		addAction(createBoardPlay(tick_start));
 	}
 
-	void Environnement::initEntity(boost::shared_ptr<Entity> value, const Coord& loc) {
+	void Environnement::initEntity(boost::shared_ptr<Entity> value, const Coord& loc) 
+	{
 		_board.lock();
 		_board(loc).hasEntity(value->getType(), value.get());
 		_board.unlock();
@@ -376,7 +381,8 @@ namespace Logique {
 		addAction(value->createFoodAction());
 	}
 
-	void Environnement::spawnSheep() {
+	void Environnement::spawnSheep() 
+	{
 		Coord loc;
 		unsigned int limit = 0;
 
@@ -388,7 +394,8 @@ namespace Logique {
 			addSheep(loc);
 	}
 
-	void Environnement::onEntityDeath(Entity& value) {
+	void Environnement::onEntityDeath(Entity& value) 
+	{
 		addEvent(Environnement_Event::ENTITY_DEATH, value, value.getType(), value.getLocation());
 
 		_board.lock();
@@ -404,7 +411,8 @@ namespace Logique {
 		}
 	}
 
-	void Environnement::popOdour(const Coord& loc, unsigned int power) {
+	void Environnement::popOdour(const Coord& loc, unsigned int power) 
+	{
 		for (unsigned int size = power; size > 0; size--) {
 			int x_start = loc.x - size + 1;
 			int y_start;
@@ -424,17 +432,19 @@ namespace Logique {
 		}
 	}
 
-	void Environnement::addOdour(int x, int y, unsigned int value) {
-		_board.get(x, y).addOdour(value);
+	void Environnement::addOdour(int x, int y, unsigned int value) 
+	{ _board.get(x, y).addOdour(value); }
+
+	void Environnement::destroyEntity(Entity* value)
+	{
+		value->destroyMe(*this);
 	}
 
-	void Environnement::destroySheep(Sheep* value) {
-		_sheepPool.destroy(value);
-	}
+	void Environnement::destroySheep(Sheep* value) 
+	{ _sheepPool.destroy(value); }
 
-	void Environnement::destroyWolf(Wolf* value) {
-		_wolfPool.destroy(value);
-	}
+	void Environnement::destroyWolf(Wolf* value) 
+	{ _wolfPool.destroy(value); }
 
 	void Environnement::getBoard(Board& out_Board)
 	{

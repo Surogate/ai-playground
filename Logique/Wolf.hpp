@@ -27,6 +27,7 @@ namespace Logique {
 
 		void initActionArray(Board& board, Environnement& env);
 
+		void destroyMe(Environnement& env);
 		void eat(Board& board, Environnement& env);
 		void reproduce(Board& board, Environnement& env);
 		void genXp();

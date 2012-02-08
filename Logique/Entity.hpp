@@ -62,6 +62,7 @@ namespace Logique  {
 		void sendXp(float power);
 		void sendXpNot(float power);
 		
+		virtual void destroyMe(Environnement& env) = 0;
 		virtual void eat(Board& board, Environnement& env) = 0;
 		virtual void reproduce(Board& board, Environnement& env) = 0;
 		virtual void genXp() = 0;
@@ -100,7 +101,6 @@ namespace Logique  {
 		ActionFunctor _add_action;
 		EntityFunctor _onDeath;
 		GetSquareFunctor _getSquare;
-		GetNumberSpeciesFunctor _getSpecieNumber;
 		PopEntityFunctor _popEntity;
 		ValidScoreFunctor _validScore;
 

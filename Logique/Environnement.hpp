@@ -61,7 +61,9 @@ namespace Logique {
 		void setBaseTime(const boost::chrono::duration<double>& time);
 		void getBoard(Board& out_board);
 		const EnvironnementGenetic& getAdn() const;
-
+		void destroyEntity(Entity* value);
+		void destroySheep(Sheep* value);
+		void destroyWolf(Wolf* value);
 		boost::thread* innerThread;
 
 	private:
@@ -94,19 +96,15 @@ namespace Logique {
 		void onEntityDeath(Entity& value);
 		void popOdour(const Coord& loc, unsigned int power = ODOURONDEATH);
 		void addOdour(int x, int y, unsigned int value);
-		void destroySheep(Sheep* value);
-		void destroyWolf(Wolf* value);
 
 		void debugActionList();
 
 		boost::array<unsigned int, Square::ENTITY_CONTAINER_SIZE> _entityNum;
 
-		Board _board;
 		boost::chrono::duration<double> _baseTime;
-		EntityPtrSet _entityList;
-		ActionList _actionList;
-		boost::object_pool<Sheep> _sheepPool;
-		boost::object_pool<Wolf> _wolfPool;
+		
+		
+		Board _board;
 
 		boost::random::random_device _randomD;
 		boost::random::mt19937 _gen;
@@ -114,6 +112,11 @@ namespace Logique {
 		
 		EnvironnementGenetic _adn;
 		bool _genetic;
+
+		ActionList _actionList;
+		EntityPtrSet _entityList;
+		boost::object_pool<Sheep> _sheepPool;
+		boost::object_pool<Wolf> _wolfPool;
 
 		DecisionTree _sheepTree;
 		DecisionTree _wolfTree;
