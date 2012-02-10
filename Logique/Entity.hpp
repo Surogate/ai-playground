@@ -37,7 +37,7 @@ namespace Logique  {
 		Entity(const Square::EntityContain& type, DecisionTree& tree, const EnvironnementGenetic::EntityGen& adn);
 		
 		Entity(const Entity& orig);
-		virtual ~Entity();
+		~Entity();
 
 		void cleanVtable();
 

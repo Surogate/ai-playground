@@ -38,7 +38,21 @@ namespace Logique {
 		addAction(createLog(0));
 	}
 
-	Environnement::~Environnement() {}
+	Environnement::~Environnement() 
+	{
+		_actionList.clear();
+
+		_board.lock();
+		BOOST_FOREACH(const EntityPair& ptr, _entityList)
+		{
+			_board(ptr.first->getLocation()).hasEntity(ptr.first->getType(), 0);
+			_entityNum[ptr.first->getType()]--;
+			ptr.first->cleanVtable();
+		}
+		_board.unlock();
+
+		_entityList.clear();
+	}
 
 	Environnement& Environnement::operator=(const Environnement& orig)
 	{ return *this; }
@@ -86,10 +100,10 @@ namespace Logique {
 				while (!_actionList.empty() && _run && _actionList.begin()->execute()) 
 				{ _actionList.pop_front(); }
 
-				if (getSheepNum() <= 3) 
+				if (getSheepNum() <= 3 && _run) 
 				{ addSheep(20); }
 
-				if (getWolfNum() <= 3) 
+				if (getWolfNum() <= 3 && _run) 
 				{ addWolf(10); }
 			}
 
@@ -136,8 +150,8 @@ namespace Logique {
 	bool Environnement::addSheep(const Coord& loc) 
 	{
 		if (!_board(loc).hasSheep()) {
-			boost::shared_ptr<Sheep> sheepPtr(new Sheep(_sheepTree));
-			//boost::shared_ptr<Sheep> sheepPtr(_sheepPool.construct(boost::ref(_sheepTree)), boost::bind(&Environnement::destroyEntity, this, _1));
+			//boost::shared_ptr<Sheep> sheepPtr(new Sheep(_sheepTree));
+			boost::shared_ptr<Sheep> sheepPtr(_sheepPool.construct(boost::ref(_sheepTree)), boost::bind(&Environnement::destroySheep, this, _1));
 			sheepPtr->addFood(Logique::FOOD_START);
 			sheepPtr->initActionArray(_board, *this);
 
@@ -154,8 +168,8 @@ namespace Logique {
 	bool Environnement::addWolf(const Coord& loc) 
 	{
 		if (!_board(loc).hasWolf()) {
-			boost::shared_ptr<Wolf> wolfPtr(new Wolf(_wolfTree));
-			//boost::shared_ptr<Wolf> wolfPtr(_wolfPool.construct(boost::ref(_wolfTree)), boost::bind(&Environnement::destroyEntity, this, _1));
+			//boost::shared_ptr<Wolf> wolfPtr(new Wolf(_wolfTree));
+			boost::shared_ptr<Wolf> wolfPtr(_wolfPool.construct(boost::ref(_wolfTree)), boost::bind(&Environnement::destroyWolf, this, _1));
 
 			wolfPtr->addFood(Logique::FOOD_START);
 			wolfPtr->initActionArray(_board, *this);
@@ -441,7 +455,11 @@ namespace Logique {
 	}
 
 	void Environnement::destroySheep(Sheep* value) 
-	{ _sheepPool.destroy(value); }
+	{ 
+		
+		_sheepPool.destroy(value); 
+	
+	}
 
 	void Environnement::destroyWolf(Wolf* value) 
 	{ _wolfPool.destroy(value); }

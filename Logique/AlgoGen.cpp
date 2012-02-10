@@ -39,7 +39,7 @@ void AlgoGen::run()
 	_run = true;
 	while (_run)
 	{
-		boost::this_thread::sleep(boost::posix_time::minutes(30));
+		boost::this_thread::sleep(boost::posix_time::minutes(TIMEBEFOREMERGE));
 		double total = 0;
 		double max = 0;
 		std::size_t i = 0;
@@ -70,11 +70,11 @@ void AlgoGen::run()
 		
 		_envList[replaced]->stop();
 		_envList[replaced]->innerThread->join();
-		_envList.erase(_envList.begin() + replaced);
 		_envList.push_back(boost::make_shared<Environnement>(
 				EnvironnementGenetic::reproduce(_envList[pos]->getAdn(), _envList[pos_2]->getAdn())
 			)
 		);
+		_envList.erase(_envList.begin() + replaced);
 
 		_envList.back()->innerThread = _thread_pool.create_thread(boost::bind(&Environnement::run, _envList.back()));
 	}

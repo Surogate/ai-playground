@@ -26,12 +26,10 @@ namespace Logique {
 		: _type(orig._type), _loc(orig._loc), _add_action(orig._add_action), _numberEat(orig._numberEat), _numberRep(orig._numberRep)
 		, _actual(orig._actual), _numberTot(orig._numberTot), _rep_limit(orig._rep_limit), _foodCount(orig._foodCount), _lastMoy(orig._lastMoy),
 		_lastAction(orig._lastAction), _tree(orig._tree)
-	{
-	}
+	{}
 
-	void Entity::cleanVtable() {
-		_newAction = Action();
-	}
+	void Entity::cleanVtable() 
+	{ _newAction = Action(); }
 
 	void Entity::addFood(unsigned int value) {
 		_foodCount += value;
@@ -43,35 +41,29 @@ namespace Logique {
 		return _foodCount > 0;
 	}
 
-	void Entity::setAddAction(const Entity::ActionFunctor& func) {
-		_add_action = func;
-	}
+	void Entity::setAddAction(const Entity::ActionFunctor& func) 
+	{ _add_action = func; }
 
-	void Entity::setOnDeath(const Entity::EntityFunctor& func) {
-		_onDeath = func;
-	}
+	void Entity::setOnDeath(const Entity::EntityFunctor& func) 
+	{ _onDeath = func; }
 
-	void Entity::setGetSquare(const GetSquareFunctor& func) {
-		_getSquare = func;
-	}
+	void Entity::setGetSquare(const GetSquareFunctor& func) 
+	{ _getSquare = func; }
 
-	void Entity::setGetNumberSpecies(const GetNumberSpeciesFunctor& func) {
-		reInitPerf();
-	}
+	void Entity::setGetNumberSpecies(const GetNumberSpeciesFunctor& func) 
+	{ reInitPerf(); }
 
-	void Entity::setPopEntityFunctor(const PopEntityFunctor& func) {
-		_popEntity = func;
-	}
+	void Entity::setPopEntityFunctor(const PopEntityFunctor& func) 
+	{ _popEntity = func; }
 
-	void Entity::setValidScore(const ValidScoreFunctor& func) {
-		_validScore = func;
-	}
+	void Entity::setValidScore(const ValidScoreFunctor& func) 
+	{ _validScore = func; }
 
-	void Entity::setLocation(Coord loc) {
-		_loc = loc;
-	}
+	void Entity::setLocation(Coord loc) 
+	{ _loc = loc; }
 
-	Action Entity::createFoodAction(unsigned int time, unsigned int value) {
+	Action Entity::createFoodAction(unsigned int time, unsigned int value) 
+	{
 		Action food;
 
 		food._tickStart = 0;
@@ -81,7 +73,8 @@ namespace Logique {
 		return food;
 	}
 
-	void Entity::decreaseFood(unsigned int value) {
+	void Entity::decreaseFood(unsigned int value) 
+	{
 		if (value <= _foodCount)
 			_foodCount -= value;
 		else
@@ -95,17 +88,14 @@ namespace Logique {
 			_onDeath(*this);
 	}
 
-	void Entity::setFood(unsigned int value) {
-		_foodCount = value;
-	}
+	void Entity::setFood(unsigned int value) 
+	{ _foodCount = value; }
 
-	const Coord& Entity::getLocation() const {
-		return _loc;
-	}
+	const Coord& Entity::getLocation() const 
+	{ return _loc; }
 
-	Square::EntityContain Entity::getType() const {
-		return _type;
-	}
+	Square::EntityContain Entity::getType() const 
+	{ return _type; }
 
 	EntityAction Entity::computeAction()
 	{
@@ -142,11 +132,10 @@ namespace Logique {
 	}
 
 	void Entity::sendXpNot(float power) 
-	{
-		sendXp(-1 * power);
-	}
+	{ sendXp(-1 * power); }
 
-	void Entity::initActionArray(Board& board, Environnement& env) {
+	void Entity::initActionArray(Board& board, Environnement& env) 
+	{
 		_actionArray[WAIT] = ActionPair(WAIT_TIME, boost::bind(&Entity::wait, this));
 		_actionArray[MOVE_UP] = ActionPair(MOVE_TIME, boost::bind(&Entity::goUp, this, boost::ref(board), boost::ref(env)));
 		_actionArray[MOVE_DOWN] = ActionPair(MOVE_TIME, boost::bind(&Entity::goDown, this, boost::ref(board), boost::ref(env)));
@@ -156,11 +145,11 @@ namespace Logique {
 		_newAction = Action(0, 0, boost::bind(&Entity::getNewAction, shared_from_this(), _1));
 	}
 
-	void Entity::wait() {
-		_lastAction = WAIT;
-	}
+	void Entity::wait() 
+	{ _lastAction = WAIT; }
 
-	void Entity::goUp(Board& board, Environnement& env) {
+	void Entity::goUp(Board& board, Environnement& env) 
+	{
 		if (moveToThisLocation(board, board.getValidValue(_loc + Coord::UP), env)) {
 			_lastAction = MOVE_UP;
 		}
@@ -172,19 +161,22 @@ namespace Logique {
 		}
 	}
 
-	void Entity::goRight(Board& board, Environnement& env) {
+	void Entity::goRight(Board& board, Environnement& env) 
+	{
 		if (moveToThisLocation(board, board.getValidValue(_loc + Coord::RIGHT), env)) {
 			_lastAction = MOVE_RIGHT;
 		}
 	}
 
-	void Entity::goDown(Board& board, Environnement& env) {
+	void Entity::goDown(Board& board, Environnement& env) 
+	{
 		if (moveToThisLocation(board, board.getValidValue(_loc + Coord::DOWN), env)) {
 			_lastAction = MOVE_DOWN;
 		}
 	}
 
-	bool Entity::moveToThisLocation(Board& board, const Coord& newLoc, Environnement& env) {
+	bool Entity::moveToThisLocation(Board& board, const Coord& newLoc, Environnement& env) 
+	{
 		if (!board(newLoc).hasEntity(_type)) {
 			board.lock();
 			board(_loc).hasEntity(_type, 0);
@@ -197,18 +189,19 @@ namespace Logique {
 		return false;
 	}
 
-	Logique::EntityAction Entity::getLastAction() const {
-		return _lastAction;
-	}
+	Logique::EntityAction Entity::getLastAction() const 
+	{ return _lastAction; }
 
-	void Entity::reInitPerf() {
+	void Entity::reInitPerf() 
+	{
 		_numberEat = 0;
 		_numberRep = 0;
 		_actual = 0;
 		_numberTot = 5;
 	}
 
-	float Entity::computeMoy() const {
+	float Entity::computeMoy() const 
+	{
 		if (_actual) {
 			float moy = std::pow(_numberEat, _numberRep + 1.f);
 			moy /= _actual;

@@ -17,7 +17,10 @@ namespace Logique {
 	{}
 
 	Sheep::~Sheep()
-	{ onDeath(); }
+	{ 
+		_actionStack.clear();
+		onDeath(); 
+	}
 
 	void Sheep::onDeath() 
 	{ sendXpNot(BADSTEP); }
