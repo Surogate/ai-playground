@@ -20,6 +20,7 @@ namespace Logique {
 
 	Wolf::~Wolf() 
 	{
+		_actionStack.clear();
 		onDeath();
 	}
 

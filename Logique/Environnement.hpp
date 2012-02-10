@@ -41,7 +41,8 @@ namespace Logique {
 		};
 
 		typedef std::deque< Action, boost::pool_allocator<Action> > ActionList;
-		typedef std::map< Entity*, Entity::Ptr, std::less< Entity* >, boost::pool_allocator< std::pair < Entity*, Entity::Ptr > > > EntityPtrSet;
+		typedef std::pair< Entity*, Entity::Ptr > EntityPair;
+		typedef std::map< Entity*, Entity::Ptr, std::less< Entity* >, boost::pool_allocator< EntityPair > > EntityPtrSet;
 		typedef Square& (Board::*board_func)(const Coord&);
 
 		Environnement();
