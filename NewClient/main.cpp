@@ -48,14 +48,16 @@ int main(int argc, char** argv) {
             if (event.Type == sf::Event::Closed ||
                 (event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Escape))
                 app.Close();
+
+			float timer = clock.GetElapsedTime().AsSeconds() / 1000.f;
             if (event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Up)
-                cam.SetCenter(cam.GetCenter().x, cam.GetCenter().y - 2 * (clock.GetElapsedTime() / 1000));
+                cam.SetCenter(cam.GetCenter().x, cam.GetCenter().y - 2 * timer);
             if (event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Down)
-                cam.SetCenter(cam.GetCenter().x, cam.GetCenter().y + 2 * (clock.GetElapsedTime() / 1000));
+                cam.SetCenter(cam.GetCenter().x, cam.GetCenter().y + 2 * timer);
             if (event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Left)
-                cam.SetCenter(cam.GetCenter().x - 2 * (clock.GetElapsedTime() / 1000), cam.GetCenter().y);
+                cam.SetCenter(cam.GetCenter().x - 2 * timer, cam.GetCenter().y);
             if (event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Right)
-                cam.SetCenter(cam.GetCenter().x + 2 * (clock.GetElapsedTime() / 1000), cam.GetCenter().y);
+                cam.SetCenter(cam.GetCenter().x + 2 * timer, cam.GetCenter().y);
  
         }
         sf::Packet packet;
@@ -77,6 +79,7 @@ int main(int argc, char** argv) {
         app.SetView(def);
         app.Display();
     }
+	std::cin.get();
     return 0;
 }
 
