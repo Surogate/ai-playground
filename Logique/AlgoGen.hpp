@@ -15,11 +15,12 @@ class AlgoGen
 public:
 	enum {
 		ENV_SIZE = 20,
-		TIMEBEFOREMERGE = 30
+		TIMEBEFOREMERGE = 2
 	};
 
 	typedef Logique::Environnement Environnement;
-	typedef std::deque< boost::shared_ptr<Environnement> > EnvironnementArray;
+	typedef boost::shared_ptr<Environnement> EnvPtr;
+	typedef std::deque< EnvPtr > EnvironnementArray;
 	typedef boost::array< double, ENV_SIZE > DoubleArray;
 	typedef void (AlgoGen::*func)(const Metric&, double& , double& , double&, double&);
 
@@ -36,6 +37,9 @@ private:
 	double evaluateEnv(Environnement& env);
 	double evaluateEntity(Environnement& env, func gatherFunction);
 	double evaluateWolf(Environnement& env);
+	EnvPtr make_environnement();
+	EnvPtr make_environnement(EnvironnementGenetic& genetic);
+	void destroy_environnement(Environnement* env);
 
 	void dump();
 	bool initFromFile();
@@ -43,6 +47,7 @@ private:
 	EnvironnementArray _envList;
 	DoubleArray _perfList;
 	boost::thread_group _thread_pool;
+	boost::object_pool<Environnement> _envPool;
 	bool _run;
 	boost::mutex _mut;
 	std::string _file;

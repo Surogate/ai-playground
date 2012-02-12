@@ -6,7 +6,8 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 AlgoGen::AlgoGen()
-	: _envList(), _run(false)
+	: _envList(), _perfList(), _thread_pool(), _envPool()
+	,_run(false), _mut()
 	, _file()
 {
 	BOOST_FOREACH(DoubleArray::value_type& val, _perfList)
@@ -15,7 +16,8 @@ AlgoGen::AlgoGen()
 }
 
 AlgoGen::AlgoGen(const std::string& file)
-	: _envList(), _run(false)
+	: _envList(), _perfList(), _thread_pool(), _envPool()
+	,_run(false), _mut()
 	, _file(file)
 {
 	if (!initFromFile())
@@ -28,18 +30,28 @@ AlgoGen::AlgoGen(const std::string& file)
 	else
 	{
 		std::cout << _envList.size() << " Environnement loaded" << std::endl;
+		while (_envList.size() < ENV_SIZE)
+		{
+			_envList.push_back(make_environnement());
+		}
+		while (_envList.size() > ENV_SIZE)
+		{
+			_envList.pop_back();
+		}
 	}
 }
 
 AlgoGen::~AlgoGen()
-{}
+{
+	_envList.clear();
+}
 
 void AlgoGen::run()
 {
 	std::size_t i = 0;
 	boost::mt19937 gen;
 
-	BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
+	BOOST_FOREACH(EnvPtr& e, _envList)
 	{
 		boost::thread* thd = _thread_pool.create_thread(boost::bind(&Environnement::run, e));
 		e->innerThread = thd;
@@ -54,7 +66,7 @@ void AlgoGen::run()
 		double max = 0;
 		std::size_t i = 0;
 
-		BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
+		BOOST_FOREACH(EnvPtr& e, _envList)
 		{
 			_perfList[i] = evaluateEnv(*e);
 			total += _perfList[i];
@@ -80,7 +92,7 @@ void AlgoGen::run()
 		
 		_envList[replaced]->stop();
 		_envList[replaced]->innerThread->join();
-		_envList.push_back(boost::make_shared<Environnement>(
+		_envList.push_back(make_environnement(
 				EnvironnementGenetic::reproduce(_envList[pos]->getAdn(), _envList[pos_2]->getAdn())
 			)
 		);
@@ -95,10 +107,9 @@ void AlgoGen::stop()
 {
 	_run = false;
 	_mut.lock();
-	BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
+	BOOST_FOREACH(EnvPtr& e, _envList)
 	{ e->stop(); }
-	BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
-	{ e->innerThread->join(); }
+	_thread_pool.join_all();
 	dump();
 	_mut.unlock();
 }
@@ -142,7 +153,7 @@ void AlgoGen::gatherWolf(const Metric& from, double& perfTotal, double& perfNum,
 void AlgoGen::initRandomEnv()
 {
 	for (std::size_t i = 0; i < ENV_SIZE; ++i)
-	{ _envList.push_back(boost::make_shared<Environnement>(EnvironnementGenetic::randomGen())); }
+	{ _envList.push_back(make_environnement()); }
 }
 
 bool AlgoGen::initFromFile()
@@ -162,7 +173,7 @@ bool AlgoGen::initFromFile()
 			if (stream.good())
 			{
 				valid = true;
-				_envList.push_back(boost::make_shared<Environnement>(adnTmp));
+				_envList.push_back(make_environnement(adnTmp));
 				_perfList[perf_index] = perfTmp;
 				++perf_index;
 			}
@@ -180,7 +191,7 @@ void AlgoGen::dump()
 		stream.open(_file.c_str(), std::ios::out | std::ios::trunc);
 		if (stream.good())
 		{
-			BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
+			BOOST_FOREACH(EnvPtr& e, _envList)
 			{
 				e->dump(stream);
 				stream << " " << _perfList[perf_index] << std::endl;
@@ -189,3 +200,21 @@ void AlgoGen::dump()
 		}
 	}
 }
+
+AlgoGen::EnvPtr AlgoGen::make_environnement()
+{
+	return make_environnement(EnvironnementGenetic::randomGen());
+}
+
+AlgoGen::EnvPtr AlgoGen::make_environnement(EnvironnementGenetic& genetic)
+{
+	//return EnvPtr(new Environnement(genetic));
+	return EnvPtr(_envPool.construct(genetic), boost::bind(&AlgoGen::destroy_environnement, this, _1));
+}
+
+void AlgoGen::destroy_environnement(Environnement* env)
+{
+	//delete env;
+	_envPool.destroy(env);
+}
+
