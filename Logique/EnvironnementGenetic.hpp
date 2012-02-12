@@ -2,6 +2,10 @@
 #ifndef ENVIRONNEMENTGENETIC_HPP
 #define ENVIRONNEMENTGENETIC_HPP
 
+#include <fstream>
+#include <ostream>
+#include <istream>
+
 #include <boost/random.hpp>
 #include <boost/random/random_device.hpp>
 
@@ -25,6 +29,9 @@ struct EnvironnementGenetic
 		float _trainStep;
 		FANN::activation_function_enum _activationHidden;
 		FANN::activation_function_enum _activationOutput;
+
+		bool operator==(const DecisionTreeGen& orig);
+		bool operator!=(const DecisionTreeGen& orig);
 	} _sheepDecisionTree, _wolfDecisionTree;
 
 	struct EntityGen {
@@ -32,11 +39,18 @@ struct EnvironnementGenetic
 		float _goodStep;
 		float _neutralStep;
 		float _badStep;
+
+		bool operator==(const EntityGen& orig);
+		bool operator!=(const EntityGen& orig);
 	} _sheepGen, _wolfGen;
+
+	bool operator==(const EnvironnementGenetic& rhs);
+	bool operator!=(const EnvironnementGenetic& rhs);
 
 	static EnvironnementGenetic randomGen();
 	static EnvironnementGenetic reproduce(const EnvironnementGenetic& lhs, const EnvironnementGenetic& rhs);
 private:
+
 	static boost::random::random_device _randomD;
 	static boost::random::mt19937 _gen;
 
@@ -81,5 +95,21 @@ private:
 		return lhs;
 	}
 };
+
+std::ostream& operator<<(std::ostream& in, const EnvironnementGenetic& adn);
+
+std::ostream& operator<<(std::ostream& in, const EnvironnementGenetic::DecisionTreeGen& treegen);
+
+std::ostream& operator<<(std::ostream& in, const EnvironnementGenetic::EntityGen& entitygen);
+
+std::ostream& operator<<(std::ostream& in, const FANN::activation_function_enum& activ);
+
+std::istream& operator>>(std::istream& in, EnvironnementGenetic& adn);
+
+std::istream& operator>>(std::istream& in, EnvironnementGenetic::DecisionTreeGen& treegen);
+
+std::istream& operator>>(std::istream& in, EnvironnementGenetic::EntityGen& entitygen);
+
+std::istream& operator>>(std::istream& in, FANN::activation_function_enum& activ);
 
 #endif /* !ENVIRONNEMENTGENETIC_HPP */

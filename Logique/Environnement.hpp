@@ -33,7 +33,7 @@ namespace Logique {
 	public:
 		enum {
 			ODOURONDEATH = 3,
-			BASE_TIME_MILISEC = 100,
+			BASE_TIME_MILISEC = 1000,
 			STARTING_ZONE_MIN = 0,
 			STARTING_ZONE_MAX = 15,
 			LOG_TIME = 30,

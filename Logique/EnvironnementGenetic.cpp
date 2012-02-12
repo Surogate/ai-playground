@@ -4,6 +4,48 @@
 boost::random::random_device EnvironnementGenetic::_randomD;
 boost::random::mt19937 EnvironnementGenetic::_gen(EnvironnementGenetic::_randomD);
 
+bool EnvironnementGenetic::operator==(const EnvironnementGenetic& rhs)
+{
+	return _sheepDecisionTree == rhs._sheepDecisionTree
+		&& _wolfDecisionTree == rhs._wolfDecisionTree
+		&& _sheepGen == rhs._sheepGen
+		&& _wolfGen == rhs._wolfGen;
+}
+
+bool EnvironnementGenetic::DecisionTreeGen::operator==(const EnvironnementGenetic::DecisionTreeGen& rhs)
+{
+	return _layerNum == rhs._layerNum
+		&& _layerSize == rhs._layerSize
+		&& _learningRate == rhs._learningRate
+		&& _decisionStep == rhs._decisionStep
+		&& _trainStep == rhs._trainStep
+		&& _activationHidden == rhs._activationHidden
+		&& _activationOutput == rhs._activationOutput;
+}
+
+bool EnvironnementGenetic::EntityGen::operator==(const EnvironnementGenetic::EntityGen& rhs)
+{
+	return _superStep == rhs._superStep
+		&& _goodStep == rhs._goodStep
+		&& _neutralStep == rhs._neutralStep
+		&& _badStep == rhs._badStep;
+}
+
+bool EnvironnementGenetic::operator!=(const EnvironnementGenetic& rhs)
+{
+	return !operator==(rhs);
+}
+
+bool EnvironnementGenetic::DecisionTreeGen::operator!=(const EnvironnementGenetic::DecisionTreeGen& rhs)
+{
+	return !operator==(rhs);
+}
+
+bool EnvironnementGenetic::EntityGen::operator!=(const EnvironnementGenetic::EntityGen& rhs)
+{
+	return !operator==(rhs);
+}
+
 EnvironnementGenetic EnvironnementGenetic::randomGen()
 {
 	EnvironnementGenetic result;
@@ -107,5 +149,61 @@ EnvironnementGenetic::EntityGen EnvironnementGenetic::reproduce(const EntityGen&
 
 	return result;
 }
+
+std::ostream& operator<<(std::ostream& in, const EnvironnementGenetic& adn)
+{
+	in << adn._sheepDecisionTree << " " << adn._wolfDecisionTree << " " << adn._sheepGen << " " << adn._wolfGen;
+	return in;
+}
+
+std::ostream& operator<<(std::ostream& in, const EnvironnementGenetic::DecisionTreeGen& treegen)
+{
+	in << treegen._layerNum << " " << treegen._layerSize << " ";
+	in << treegen._learningRate << " " << treegen._decisionStep << " ";
+	in << treegen._trainStep << " " << treegen._activationHidden << " " << treegen._activationOutput;
+	return in;
+}
+
+std::ostream& operator<<(std::ostream& in, const EnvironnementGenetic::EntityGen& entitygen)
+{
+	in << entitygen._superStep << " " << entitygen._goodStep << " " << entitygen._neutralStep << " " << entitygen._badStep;
+	return in;
+}
+
+std::ostream& operator<<(std::ostream& in, const FANN::activation_function_enum& activ)
+{
+	in << static_cast<int>(activ);
+	return in;
+}
+
+std::istream& operator>>(std::istream& in, EnvironnementGenetic& adn)
+{
+	in >> adn._sheepDecisionTree >> adn._wolfDecisionTree >> adn._sheepGen >> adn._wolfGen;
+	return in;
+}
+
+std::istream& operator>>(std::istream& in, EnvironnementGenetic::DecisionTreeGen& treegen)
+{
+	in >> treegen._layerNum >> treegen._layerSize >> treegen._learningRate >> treegen._decisionStep;
+	in >> treegen._trainStep >> treegen._activationHidden >> treegen._activationOutput;
+	return in;
+}
+
+std::istream& operator>>(std::istream& in, EnvironnementGenetic::EntityGen& entitygen)
+{
+	in >> entitygen._superStep >> entitygen._goodStep >> entitygen._neutralStep >> entitygen._badStep;
+	return in;
+}
+
+std::istream& operator>>(std::istream& in, FANN::activation_function_enum& activ)
+{
+	int tmp = 0;
+
+	in >> tmp;
+	activ = static_cast<FANN::activation_function_enum>(tmp);
+	return in;
+}
+
+
 
 

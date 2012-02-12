@@ -5,9 +5,7 @@
 #include "Environnement.hpp"
 
 int main(void) {
-	AlgoGen gen;
-
-	//Logique::Environnement* gen = 0;
+	AlgoGen gen("Envdump.txt");
 
 	bool run = true;
 	bool launched = false;
@@ -20,19 +18,17 @@ int main(void) {
 		if (!launched && cin_buffer == "start")
 		{
 			std::cout << "algogen start" << std::endl;
-			//gen = new Logique::Environnement();
 			launched = true;
 			algo_thread = boost::thread(&AlgoGen::run, &gen);			
-			//algo_thread = boost::thread(&Logique::Environnement::run, gen);			
+			std::cout << "algogen start ok" << std::endl;
 		}
 		if (cin_buffer == "stop")
 		{
-			std::cout << "algogen stopped" << std::endl;
+			std::cout << "algogen stop" << std::endl;
 			gen.stop();
-			//gen->stop();
-			algo_thread.join();			
-			//delete gen;
+			algo_thread.interrupt();	
 			launched = false;
+			std::cout << "algogen stop ok" << std::endl;
 		}
 		if (cin_buffer == "exit")
 		{
@@ -44,4 +40,3 @@ int main(void) {
 	
 	return 0;
 }
-

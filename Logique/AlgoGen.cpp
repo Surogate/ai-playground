@@ -9,6 +9,8 @@ AlgoGen::AlgoGen()
 	: _envList(), _run(false)
 	, _file()
 {
+	BOOST_FOREACH(DoubleArray::value_type& val, _perfList)
+	{ val = 0; }
 	initRandomEnv();
 }
 
@@ -18,7 +20,14 @@ AlgoGen::AlgoGen(const std::string& file)
 {
 	if (!initFromFile())
 	{
+		BOOST_FOREACH(DoubleArray::value_type& val, _perfList)
+		{ val = 0; }
+		std::cout << "random seed" << std::endl;
 		initRandomEnv();
+	}
+	else
+	{
+		std::cout << _envList.size() << " Environnement loaded" << std::endl;
 	}
 }
 
@@ -35,11 +44,12 @@ void AlgoGen::run()
 		boost::thread* thd = _thread_pool.create_thread(boost::bind(&Environnement::run, e));
 		e->innerThread = thd;
 	}
-
 	_run = true;
+
 	while (_run)
 	{
 		boost::this_thread::sleep(boost::posix_time::minutes(TIMEBEFOREMERGE));
+		_mut.lock();
 		double total = 0;
 		double max = 0;
 		std::size_t i = 0;
@@ -77,29 +87,20 @@ void AlgoGen::run()
 		_envList.erase(_envList.begin() + replaced);
 
 		_envList.back()->innerThread = _thread_pool.create_thread(boost::bind(&Environnement::run, _envList.back()));
+		_mut.unlock();
 	}
 }
 
 void AlgoGen::stop()
 {
 	_run = false;
+	_mut.lock();
 	BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
 	{ e->stop(); }
 	BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
 	{ e->innerThread->join(); }
 	dump();
-}
-
-void AlgoGen::dump()
-{
-	std::ofstream stream;
-	stream.open(_file.c_str(), std::ios::out | std::ios::trunc);
-	if (!stream.bad())
-	{
-		BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
-		{ e->dump(stream); }
-		stream.close();
-	}
+	_mut.unlock();
 }
 
 double AlgoGen::evaluateEnv(Environnement& env)
@@ -146,5 +147,45 @@ void AlgoGen::initRandomEnv()
 
 bool AlgoGen::initFromFile()
 {
-	return false;
+	bool valid = false;
+	if (_file.size())
+	{
+		std::ifstream stream;
+		stream.open(_file.c_str(), std::ios::in |std::ios::beg);
+		EnvironnementGenetic adnTmp;
+		DoubleArray::value_type perfTmp;
+		std::size_t perf_index = 0;
+		do
+		{
+			stream >> adnTmp;
+			stream >> perfTmp;
+			if (stream.good())
+			{
+				valid = true;
+				_envList.push_back(boost::make_shared<Environnement>(adnTmp));
+				_perfList[perf_index] = perfTmp;
+				++perf_index;
+			}
+		} while (stream.good());
+	}
+	return valid;
+}
+
+void AlgoGen::dump()
+{
+	if (_file.size())
+	{
+		std::ofstream stream;
+		std::size_t perf_index = 0;
+		stream.open(_file.c_str(), std::ios::out | std::ios::trunc);
+		if (stream.good())
+		{
+			BOOST_FOREACH(boost::shared_ptr<Environnement>& e, _envList)
+			{
+				e->dump(stream);
+				stream << " " << _perfList[perf_index] << std::endl;
+				++perf_index;
+			}
+		}
+	}
 }

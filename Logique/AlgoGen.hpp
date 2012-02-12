@@ -14,8 +14,8 @@ class AlgoGen
 {
 public:
 	enum {
-		ENV_SIZE = 5,
-		TIMEBEFOREMERGE = 5
+		ENV_SIZE = 20,
+		TIMEBEFOREMERGE = 30
 	};
 
 	typedef Logique::Environnement Environnement;
@@ -44,6 +44,7 @@ private:
 	DoubleArray _perfList;
 	boost::thread_group _thread_pool;
 	bool _run;
+	boost::mutex _mut;
 	std::string _file;
 };
 

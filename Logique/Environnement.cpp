@@ -115,7 +115,9 @@ namespace Logique {
 	{ _run = false; }
 
 	void Environnement::dump(std::ostream& stream)
-	{}
+	{
+		stream << _adn;
+	}
 
 	void Environnement::addAction(const Action& value) 
 	{ unsafeInsertAction(value); }
