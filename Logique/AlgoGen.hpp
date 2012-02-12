@@ -15,7 +15,7 @@ class AlgoGen
 public:
 	enum {
 		ENV_SIZE = 20,
-		TIMEBEFOREMERGE = 2
+		TIMEBEFOREMERGE = 30
 	};
 
 	typedef Logique::Environnement Environnement;
