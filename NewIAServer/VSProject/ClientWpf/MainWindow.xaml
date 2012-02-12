@@ -1,0 +1,36 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:local="clr-namespace:ClientWpf" x:Class="ClientWpf.MainWindow"
+        Title="MainWindow" Height="350" Width="525">
+	<Window.DataContext>
+		<local:MainViewModel/>
+	</Window.DataContext>
+    <Grid>
+    	<Grid Margin="8,8,0,0" Height="48" VerticalAlignment="Top" HorizontalAlignment="Left" Width="289">
+    		<Label Content="IP :" HorizontalAlignment="Left" Margin="0,2.5,0,18.5" x:Name="label1" VerticalAlignment="Top" />
+    		<TextBox Margin="44,5,94,21" x:Name="textBox1" VerticalAlignment="Top" Text="{Binding IP}" />
+    		<Button Content="Connect" Margin="214,5,0,21" x:Name="button1" RenderTransformOrigin="1.133,0.5" HorizontalAlignment="Left" Width="75" VerticalAlignment="Top" Command="{Binding Connect}" />
+    	</Grid>
+        <DVC:Chart x:Name="chart" Margin="0,0,0,0" Title="">
+            <DVC:LineSeries x:Name="wolfNum" DependentValuePath="Time" IndependentValuePath="Value" DependentValueBinding="{Binding WolfNumber}" IndependentValueBinding="{Binding Time}" Title="Wolf Number" ItemsSource="{Binding Metrics}" Visibility="{Binding WolfNumVisibility}"/>
+            <DVC:LineSeries x:Name="wolfMoy" DependentValuePath="Time" IndependentValuePath="Value" DependentValueBinding="{Binding WolfMoy}" IndependentValueBinding="{Binding Time}" Title="Wolf Moy" ItemsSource="{Binding Metrics}" Visibility="{Binding WolfMoyVisibility}"/>
+            <DVC:LineSeries x:Name="wolfANum" DependentValuePath="Time" IndependentValuePath="Value" DependentValueBinding="{Binding WolfActionNumber}" IndependentValueBinding="{Binding Time}" Title="Wolf Action Number" ItemsSource="{Binding Metrics}" Visibility="{Binding WolfActNumVisibility}"/>
+            <DVC:LineSeries x:Name="wolfANeu" DependentValuePath="Time" IndependentValuePath="Value" DependentValueBinding="{Binding WolfActionNeural}" IndependentValueBinding="{Binding Time}" Title="Wolf Action Neural" ItemsSource="{Binding Metrics}" Visibility="{Binding WolfActNeuVisibility}"/>
+            <DVC:LineSeries x:Name="sheepNum" DependentValuePath="Time" IndependentValuePath="Value" DependentValueBinding="{Binding SheepNumber}" IndependentValueBinding="{Binding Time}" Title="Sheep Number" ItemsSource="{Binding Metrics}" Visibility="{Binding SheepNumVisibility}"/>
+            <DVC:LineSeries x:Name="sheepMoy" DependentValuePath="Time" IndependentValuePath="Value" DependentValueBinding="{Binding SheepMoy}" IndependentValueBinding="{Binding Time}" Title="Sheep Moy" ItemsSource="{Binding Metrics}" Visibility="{Binding SheepMoyVisibility}"/>
+            <DVC:LineSeries x:Name="sheepANum" DependentValuePath="Time" IndependentValuePath="Value" DependentValueBinding="{Binding SheepActionNumber}" IndependentValueBinding="{Binding Time}" Title="Sheep Action Number" ItemsSource="{Binding Metrics}" Visibility="{Binding SheepActNumVisibility}"/>
+            <DVC:LineSeries x:Name="sheepANeu" DependentValuePath="Time" IndependentValuePath="Value" DependentValueBinding="{Binding SheepActionNeural}" IndependentValueBinding="{Binding Time}" Title="Sheep Action Neural" ItemsSource="{Binding Metrics}" Visibility="{Binding SheepActNeuVisibility}"/>
+        </DVC:Chart>
+        <CheckBox Content="Wolf Num" Height="16" HorizontalAlignment="Right" Margin="0,8,115.706,0" Name="checkBox1" VerticalAlignment="Top" IsChecked="{Binding WolfNumLine, Mode=TwoWay}" />
+        <CheckBox Content="Wolf Moy" Height="16" HorizontalAlignment="Right" Margin="0,30,118.196,0" Name="checkBox2" VerticalAlignment="Top" IsChecked="{Binding WolfMoyLine, Mode=TwoWay}" />
+        <CheckBox Content="Sheep Num" Height="16" HorizontalAlignment="Right" Margin="0,8,20.84,0" Name="checkBox3" VerticalAlignment="Top" IsChecked="{Binding SheepNumLine, Mode=TwoWay}" />
+        <CheckBox Content="Sheep Moy" Height="16" HorizontalAlignment="Right" Margin="0,30,23.33,0" Name="checkBox4" VerticalAlignment="Top" IsChecked="{Binding SheepMoyLine, Mode=TwoWay}" />
+        <CheckBox Content="Sheep A.Num" Height="16" HorizontalAlignment="Right" Margin="0,52,10.5,0" Name="checkBox5" VerticalAlignment="Top" IsChecked="{Binding SheepActNumLine, Mode=TwoWay}" />
+        <CheckBox Content="Wolf A.Num" Height="16" HorizontalAlignment="Right" Margin="0,52,105.366,0" Name="checkBox6" VerticalAlignment="Top" IsChecked="{Binding WolfActNumLine, Mode=TwoWay}" />
+        <CheckBox Content="Wolf A.Neu" Height="16" HorizontalAlignment="Right" Margin="0,74,109.426,0" Name="checkBox7" VerticalAlignment="Top" IsChecked="{Binding WolfActNeuLine, Mode=TwoWay}" />
+        <CheckBox Content="Sheep A.Neu" Height="16" HorizontalAlignment="Right" Margin="0,74,14.56,0" Name="checkBox8" VerticalAlignment="Top" IsChecked="{Binding SheepActNeuLine, Mode=TwoWay}" />
+        <Button Content="Clear" Height="25" Margin="0,0,61,23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Command="{Binding Clear}"/>
+    </Grid>
+</Window>
