@@ -35,7 +35,6 @@ int main(void) {
 			run = false;
 			std::cout << "exiting" << std::endl;
 		}
-			
 	}	
 	
 	return 0;

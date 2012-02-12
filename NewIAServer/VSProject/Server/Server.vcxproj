@@ -89,6 +89,7 @@
     <ClInclude Include="..\..\..\Logique\Entity.hpp" />
     <ClInclude Include="..\..\..\Logique\EntityConstant.hpp" />
     <ClInclude Include="..\..\..\Logique\Environnement.hpp" />
+    <ClInclude Include="..\..\..\Logique\EnvironnementGenetic.hpp" />
     <ClInclude Include="..\..\..\Logique\Environnement_Event.h" />
     <ClInclude Include="..\..\..\Logique\EventProxy.hpp" />
     <ClInclude Include="..\..\..\Logique\Logger.hpp" />
@@ -110,6 +111,7 @@
     <ClCompile Include="..\..\..\Logique\DecisionTree.cpp" />
     <ClCompile Include="..\..\..\Logique\Entity.cpp" />
     <ClCompile Include="..\..\..\Logique\Environnement.cpp" />
+    <ClCompile Include="..\..\..\Logique\EnvironnementGenetic.cpp" />
     <ClCompile Include="..\..\..\Logique\Logger.cpp" />
     <ClCompile Include="..\..\..\Logique\Sheep.cpp" />
     <ClCompile Include="..\..\..\Logique\Wolf.cpp" />
