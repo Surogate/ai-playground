@@ -15,7 +15,7 @@ Server::Server() :
 	socket2_(16500),
 	server_(new Poco::Net::TCPServerConnectionFactoryImpl<Connection>(),
 	socket_),
-	server2_(new Poco::Net::TCPServerConnectionFactoryImpl<Connection>(),
+	server2_(new Poco::Net::TCPServerConnectionFactoryImpl<ConnectionInfo>(),
 	socket2_),
 	connections_(),
 	connections_info_(),
