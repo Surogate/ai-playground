@@ -22,7 +22,7 @@ public:
 	typedef boost::shared_ptr<Environnement> EnvPtr;
 	typedef std::deque< EnvPtr > EnvironnementArray;
 	typedef boost::array< double, ENV_SIZE > DoubleArray;
-	typedef void (AlgoGen::*func)(const Metric&, double& , double& , double&, double&);
+	typedef void (AlgoGen::*func)(const Metric&, double& , double& , double&, double&, double&);
 
 	AlgoGen();
 	AlgoGen(const std::string& file);
@@ -30,8 +30,8 @@ public:
 
 	void run();
 	void stop();
-	void gatherSheep(const Metric& from, double& perfTotal, double& perfNum, double& actienTotal, double& actionNum);
-	void gatherWolf(const Metric& from, double& perfTotal, double& perfNum, double& actienTotal, double& actionNum);
+	void gatherSheep(const Metric& from, double& perfTotal, double& perfNum, double& actienTotal, double& actionNum, double& entityTotal);
+	void gatherWolf(const Metric& from, double& perfTotal, double& perfNum, double& actienTotal, double& actionNum, double& entityTotal);
 private:
 	void initRandomEnv();
 	double evaluateEnv(Environnement& env);

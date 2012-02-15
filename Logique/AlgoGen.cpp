@@ -116,7 +116,7 @@ void AlgoGen::stop()
 
 double AlgoGen::evaluateEnv(Environnement& env)
 {
-	return evaluateEntity(env, &AlgoGen::gatherSheep) * ( 1 + evaluateEntity(env, &AlgoGen::gatherWolf));
+	return evaluateEntity(env, &AlgoGen::gatherSheep) * evaluateEntity(env, &AlgoGen::gatherWolf);
 }
 
 double AlgoGen::evaluateEntity(Environnement& env, func gatherFunction)
@@ -125,29 +125,32 @@ double AlgoGen::evaluateEntity(Environnement& env, func gatherFunction)
 	double perfNum = 0;
 	double actionTotal = 0;
 	double actionNum = 0;
+	double entityTotal = 0;
 
 	Environnement::MetricProxy proxy = env.getMetricProxy(); 
 	proxy.foreach(boost::bind(gatherFunction, this, _1, 
-		boost::ref(perfTotal), boost::ref(perfNum), boost::ref(actionTotal), boost::ref(actionNum)));
+		boost::ref(perfTotal), boost::ref(perfNum), boost::ref(actionTotal), boost::ref(actionNum), boost::ref(entityTotal)));
 	if (perfNum > 0 && actionNum > 0)
-		return (perfTotal / perfNum) * (actionTotal / actionNum);
+		return (perfTotal / perfNum) * (actionTotal / actionNum) * (entityTotal / perfNum);
 	return 0;
 }
 
-void AlgoGen::gatherSheep(const Metric& from, double& perfTotal, double& perfNum, double& actionTotal, double& actionNum)
+void AlgoGen::gatherSheep(const Metric& from, double& perfTotal, double& perfNum, double& actionTotal, double& actionNum, double& entityTotal)
 {
 	perfTotal += from.sheepMoy;
 	++perfNum;
 	actionTotal += from.sheepActionNeural;
 	actionNum += from.sheepActionNum;
+	entityTotal += from.sheepNum;
 }
 
-void AlgoGen::gatherWolf(const Metric& from, double& perfTotal, double& perfNum, double& actionTotal, double& actionNum)
+void AlgoGen::gatherWolf(const Metric& from, double& perfTotal, double& perfNum, double& actionTotal, double& actionNum, double& entityTotal)
 {
 	perfTotal += from.wolfMoy;
 	++perfNum;
 	actionTotal += from.wolfActionNeural;
 	actionNum += from.wolfActionNum;
+	entityTotal += from.wolfNum;
 }
 
 void AlgoGen::initRandomEnv()
