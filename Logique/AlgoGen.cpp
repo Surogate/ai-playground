@@ -162,7 +162,7 @@ bool AlgoGen::initFromFile()
 	if (_file.size())
 	{
 		std::ifstream stream;
-		stream.open(_file.c_str(), std::ios::in |std::ios::beg);
+		stream.open(_file.c_str());
 		EnvironnementGenetic adnTmp;
 		DoubleArray::value_type perfTmp;
 		std::size_t perf_index = 0;
@@ -206,7 +206,7 @@ AlgoGen::EnvPtr AlgoGen::make_environnement()
 	return make_environnement(EnvironnementGenetic::randomGen());
 }
 
-AlgoGen::EnvPtr AlgoGen::make_environnement(EnvironnementGenetic& genetic)
+AlgoGen::EnvPtr AlgoGen::make_environnement(const EnvironnementGenetic& genetic)
 {
 	//return EnvPtr(new Environnement(genetic));
 	return EnvPtr(_envPool.construct(genetic), boost::bind(&AlgoGen::destroy_environnement, this, _1));

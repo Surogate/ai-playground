@@ -38,7 +38,7 @@ private:
 	double evaluateEntity(Environnement& env, func gatherFunction);
 	double evaluateWolf(Environnement& env);
 	EnvPtr make_environnement();
-	EnvPtr make_environnement(EnvironnementGenetic& genetic);
+	EnvPtr make_environnement(const EnvironnementGenetic& genetic);
 	void destroy_environnement(Environnement* env);
 
 	void dump();
