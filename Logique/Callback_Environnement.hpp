@@ -24,7 +24,7 @@ namespace Logique {
 		typedef DequeProxy< MetricDeque > MetricProxy;
 
 		Callback_Environnement();
-		~Callback_Environnement();
+		virtual ~Callback_Environnement();
 		Callback_Environnement(const Callback_Environnement& value);
 		
 
