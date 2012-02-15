@@ -8,10 +8,6 @@ namespace Logique {
 	Wolf::Wolf(DecisionTree& tree) 
 		: Entity(Square::WOLF, tree)
 	{
-		SUPERSTEP = 0.4f;
-		GOODSTEP = 0.3f;
-		NEUTRALSTEP = 0.03f;
-		BADSTEP = 0.1f;
 	}
 
 	Wolf::Wolf(DecisionTree& tree, const EnvironnementGenetic::EntityGen& adn) 
