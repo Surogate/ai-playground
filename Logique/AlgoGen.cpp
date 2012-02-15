@@ -139,18 +139,18 @@ void AlgoGen::gatherSheep(const Metric& from, double& perfTotal, double& perfNum
 {
 	perfTotal += from.sheepMoy;
 	++perfNum;
-	actionTotal += from.sheepActionNeural;
-	actionNum += from.sheepActionNum;
-	entityTotal += from.sheepNum;
+	actionTotal += static_cast<double>(from.sheepActionNeural);
+	actionNum += static_cast<double>(from.sheepActionNum);
+	entityTotal += static_cast<double>(from.sheepNum);
 }
 
 void AlgoGen::gatherWolf(const Metric& from, double& perfTotal, double& perfNum, double& actionTotal, double& actionNum, double& entityTotal)
 {
 	perfTotal += from.wolfMoy;
 	++perfNum;
-	actionTotal += from.wolfActionNeural;
-	actionNum += from.wolfActionNum;
-	entityTotal += from.wolfNum;
+	actionTotal += static_cast<double>(from.wolfActionNeural);
+	actionNum += static_cast<double>(from.wolfActionNum);
+	entityTotal += static_cast<double>(from.wolfNum);
 }
 
 void AlgoGen::initRandomEnv()
