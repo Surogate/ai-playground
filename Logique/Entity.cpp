@@ -123,11 +123,22 @@ namespace Logique {
 
 	void Entity::sendXp(float power)
 	{
-		while (_actionStack.size()) {
-			_tree.initInputArray(_actionStack.begin(), _actionStack.end());
-			_tree.train(_actionStack.front().result, power);
-			_actionStack.pop_front();
+		ActionStoreDeque::const_iterator it = _actionStack.begin();
+		ActionStoreDeque::const_iterator ite = _actionStack.end();
+
+		if (_actionStack.size())
+		{
+			while (it != ite && it + 5 != ite)
+			{
+				_tree.initInputArray(it, ite);
+				_tree.train(it->result, power);
+				++it;
+			}
 		}
+
+		while (_actionStack.size() > 5)
+		{ _actionStack.pop_back(); }
+
 		_tree.generateTree();
 	}
 
@@ -196,8 +207,8 @@ namespace Logique {
 	{
 		_numberEat = 0;
 		_numberRep = 0;
-		_actual = 0;
-		_numberTot = 5;
+		_actual = _actionStack.size();
+		_numberTot = 10;
 	}
 
 	float Entity::computeMoy() const 

@@ -67,7 +67,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;METRICONCOUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Program Files %28x86%29\boost\boost_1_47;C:\Users\calimeraw\Documents\dev\poco-1.4.3\Foundation\include;C:\Users\calimeraw\Documents\dev\poco-1.4.3\Net\include;C:\Users\calimeraw\Documents\dev\fann-2.1.0\src\include;C:\Users\calimeraw\Documents\dev\ai-playground\Logique;C:\Program Files\boost\boost_1_47;E:\Document\ai-playground\Logique;E:\Document\poco-1.4.3\Net\include;E:\Document\poco-1.4.3\Foundation\include;E:\Document\fann-2.1.0\src\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

@@ -49,6 +49,7 @@ struct EnvironnementGenetic
 
 	static EnvironnementGenetic randomGen();
 	static EnvironnementGenetic reproduce(const EnvironnementGenetic& lhs, const EnvironnementGenetic& rhs);
+	static EnvironnementGenetic createBetter(const std::string& value);
 private:
 
 	static boost::random::random_device _randomD;
