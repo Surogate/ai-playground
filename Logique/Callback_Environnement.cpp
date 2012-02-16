@@ -66,13 +66,12 @@ namespace Logique {
 	{
 		#ifdef METRICONCOUT
 		debugMetric(value);
-		#else
+		#endif
 		_metricMut.lock();
 		_metricQueue.push_back(value);
 		if (_metricLimit && _metricQueue.size() > _metricLimit)
 			_metricQueue.pop_front();
 		_metricMut.unlock();
-		#endif
 	}
 
 	DequeProxy<Callback_Environnement::EventDeque> Callback_Environnement::getEventProxy() {

@@ -1,4 +1,6 @@
 
+#include <fstream>
+
 #include "EnvironnementGenetic.hpp"
 
 boost::random::random_device EnvironnementGenetic::_randomD;
@@ -111,6 +113,36 @@ EnvironnementGenetic::EntityGen EnvironnementGenetic::randomEntity()
 	result._badStep = step(_gen);
 
 	return result;
+}
+
+EnvironnementGenetic EnvironnementGenetic::createBetter(const std::string& value)
+{
+	EnvironnementGenetic better_ret;
+	EnvironnementGenetic ret;
+	double perf;
+	double better_perf = 0;
+
+	std::ifstream stream(value.c_str());
+
+	if (!stream.good())
+	{
+		std::cout << "error load" << std::endl;
+	}
+
+	while (stream.good())
+	{
+		stream >> ret;
+		stream >> perf;
+		if (!stream.fail() && perf > better_perf)
+		{
+			better_perf = perf;
+			better_ret = ret;
+		}
+	}
+
+	std::cout << better_ret << std::endl;
+
+	return better_ret;
 }
 
 EnvironnementGenetic::DecisionTreeGen EnvironnementGenetic::reproduce(const DecisionTreeGen& lhs, const DecisionTreeGen& rhs)

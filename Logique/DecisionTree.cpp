@@ -8,7 +8,7 @@ namespace Logique {
 	DecisionTree::DecisionTree() 
 		: _ann(), _numTotal(0), _numNeural(0)
 		, _randomD(), _gen(_randomD), _distri(0, ACTION_CONTAINER_SIZE - 1)
-		, DECISIONSTEP(0.15f), TRAINSTEP(0.05f), LEARNINGRATE(0.7f)
+		, DECISIONSTEP(0.1f), TRAINSTEP(0.05f), LEARNINGRATE(0.7f)
 		, LAYERNUM(2), HIDDENSIZE(INPUTSIZE), ACTIVATIONFUNCHIDDEN(FANN::GAUSSIAN_STEPWISE), ACTIVATIONFUNCOUTPUT(FANN::GAUSSIAN_STEPWISE)
 	{
 		createNeuralNet();

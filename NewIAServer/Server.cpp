@@ -19,7 +19,7 @@ Server::Server() :
 	socket2_),
 	connections_(),
 	connections_info_(),
-	environnement_(),
+	environnement_(EnvironnementGenetic::createBetter("Envdump.txt")),
 	connections_mut_(),
 	connections_info_mut_() {
 		forge_[Logique::Environnement_Event::ENTITY_SPAWN] = boost::bind(&Server::spawnForge, this, _1, _2);
@@ -29,6 +29,8 @@ Server::Server() :
 		forge_[Logique::Environnement_Event::ENTITY_REPRODUCE] = boost::bind(&Server::reproduceForge, this, _1, _2);
 		forge_[Logique::Environnement_Event::GRASS_UP] = boost::bind(&Server::grassUpForge, this, _1, _2);
 		forge_[Logique::Environnement_Event::GRASS_DOWN] = boost::bind(&Server::grassDownForge, this, _1, _2);
+
+		environnement_.setBaseTime(boost::chrono::milliseconds(200));
 }
 
 Server::~Server() {
